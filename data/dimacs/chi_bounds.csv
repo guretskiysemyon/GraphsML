@@ -1,0 +1,80 @@
+name,family,n,m,n_isolated,max_degree,self_loops,chi_lb,chi_ub,chi_proven,chi,trick_page_chi,notes
+DSJC1000.1,DSJC,1000,49629,0,127,0,10,20,False,,,p-line m is 2x the unique edge count
+DSJC1000.5,DSJC,1000,249826,0,551,0,73,82,False,,,p-line m is 2x the unique edge count
+DSJC1000.9,DSJC,1000,449449,0,924,0,216,222,False,,,p-line m is 2x the unique edge count
+DSJC125.1,DSJC,125,736,0,23,0,5,5,True,5,,p-line m is 2x the unique edge count
+DSJC125.5,DSJC,125,3891,0,75,0,17,17,True,17,,p-line m is 2x the unique edge count
+DSJC125.9,DSJC,125,6961,0,120,0,44,44,True,44,,p-line m is 2x the unique edge count
+DSJC250.1,DSJC,250,3218,0,38,0,7,8,False,,,p-line m is 2x unique; LB 7 (2026) vs 6 (2022)
+DSJC250.5,DSJC,250,15668,0,147,0,26,28,False,,,p-line m is 2x unique (Trick page lists a typo 31366)
+DSJC250.9,DSJC,250,27897,0,234,0,72,72,True,72,,p-line m is 2x the unique edge count
+DSJC500.1,DSJC,500,12458,0,68,0,9,12,False,,,p-line m is 2x the unique edge count
+DSJC500.5,DSJC,500,62624,0,286,0,43,47,False,,,p-line m is 2x unique (Trick page lists a typo 125249)
+DSJC500.9,DSJC,500,112437,0,471,0,123,126,False,,,p-line m is 2x the unique edge count
+DSJR500.1,DSJR,500,3555,0,25,0,12,12,True,12,,p-line m is 2x the unique edge count
+DSJR500.1c,DSJR,500,121275,0,497,0,85,85,True,85,,"p-line m is 2x unique; Porumbel page lists 84, the two papers prove 85"
+DSJR500.5,DSJR,500,58862,0,388,0,122,122,True,122,,p-line m is 2x the unique edge count
+anna,SocialNet,138,493,0,71,0,11,11,True,11,11,
+david,SocialNet,87,406,0,82,0,11,11,True,11,11,
+flat1000_50_0,flat,1000,245000,0,520,0,50,50,True,50,50,
+flat1000_60_0,flat,1000,245830,0,524,0,60,60,True,60,60,
+flat1000_76_0,flat,1000,246708,0,532,0,72,81,False,,76,"planted 76-colouring exists by construction (so chi <= 76); exact bounds in the table are 72/81, not proven; Trick page lists 76"
+flat300_20_0,flat,300,21375,0,160,0,20,20,True,20,20,
+flat300_26_0,flat,300,21633,0,158,0,26,26,True,26,26,
+flat300_28_0,flat,300,21695,0,162,0,28,28,True,28,28,
+fpsol2.i.1,fpsol,496,11654,227,252,0,65,65,True,65,65,
+fpsol2.i.2,fpsol,451,8691,88,346,0,30,30,True,30,30,
+fpsol2.i.3,fpsol,425,8688,62,346,0,30,30,True,30,30,
+games120,other,120,638,0,13,0,9,9,True,9,9,
+homer,SocialNet,561,1628,5,99,2,13,13,True,13,13,one self-loop at vertex 95 (dropped by the loader)
+huck,SocialNet,74,301,0,53,0,11,11,True,11,11,
+inithx.i.1,inithx,864,18707,345,502,0,54,54,True,54,54,
+inithx.i.2,inithx,645,13979,87,541,0,31,31,True,31,31,
+inithx.i.3,inithx,621,13969,62,542,0,31,31,True,31,31,
+jean,SocialNet,80,254,3,36,0,10,10,True,10,10,
+latin_square_10,other,900,307350,0,683,0,90,97,False,,,open
+le450_15a,le,450,8168,0,99,0,15,15,True,15,15,
+le450_15b,le,450,8169,0,94,0,15,15,True,15,15,
+le450_15c,le,450,16680,0,139,0,15,15,True,15,15,
+le450_15d,le,450,16750,0,138,0,15,15,True,15,15,
+le450_25a,le,450,8260,0,128,0,25,25,True,25,25,
+le450_25b,le,450,8263,0,111,0,25,25,True,25,25,
+le450_25c,le,450,17343,0,179,0,25,25,True,25,25,
+le450_25d,le,450,17425,0,157,0,25,25,True,25,25,
+le450_5a,le,450,5714,0,42,0,5,5,True,5,5,
+le450_5b,le,450,5734,0,42,0,5,5,True,5,5,
+le450_5c,le,450,9803,0,66,0,5,5,True,5,5,
+le450_5d,le,450,9757,0,68,0,5,5,True,5,5,
+miles1000,miles,128,3216,0,86,0,42,42,True,42,42,
+miles1500,miles,128,5198,0,106,0,73,73,True,73,73,
+miles250,miles,128,387,3,16,0,8,8,True,8,8,
+miles500,miles,128,1170,0,38,0,20,20,True,20,20,
+miles750,miles,128,2113,0,64,0,31,31,True,31,31,
+mulsol.i.1,mulsol,197,3925,59,121,0,49,49,True,49,49,
+mulsol.i.2,mulsol,188,3885,15,156,0,31,31,True,31,31,
+mulsol.i.3,mulsol,184,3916,10,157,0,31,31,True,31,31,
+mulsol.i.4,mulsol,185,3946,10,158,0,31,31,True,31,31,
+mulsol.i.5,mulsol,186,3973,10,159,0,31,31,True,31,31,
+myciel3,myciel,11,20,0,5,0,4,4,True,4,4,
+myciel4,myciel,23,71,0,11,0,5,5,True,5,5,
+myciel5,myciel,47,236,0,23,0,6,6,True,6,6,
+myciel6,myciel,95,755,0,47,0,7,7,True,7,7,
+myciel7,myciel,191,2360,0,95,0,8,8,True,8,8,
+queen10_10,queen,100,1470,0,35,0,11,11,True,11,,
+queen11_11,queen,121,1980,0,40,0,11,11,True,11,11,
+queen12_12,queen,144,2596,0,43,0,12,12,True,12,,
+queen13_13,queen,169,3328,0,48,0,13,13,True,13,13,
+queen14_14,queen,196,4186,0,51,0,14,14,True,14,,
+queen15_15,queen,225,5180,0,56,0,15,15,True,15,,
+queen16_16,queen,256,6320,0,59,0,16,17,False,,,
+queen5_5,queen,25,160,0,16,0,5,5,True,5,5,
+queen6_6,queen,36,290,0,19,0,7,7,True,7,7,
+queen7_7,queen,49,476,0,24,0,7,7,True,7,7,
+queen8_12,queen,96,1368,0,32,0,12,12,True,12,12,
+queen8_8,queen,64,728,0,27,0,9,9,True,9,9,
+queen9_9,queen,81,1056,0,32,0,10,10,True,10,10,
+school1,school,385,19095,0,282,0,14,14,True,14,,
+school1_nsh,school,352,14612,0,232,0,14,14,True,14,,
+zeroin.i.1,zeroin,211,4100,85,111,0,49,49,True,49,49,
+zeroin.i.2,zeroin,211,3541,54,140,0,30,30,True,30,30,
+zeroin.i.3,zeroin,206,3540,49,140,0,30,30,True,30,30,

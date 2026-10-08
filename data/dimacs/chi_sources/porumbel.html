@@ -1,0 +1,756 @@
+<HTML>
+<HEAD>
+<TITLE>DIMACS Graphs and Best Algorithms</TITLE>
+<META NAME="description" CONTENT="Benchmark DIMACS Graph Coloring Instances and Best Upper Bounds">
+<META NAME="keywords" CONTENT="index">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+
+
+<LINK REL="STYLESHEET" HREF="index.css">
+
+</HEAD>
+
+<BODY >
+
+<P>
+<table  align=center>
+<tr><td >
+<p>
+	<font  color="#000000" size="6">
+DIMACS Graphs: Benchmark Instances and Best Upper Bounds
+	</font>
+</p>
+</td></tr>
+</table>
+
+</P>
+<HR>
+
+<H4><A NAME="SECTION00000010000000000000">
+Graph Coloring Instances with <i> Difficult </i> Upper Bounds </A>
+</H4>
+ 
+
+<font style="font-size:14"> <i><b>Notice</b>: Given the continually growing number of coloring algorithms, the initial library was becoming too large (with quite dilluted information and cumbersome to read). As such, the result tables are now split, using a classification already proposed in certain papers:<br> &nbsp; (i) local search algorithms (<u>no</u> populations, <u>no</u> hybridisations, <u>no</u> independent set isolation) and <br>&nbsp;(ii) population-based algorithms, complex hybrid EAs, etc. <br>Personally, I don't consider that the value or the interest in these algorithms could ever be ranked according to the figures below. Besides the fact that the experimental conditions are very different, certain papers employ general meta-heuristic ideas, while others algorithms use very specific graph coloring techniques (e.g. isolating independent sets).<br></i> </font>
+
+
+<DIV ALIGN="CENTER">
+<br>
+<b>Local search algorithms</b><br>
+
+
+<table border=0><tr>
+
+<!-- starting left pane table -->
+    <td> <TABLE CELLPADDING=3 BORDER="1">
+    <TR><TD ALIGN="LEFT">Graph</TD>
+    <TD ALIGN="CENTER">best K /<SPAN CLASS="MATH"><IMG
+     WIDTH="17" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+     SRC="img1.png"
+     ALT="$ \chi$"></SPAN>
+    </TD>
+    <TD ALIGN="CENTER">References</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=dsjc250.5.col>dsjc250.5</a></TD>
+    <TD ALIGN="CENTER">28/?</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#stutzle:01">2</A>,<A
+     HREF="index.html#Devarenne:01">3</A>,<A
+     HREF="index.html#galinier:01">7</A>,<A
+     HREF="index.html#vss">15</A>,<a
+     HREF="index.html#TS-Div/Int">18</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=dsjc500.1.col>dsjc500.1</a></TD>
+    <TD ALIGN="CENTER">12/?
+    <!--<A NAME="tex2html2Lower" HREF="#lowerBound"><SUP><SPAN CLASS="arabic">1</SPAN></SUP></A></TD>-->
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#BlochligerZufferey08">1</A>,<A
+     HREF="index.html#stutzle:01">2</A>,<A
+     HREF="index.html#vss">15</A>,<a
+     HREF="index.html#TS-Div/Int">18</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=dsjc500.5.col>dsjc500.5</a></TD>
+    <TD ALIGN="CENTER">48/?</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#BlochligerZufferey08">1</A>,<A
+     HREF="index.html#vss">15</A>,<a
+     HREF="index.html#TS-Div/Int">18</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=dsjc500.9.col>dsjc500.9</a></TD>
+    <TD ALIGN="CENTER">126/?</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#BlochligerZufferey08">1</A>,<A
+     HREF="index.html#vss">15</A>,<a
+     HREF="index.html#TS-Div/Int">18</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=dsjc1000.1.col>dsjc1000.1</a></TD>
+    <TD ALIGN="CENTER">20/?</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#BlochligerZufferey08">1</A>,<A
+     HREF="index.html#mmt">14</A>,<A
+     HREF="index.html#vss">15</A>,<a
+     HREF="index.html#TS-Div/Int">18</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=dsjc1000.5.col>dsjc1000.5</a></TD>
+    <TD ALIGN="CENTER">85/?</TD>
+    <TD ALIGN="CENTER">[<a HREF="index.html#TS-Div/Int">18</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=dsjc1000.9.col>dsjc1000.9</a></TD>
+    <TD ALIGN="CENTER">223/?</TD>
+    <TD ALIGN="CENTER">[<a HREF="index.html#TS-Div/Int">18</A>]</TD>
+    </TR>
+    </table></td>
+
+<!--Middle-->
+
+    <td><TABLE CELLPADDING=3 BORDER="1">
+    <TR><TD ALIGN="LEFT">Graph</TD>
+    <TD ALIGN="CENTER">best K /<SPAN CLASS="MATH"><IMG
+     WIDTH="17" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+     SRC="img1.png"
+     ALT="$ \chi$"></SPAN>
+    </TD>
+    <TD ALIGN="CENTER">References</TD>
+    </TR>
+
+
+    <TR><TD ALIGN="LEFT"><a  href=r250.5.col>r250.5</a></TD>
+    <TD ALIGN="CENTER">66/65</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#BlochligerZufferey08">1</A>]</TD>
+    </TR>
+
+
+    <TR><TD ALIGN="LEFT"><a  href=r1000.1c.col>r1000.1c</a></TD>
+    <TD ALIGN="CENTER">98/?</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#BlochligerZufferey08">1</A>,<A
+     HREF="index.html#TS-Div/Int">18</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=r1000.5.col>r1000.5</a></TD>
+    <TD ALIGN="CENTER">234/234</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#SPrestwich:01">13</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=dsjr500.1c.col>dsjr500.1c</a></TD>
+    <TD ALIGN="CENTER">84/84</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#Benhamou">17</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=dsjr500.5.col>dsjr500.5</a></TD>
+    <TD ALIGN="CENTER">122/122</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#SPrestwich:01">13</A>]</TD>
+    </TR>
+
+
+    <TR><TD ALIGN="LEFT"><a  href=le450_25c.col>le450_25c</a></TD>
+    <TD ALIGN="CENTER">25/25</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#BlochligerZufferey08">1</A>,<A
+     HREF="index.html#TS-Div/Int">18</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=le450_25d.col>le450.25d</a></TD>
+    <TD ALIGN="CENTER">25/25</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#BlochligerZufferey08">1</A>,<A
+     HREF="index.html#TS-Div/Int">18</A>]</TD>
+    </TR>
+
+
+
+    </table> </td>
+
+<!--Starting right pane-->
+
+    <td>
+    <TABLE CELLPADDING=3 BORDER="1">
+    <TR><TD ALIGN="LEFT">Graph</TD>
+    <TD ALIGN="CENTER">best K /<SPAN CLASS="MATH"><IMG
+     WIDTH="17" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+     SRC="img1.png"
+     ALT="$ \chi$"></SPAN>
+    </TD>
+    <TD ALIGN="CENTER">References</TD>
+    </TR>
+
+
+    <TR><TD ALIGN="LEFT"><a  href=flat300_28_0.col>flat300_28_0</a></TD>
+    <TD ALIGN="CENTER">28/28</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#BlochligerZufferey08">1</A>,<A
+     HREF="index.html#vss">15</A>,<a
+     HREF="index.html#TS-Div/Int">18</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=flat1000_50_0.col>flat1000_50_0</a></TD>
+    <TD ALIGN="CENTER">50/50</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#BlochligerZufferey08">1</A>,<A
+     HREF="index.html#vss">15</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=flat1000_60_0.col>flat1000_60_0</a></TD>
+    <TD ALIGN="CENTER">60/60</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#BlochligerZufferey08">1</A>,<A
+     HREF="index.html#vss">15</A>]
+
+</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=flat1000_76_0.col>flat1000_76_0</a></TD>
+    <TD ALIGN="CENTER">85/76</TD>
+    <TD ALIGN="CENTER">[<a HREF="index.html#TS-Div/Int">18</A>] 
+</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=latin_square.col> latin_square</a></TD>
+    <TD ALIGN="CENTER">99/?</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#stutzle:01">2</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=C2000.5.col>C2000.5</a></TD>
+    <TD ALIGN="CENTER">/?</TD>
+    <TD ALIGN="CENTER">-</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=C4000.5.col>C4000.5</a></TD>
+    <TD ALIGN="CENTER">/?</TD>
+    <TD ALIGN="CENTER">-</TD>
+    </TR>
+
+
+    </TABLE> </td>
+<!--End left pane table -->
+
+</tr></TABLE> <!--end table containing left, midle and right tables-->
+
+
+
+
+<br>
+<b>Hybrid and population-based methods</b><br>
+
+<table border=0><tr>
+
+<!-- starting left pane table -->
+    <td> <TABLE CELLPADDING=3 BORDER="1">
+    <TR><TD ALIGN="LEFT">Graph</TD>
+    <TD ALIGN="CENTER">best K /<SPAN CLASS="MATH"><IMG
+     WIDTH="17" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+     SRC="img1.png"
+     ALT="$ \chi$"></SPAN>
+    </TD>
+    <TD ALIGN="CENTER">References</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=dsjc250.5.col>dsjc250.5</a></TD>
+    <TD ALIGN="CENTER">28/?</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#GalinierHao99">6</A>,<A
+     HREF="index.html#galinier:01">7</A>,<A
+     HREF="index.html#morgenstern:01">12</A>,<A 
+     HREF="index.html#mmt">14</A>,<A
+     HREF="index.html#TS-Div/Int">18</A>,<A HREF="index.html#macol">19</A>,<A HREF="index.html#evodiv">20</A>,<A HREF="index.html#quantum">22</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=dsjc500.1.col>dsjc500.1</a></TD>
+    <TD ALIGN="CENTER">12/?
+    <!--<A NAME="tex2html2Lower" HREF="#lowerBound"><SUP><SPAN CLASS="arabic">1</SPAN></SUP></A></TD>-->
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#galinier:01">7</A>,<A
+     HREF="index.html#dorne">11</A>,<A
+     HREF="index.html#morgenstern:01">12</A>,<A
+     HREF="index.html#mmt">14</A>,<A HREF="index.html#macol">19</A>,<A HREF="index.html#evodiv">20</A>,<A HREF="index.html#quantum">22</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=dsjc500.5.col>dsjc500.5</a></TD>
+    <TD ALIGN="CENTER">48/?</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#GalinierHao99">6</A>,<A
+     HREF="index.html#galinier:01">7</A>,<A
+     HREF="index.html#dorne">11</A>,<A
+     HREF="index.html#mmt">14</A>,<A HREF="index.html#macol">19</A>,<A HREF="index.html#evodiv">20</A>,<A HREF="index.html#quantum">22</A>,<A HREF="index.html#dhqa">23</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=dsjc500.9.col>dsjc500.9</a></TD>
+    <TD ALIGN="CENTER">126/?</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#galinier:01">7</A>,<A
+     HREF="index.html#dorne">11</A>,<A
+     HREF="index.html#morgenstern:01">12</A>,<A
+     HREF="index.html#TS-Div/Int">18</A>,<A HREF="index.html#macol">19</A>,<A HREF="index.html#evodiv">20</A>,<A HREF="index.html#quantum">22</A>,<A HREF="index.html#dhqa">23</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=dsjc1000.1.col>dsjc1000.1</a></TD>
+    <TD ALIGN="CENTER">20/?</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#GalinierHao99">6</A>,<A
+     HREF="index.html#galinier:01">7</A>,<A
+     HREF="index.html#dorne">11</A>,<A
+     HREF="index.html#mmt">14</A>,<A HREF="index.html#macol">19</A>,<A HREF="index.html#evodiv">20</A>,<A HREF="index.html#indepsets">21</A>,<A HREF="index.html#quantum">22</A>,<A HREF="index.html#dhqa">23</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=dsjc1000.5.col>dsjc1000.5</a></TD>
+    <TD ALIGN="CENTER">83/?</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#GalinierHao99">6</A>,<A
+     HREF="index.html#dorne">11</A>,<A
+     HREF="index.html#mmt">14</A>,<A HREF="index.html#macol">19</A>,<A HREF="index.html#evodiv">20</A>,<A HREF="index.html#indepsets">21</A>,<A HREF="index.html#quantum">22</A>,<A HREF="index.html#dhqa">23</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=dsjc1000.9.col>dsjc1000.9</a></TD>
+    <TD ALIGN="CENTER">222/?</TD>
+    <TD ALIGN="CENTER">[<A HREF="index.html#indepsets">21</A>,<A HREF="index.html#quantum">22</A>,<A HREF="index.html#dhqa">23</A>]</TD>
+    </TR>
+    </table></td>
+
+<!--Middle-->
+
+    <td><TABLE CELLPADDING=3 BORDER="1">
+    <TR><TD ALIGN="LEFT">Graph</TD>
+    <TD ALIGN="CENTER">best K /<SPAN CLASS="MATH"><IMG
+     WIDTH="17" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+     SRC="img1.png"
+     ALT="$ \chi$"></SPAN>
+    </TD>
+    <TD ALIGN="CENTER">References</TD>
+    </TR>
+
+
+    <TR><TD ALIGN="LEFT"><a  href=r250.5.col>r250.5</a></TD>
+    <TD ALIGN="CENTER">65/65</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#morgenstern:01">12</A>,<A
+     HREF="index.html#mmt">14</A>,<A HREF="index.html#macol">19</A>,<A HREF="index.html#evodiv">20</A>,<A HREF="index.html#quantum">22</A>,<A HREF="index.html#dhqa">23</A>]</TD>
+    </TR>
+
+
+    <TR><TD ALIGN="LEFT"><a  href=r1000.1c.col>r1000.1c</a></TD>
+    <TD ALIGN="CENTER">98/?</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#morgenstern:01">12</A>,<A
+     HREF="index.html#mmt">14</A>
+     <A HREF="index.html#macol">19</A>,<A HREF="index.html#evodiv">20</A>,<A HREF="index.html#quantum">22</A>
+]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=r1000.5.col>r1000.5</a></TD>
+    <TD ALIGN="CENTER">234/234</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#mmt">14</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=dsjr500.1c.col>dsjr500.1c</a></TD>
+    <TD ALIGN="CENTER">85/84</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#morgenstern:01">12</A>,<A
+     HREF="index.html#mmt">14</A>,<A HREF="index.html#macol">19</A>,<A HREF="index.html#evodiv">20</A>,<A HREF="index.html#quantum">22</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=dsjr500.5.col>dsjr500.5</a></TD>
+    <TD ALIGN="CENTER">122/122</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#mmt">14</A>,<A HREF="index.html#macol">19</A>,<A HREF="index.html#evodiv">20</A>,<A HREF="index.html#quantum">22</A>,<A HREF="index.html#dhqa">23</A>]</TD>
+    </TR>
+
+
+    <TR><TD ALIGN="LEFT"><a  href=le450_25c.col>le450_25c</a></TD>
+    <TD ALIGN="CENTER">25/25</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#morgenstern:01">12<SUP><SPAN CLASS="arabic">p. 353</SPAN></SUP></A>,<A
+     HREF="index.html#mmt">14</A>,<A HREF="index.html#macol">19</A>,<A HREF="index.html#evodiv">20</A>,<A HREF="index.html#quantum">22</A>,<A HREF="index.html#dhqa">23</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=le450_25d.col>le450.25d</a></TD>
+    <TD ALIGN="CENTER">25/25</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#morgenstern:01">12<SUP><SPAN CLASS="arabic">pp. 353</SPAN></SUP></A>,<A
+     HREF="index.html#mmt">14</A>,
+     <A HREF="index.html#macol">19</A>,<A HREF="index.html#evodiv">20</A>,<A HREF="index.html#quantum">22</A>,<A HREF="index.html#dhqa">23</A>]</TD>
+    </TR>
+
+
+
+    </table> </td>
+<!--Starting right pane-->
+
+    <td>
+    <TABLE CELLPADDING=3 BORDER="1">
+    <TR><TD ALIGN="LEFT">Graph</TD>
+    <TD ALIGN="CENTER">best K /<SPAN CLASS="MATH"><IMG
+     WIDTH="17" HEIGHT="33" ALIGN="MIDDLE" BORDER="0"
+     SRC="img1.png"
+     ALT="$ \chi$"></SPAN>
+    </TD>
+    <TD ALIGN="CENTER">References</TD>
+    </TR>
+
+
+    <TR><TD ALIGN="LEFT"><a  href=flat300_28_0.col>flat300_28_0</a></TD>
+    <TD ALIGN="CENTER">29/28</TD>
+    <TD ALIGN="CENTER">[<A HREF="index.html#macol">19</A>,<A HREF="index.html#evodiv">20</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=flat1000_50_0.col>flat1000_50_0</a></TD>
+    <TD ALIGN="CENTER">50/50</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#morgenstern:01">12</A>,<A
+     HREF="index.html#galinier:01">7</A>,<A
+     HREF="index.html#mmt">14</A>,<A HREF="index.html#macol">19</A>,<A HREF="index.html#evodiv">20</A>,<A HREF="index.html#indepsets">21</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=flat1000_60_0.col>flat1000_60_0</a></TD>
+    <TD ALIGN="CENTER">60/60</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#morgenstern:01">12</A>,<A
+     HREF="index.html#galinier:01">7</A>,<A
+     HREF="index.html#mmt">14</A>,<A
+     HREF="index.html#vss">15</A>,<A HREF="index.html#macol">19</A>,<A HREF="index.html#evodiv">20</A>,<A HREF="index.html#indepsets">21</A>]
+
+</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=flat1000_76_0.col>flat1000_76_0</a></TD>
+    <TD ALIGN="CENTER">82/76</TD>
+    <TD ALIGN="CENTER">[<A HREF="index.html#mmt">14</A>,<A HREF="index.html#macol">19</A>,<A HREF="index.html#evodiv">20</A>,<A HREF="index.html#indepsets">21</A>,<A HREF="index.html#quantum">22</A>,<A HREF="index.html#dhqa">23</A>] 
+</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=latin_square.col> latin_square</a></TD>
+    <TD ALIGN="CENTER">97/?</TD>
+    <TD ALIGN="CENTER">[<A
+     HREF="index.html#dhqa">23</A>]</TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=C2000.5.col>C2000.5</a></TD>
+    <TD ALIGN="CENTER">146/?</TD>
+    <TD ALIGN="CENTER">[<A HREF="index.html#indepsets">21</A><A NAME="tex2html2"
+      HREF="#foot120"><SUP><SPAN CLASS="arabic">1</SPAN></SUP></A>]
+     </TD>
+    </TR>
+    <TR><TD ALIGN="LEFT"><a  href=C4000.5.col>C4000.5</a></TD>
+    <TD ALIGN="CENTER">260/?</TD>
+    <TD ALIGN="CENTER">[<A HREF="index.html#indepsets">21</A><A NAME="tex2html2"
+      HREF="#foot120"><SUP><SPAN CLASS="arabic">1</SPAN></SUP></A>]</TD>
+    </TR>
+
+</tr></TABLE> <!--end table containing left, midle and right tables-->
+</td></tr>
+</table>
+
+
+
+<form action="upload.php" method="post" > You have information about a new reference, see any error? Note it down here in a few seconds (or <a href="mailto:daniel.porumbel.AT.univ-artois.fr">e-mail</a> me): 
+<input type="text" name="inputbox" value="">
+<input type="submit" value="Submit">
+</form>
+
+
+
+</DIV>
+<P>
+<DIV ALIGN="CENTER">
+</DIV>
+
+<b>Trivial Upper Bounds and Easy Dimacs Instances: </b>
+                            {<a href="flat300_26_0.col">flat300_26</a>,26}, 
+                            {<a href=le450_15c.col>le450_15c</a>,15}, 
+   						    {<a href=le450_15d.col>le450_15d</a>,15}, 
+							{<a href=dsjc125.1.col>dsjc125.1</a>,5},
+							{<a href=dsjc125.9.col>dsjc125.9</a>,44},
+							{<a href=dsjc250.1.col>dsjc250.1</a>,8},
+							{<a href=dsjc250.9.col>dsjc250.9</a>,72},
+							{<a href=school1.col>school1</a>,14}, 
+							{<a href=school1_nsh.col>school1_nsh</a>,14}
+
+							{<a href=dsjc125.5.col>dsjc125.5</a>,17},
+                           {<a href=le450_5a.col>le450_5a</a>,5}, 
+						   {<a href=le450_5b.col>le450_5b</a>,5}, 
+						   {<a href=le450_5c.col>le450_5c</a>,5}, 
+						   {<a href=le450_5d.col>le450_5d</a>,5},							
+                           {<a href=le450_15a.col>le450_15a</a>,15}, 
+						   {<a href=le450_15b.col>le450_15b</a>,15}, 
+						   {<a href=le450_25a.col>le450_25a</a>,25}, 
+						   {<a href=le450_25b.col>le450_25b</a>,25},
+                           {<a href=r125.1.col>r125.1</a>,5},
+						   {<a href=r125.1c.col>r125.1c</a>,46}, 
+						   {<a href=r125.5.col>r125.5</a>, 36},
+						   {<a href=r250.1.col>r250.1</a>,8},
+						   {<a href=r250.1c.col>r250.1c</a>,64},						   
+						   {<a href=r1000.1.col>r1000.1</a>,20},
+                           {<a href=dsjr500.1.col>dsjr500.1</a>,12}.                           
+                           
+Legal colorings for the above instances (denoted in the form {G,K<sup>*</sup>}, where K<sup>*</sup> is the best upper bound) 
+can be  easily reached by many families of heuristics (<i>perhaps only the first three instances might be somehow more difficult</i>). Except for the first 10 graphs, all other upper bounds can be found in 
+the 1996 paper of C. Morgenstern [<A HREF="index.html#morgenstern:01">12,p. 357</A>]: 
+
+<H2>
+Graph Descriptions
+</H2>
+<P>
+All listed graphs are from the Dimacs benchmark [<A
+ HREF="index.html#Dimacs96">9</A>], and, more exactly, they belong to the following families:
+
+<P>
+
+<UL>
+<LI><b> dsjcX.Y </b> Random graphs generated by Johnson <SPAN  CLASS="textsl">et. al</SPAN> [<A
+ HREF="index.html#Johnsonetal91">8</A>] and used extensively afterwords by most graph coloring algorithms (like dsjc1000.5). The number of vertices is denoted by the first number while the second digit references the probability that any two vertices establish an edge (the density).
+</LI>
+<LI><b> flatX_K</b> Flat graphs due to J. Culberson. They are generated by partitioning the vertex set into K almost equal sized classes and then by selecting edges only between vertices of different classes. Finding the best legal K-coloring is equivalent to restoring this initial partitioning. The second number K is hence the chromatic number (X is the vertex set size).
+</LI>
+<LI><b> le450_K</b> Leighton graphs, with the 450 vertices and with known chromatic number K
+ (denoted by the second number) [<A
+ HREF="index.html#leighton:01">10</A>]; all graphs have a clique of size K.
+
+</LI>
+<LI> <b> dsjrX.Y and rX.Y</b> Random geometric graphs:
+  
+<UL>
+<LI>dsjrX.Y - graphs presented by Johnson <SPAN  CLASS="textsl">et. al</SPAN> in [<A
+ HREF="index.html#Johnsonetal91">8</A>] along with the above dsjc random graphs. They are generated by picking points uniformly at random in a square and by setting an edge between all pairs of vertices situated within a certain distance
+</LI>
+<LI>rX.Y - graphs generated using the same idea by M. Trick using a program of C. Morgenstern; suffix "c" denotes the complement of a graph. Descriptions can be found in [<A HREF="index.html#Sewell">16</A>]. 
+Chromatic numbers for these graphs are taken from [<A HREF="index.html#Sewell">16</A>,Table 8]. For R1000.5, only the clique
+number is available, but it is equal to the chromatic number and to the upper bound 234.
+  
+</LI>
+
+
+</UL>
+</LI>
+<LI><b>C2000.5 and C4000.5</b>  Huge random graphs with up to 4 million edges.
+</LI>
+<LI><b>latin_square_10 and school*</b> A latin square graph (and class scheduling graphs respectivelly) generated by Gary Lewandowski in the second Dimacs challenge.
+</LI>
+</UL>
+
+<P>
+
+<H2><A NAME="SECTION00000040000000000000">
+Bibliography</A>
+</H2><DL COMPACT><DD><P></P><DT><A NAME="BlochligerZufferey08">1. </A>
+
+I.&nbsp;Bl&#246;chliger and N.&nbsp;Zufferey.
+A graph coloring heuristic using partial solutions and a reactive
+  tabu scheme.
+<EM>Computers and Operations Research</EM>, 35(3):960-975, 2008
+
+<P></P><DT><A NAME="stutzle:01">2. </A>
+
+M.&nbsp;Chiarandini and T&nbsp;Stutzle.
+An application of iterated local search to graph coloring, 2002.
+
+<P></P><DT><A NAME="Devarenne:01">3. </A>
+
+I.&nbsp;Devarenne, Mabed H., and A.&nbsp;Caminada.
+Intelligent neighborhood exploration in local search heuristics.
+In <EM>ICTAI '06: Proceedings of the 18th IEEE International
+  Conference on Tools with Artificial Intelligence</EM>, pages 144-150,
+  Washington, DC, USA, 2006. IEEE Computer Society.
+
+<P></P><DT><A NAME="FleurentFerland96_2_">4. </A>
+
+C.&nbsp;Fleurent and J.A. Ferland.
+Object-oriented implementation of heuristic search methods for graph
+  coloring, maximum clique, and satisfiability.
+In D.S. Johnson and M.A. Trick, editors, <EM>Cliques, Coloring, and
+  Satisfiability: Second DIMACS Implementation Challenge, 1996</EM>, volume&nbsp;26 of DIMACS series in Discrete Mathematics and Theoretical Computer Science,
+  pages 619--652. American Mathematical Society.
+
+<P></P><DT><A NAME="fotakis:01">5. </A>
+
+D.A. Fotakis, S.D. Likothanassis, and S.K. Stefanakos.
+An Evolutionary Annealing Approach to Graph Coloring.
+<EM>Applications of Evolutionary Computing. EvoWorkshops2001:
+  EvoCOP, EvoFlight, EvoIASP, EvoLearn, and EvoSTIM. Proceedings</EM>,
+  2037:120-129, 2001.
+
+<P></P><DT><A NAME="GalinierHao99">6. </A>
+
+P.&nbsp;Galinier and J.K. Hao.
+Hybrid Evolutionary Algorithms for Graph Coloring.
+<EM>Journal of Combinatorial Optimization</EM>, 3(4):379-397, 1999.
+
+<P></P><DT><A NAME="galinier:01">7. </A>
+
+P.&nbsp;Galinier, A.&nbsp;Hertz, and N.&nbsp;Zufferey.
+An Adaptive Memory Algorithm for the K-colouring Problem.
+<EM>Discrete Applied Mathematics</EM>, 156(2):267–279, 2008.
+
+<P></P><DT><A NAME="Johnsonetal91">8. </A>
+
+D.S. Johnson, C.R. Aragon, L.A. McGeoch, and C.&nbsp;Schevon.
+Optimization by Simulated Annealing: An Experimental Evaluation;
+  Part II, Graph Coloring and Number Partitioning.
+<EM>Operations Research</EM>, 39(3):378-406, 1991.
+
+<P></P><DT><A NAME="Dimacs96">9. </A>
+
+D.S. Johnson and M.&nbsp;Trick.
+Cliques, Coloring, and Satisfiability: Second DIMACS Implementation
+  Challenge.
+<EM>American Mathematical Society</EM>, 1996.
+
+<P></P><DT><A NAME="leighton:01">10. </A>
+
+F.T. Leighton.
+A graph coloring algorithm for large scheduling problems.
+<EM>Journal of Research of the National Bureau of Standards</EM>,
+  84(6):489-503, 1979.
+
+<P></P><DT><A NAME="dorne">11. </A>
+
+R.&nbsp;Dorne and J.K.&nbsp;Hao.
+A new genetic local search algorithm for graph coloring.
+In A. E. Eiben, T. Back, M. Schoenauer, and H.P. Schwefel, editors, <EM>PPSN</EM>, volume
+1498 of LNCS, pages 745–754, 1998.
+
+
+<P></P><DT><A NAME="morgenstern:01">12. </A>
+
+C.&nbsp;Morgenstern.
+Distributed coloration neighborhood search.
+In D.S. Johnson and M.A. Trick, editors, <EM>Cliques, Coloring, and
+  Satisfiability: Second DIMACS Implementation Challenge</EM>, volume&nbsp;26 of DIMACS series in Discrete Mathematics and Theoretical Computer Science, pages
+  335--358. American Mathematical Society, 1996. <SUP>Important: Some graphs are found under different names (i.e. G500,0.1 instead of dsjc500.1, see page 348); the table at page 357 does not summarise all the results from the whole paper.</SUP>
+
+
+<P></P><DT><A NAME="SPrestwich:01">13. </A>
+
+S.&nbsp;Prestwich.
+Coloration Neighbourhood Search With Forward Checking.
+<EM>Annals of Mathematics and Artificial Intelligence</EM>,
+  34(4):327-340, 2002.
+
+<P></P><DT><A NAME="mmt">14. </A>
+
+E.&nbsp;Malaguti, M.&nbsp;Monaci, and P.&nbsp;Toth.
+A Metaheuristic Approach for the Vertex Coloring Problem.
+<EM>INFORMS Journal on Computing</EM>, 20(2):302, 2008.
+
+<P></P><DT><A NAME="vss">15. </A>
+
+A.&nbsp;Hertz, M.&nbsp;Plumettaz, and N.&nbsp;Zufferey.
+Variable Space Search for Graph Coloring.
+<EM>Discrete Applied Mathematics </EM>, 156(13): 2551-2560, 2008.
+
+<P></P><DT><A NAME="Sewell">16. </A>
+E.C.&nbsp;Sewell.
+An improved algorithm for exact graph coloring.
+In D.S. Johnson and M.A. Trick, editors, <EM>Cliques, Coloring, and
+  Satisfiability: Second DIMACS Implementation Challenge</EM>, volume&nbsp;26 of DIMACS series in Discrete Mathematics and Theoretical Computer Science
+, pages 359--376. American Mathematical Society, 1996. 
+
+<P></P><DT><A NAME="Benhamou">17. </A>
+B.&nbsp;Benhamou and M.R.&nbsp;Saidi.
+Etude de la dominance dans les CSPs a contraintes de difference.
+Journees Francophones de Programmation par Contraintes, 2006, 63-70 [In French]
+
+<P></P><DT><A NAME="TS-Div/Int">18. </A>
+D.&nbsp;Porumbel, J.K.&nbsp;Hao and P&nbsp;Kuntz. A Search Space "Cartography" for Guiding Graph Coloring Heuristics.
+<EM>Computers & Operations Research </EM>, 37(4): 769-778, 2010.
+
+ 
+
+<P></P><DT><A NAME="macol">19. </A>
+ Zhipeng Lü and Jin-Kao Hao, A Memetic Algorithm for Graph Coloring, <em> European Journal of Operational Research, 203(1): 241-250, 2010. </em>
+
+ <P></P><DT><A NAME="evodiv">20. </A>
+D.&nbsp;Porumbel, J.K.&nbsp;Hao and P&nbsp;Kuntz.  An Evolutionary Approach with Diversity Guarantee and Well-Informed Grouping Recombination for Graph Coloring,
+<em>Computers & Operations Research</em>, 37(10):1822-1832, 2010.
+
+<P></P><DT><A NAME="indepsets">21. </A>
+Qinghua Wu, Jin-Kao Hao.
+Coloring large graphs based on independent set extraction
+ <em> Computers and Operations Research</em>, 39: 283-290, 2012
+
+
+<P></P><DT><A NAME="quantum">22. </A>
+Olawale Titiloye, Alan Crispin. Quantum annealing of the graph coloring problem,
+ <em> Discrete Optimization</em>, 8: 376-384, 2011
+
+<P></P><DT><A NAME="dhqa">23. </A>
+Olawale Titiloye, Alan Crispin. 
+Graph Coloring with a Distributed Hybrid Quantum Annealing Algorithm. In J. O'Shea, N. Nguyen, K. Crockett, R. Howlett, L. Jain (eds.), <i>Agent and Multi-Agent Systems: Technologies and Applications</i>, vol. 6682 of Lecture Notes in Computer Science, pp. 553-562. 2011, Springer Berlin / Heidelberg. ISBN 978-3-642-21999-3. 
+<H4>Footnotes</H4>
+<DL>
+<!--
+<DT><A NAME="lowerBound">Lower Bound</A><A
+ HREF="index.html#tex2html2Lower"><SUP><SPAN CLASS="arabic">1</SPAN></SUP></A></DT>
+<DD>There is a paper stating that the lower bound is 12, thus implying that the chromatic number is also 12: 	
+T. Mancini et M. Cadoli, Detecting and Breaking Symmetries by Reasoning on Problem Specifications in J-D. Zucker et L. Saitta (Eds.), Abstraction,
+Reformulation and Approximation, volume 3607 of LNCS, pages 165-181, 2005
+</DD>
+-->
+<DT><A NAME="foot120"></A><A
+ HREF="index.html#tex2html2"><SUP><SPAN CLASS="arabic">1</SPAN></SUP></A></DT>
+<DD>These large graphs are probably best colored by removing independent sets and applying algorithms on the residual graph (see also <A HREF="index.html#FleurentFerland96_2_">4</A>).
+</DD>
+</DL>
+
+<HR>
+<h4> <A NAME="SECTION00000050000000000000">
+Acknowledgements
+</h4>
+<p> 
+This library should be up-to-date, as of August 2011. The first version was created in 2008 by Daniel Porumbel in his PhD project with Jin Kao Hao and Pascale Kuntz. Detailed corrections
+and verifications were performed by Jean Philippe Hamiez, whose help is acknowledged. Most graph files are obtained from <a href="http://mat.gsia.cmu.edu/COLOR/instances.html">M. Trick's page</a>; however, some files were also obtained via private correspondence. The first html version was produced by <A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator. However, you might also want to check the project <a href=http://sites.google.com/site/graphcoloring/>Graph Coloring Benchmarks</a>, that is constructed on wiki collaborative work where anybody could contribute.
+</p>
+
+<!--
+<DIV CLASS="navigation">
+
+<ADDRESS>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+if (Date.parse(document.lastModified) != 0) {
+  var modiDate = new Date(document.lastModified);
+  var monthName = new Array("January", "February", "March", "April", "May", 
+   "June", "July", "August", "September", "October", "November", "December");
+  document.write("Last modified: " + monthName[modiDate.getMonth()] + " ");
+  document.write(modiDate.getDate() + ", " + modiDate.getFullYear());
+  }
+  </SCRIPT>
+</ADDRESS>
+<p> &#169; 2008-2009 Daniel Porumbel </p>
+-->
+
+<hr>
+<table width=100%>
+<tr>
+<td><a href="http://www.info.univ-angers.fr/pub/porumbel">Back home</a>
+</td>
+<td align="right">
+Total visits:&nbsp;  
+<!-- Start of SHOW StatCounter Code --
+<script type="text/javascript">
+var sc_project=4608798; 
+var sc_invisible=0; 
+var sc_partition=56; 
+var sc_click_stat=1; 
+var sc_security="71145fde"; 
+var sc_text=1; 
+</script>
+
+<script type="text/javascript"
+src="http://www.statcounter.com/counter/counter.js"></script><noscript><div
+class="statcounter"><a title="web stats"
+href="http://www.statcounter.com/free_web_stats.html"
+target="_blank"><img class="statcounter"
+src="http://c.statcounter.com/4608798/0/71145fde/0/"
+alt="web stats" ></a></div></noscript>
+<!-- End of StatCounter Code -->
+
+
+
+
+<!-- Start of StatCounter Code -->
+<script type="text/javascript">
+var sc_project=4608798; 
+var sc_invisible=0; 
+var sc_partition=56; 
+var sc_click_stat=1; 
+var sc_security="71145fde"; 
+</script>
+
+<script type="text/javascript"
+src="http://www.statcounter.com/counter/counter.js"></script><noscript><div
+class="statcounter"><a title="create counter"
+href="http://www.statcounter.com/free_hit_counter.html"
+target="_blank"><img class="statcounter"
+src="http://c.statcounter.com/4608798/0/71145fde/1/"
+alt="create counter" ></a></div></noscript>
+<!-- End of StatCounter Code -->
+
+
+
+</td>
+</tr>
+</table>
+
+</BODY>
+</HTML>

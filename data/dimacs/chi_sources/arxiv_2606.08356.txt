@@ -1,0 +1,2173 @@
+                                          Advancing Branch-and-Price for Graph Coloring:
+                                          New Pricing Strategies and Benchmark Results
+                                              Mingming Zhenga , Roberto Baldaccib , Fabio Furinic , Qinghua Wua
+                                          a
+                                            School of Management, Huazhong University of Science and Technology, Wuhan 430074, China, m.zheng0626@gmail.com,
+                                          qinghuawu1005@gmail.com
+                                          b
+                                            College of Science and Engineering, Hamad Bin Khalifa University, Doha 34110, Qatar, rbaldacci@hbku.edu.qa
+                                          c
+                                            Department of Computer, Control, and Management Engineering “Antonio Ruberti”, Sapienza University of Rome, Rome 00185, Italy,
+                                          fabio.furini@uniroma1.it
+arXiv:2606.08356v1 [math.OC] 6 Jun 2026
+
+
+
+
+                                          Abstract. This paper proposes BPCOL+, an exact branch-and-price algorithm for the Graph Coloring Problem. The algorithm is
+                                          both novel and highly effective, integrating enhanced pricing strategies within Zero-Suppressed Binary Decision Diagrams (ZDDs)
+                                          to efficiently solve the pricing problem associated with the maximal-stable-set-based set-covering formulation. After computing
+                                          upper and lower bounds at the root node using heuristic and column generation techniques, BPCOL+ reduces the size of the
+                                          ZDD through maximal stable set reduction techniques that exploit alternative dual vectors. Computational experiments on the 137
+                                          DIMACS benchmark instances and on 5,000 recently proposed Erdős–Rényi instances show that BPCOL+ outperforms existing
+                                          exact branch-and-price algorithms and remains highly competitive with state-of-the-art SAT-based exact solvers. In particular,
+                                          BPCOL+ solves 96 DIMACS instances within one hour and proves optimality for 4,641 of the 5,000 Erdős–Rényi instances.
+
+                                          Key words: Graph Coloring Problem • Exact Algorithm • Branch-and-Price • Decision Diagrams
+                                          History: June 9, 2026
+
+
+
+
+                                          1.      Introduction
+                                          Given an undirected graph G := (V, E ), where V is the vertex set and E is the edge set, a proper vertex
+                                          coloring assigns a color to each vertex so that adjacent vertices receive different colors. A stable set is a
+                                          subset S ⊆ V whose vertices are pairwise nonadjacent; hence, S can be assigned a single color in a proper
+                                          coloring. A maximal stable set is a stable set that is inclusion-wise maximal. The Graph Coloring Problem
+                                          (GCP), also known as the Vertex Coloring Problem, seeks a partition of V into the minimum number of
+                                          stable sets. This value is called the chromatic number of G and is denoted by χ(G ).
+                                               As an illustrative example of the GCP, the left part of Figure 1 depicts a graph G with |V| = 6 vertices
+                                          and |E| = 7 edges. The vertex set is V = {v1 , v2 , v3 , v4 , v5 , v6 }, and the edge set consists of a 6-cycle plus
+                                          an additional edge between v1 and v4 . The right part of the figure shows a proper vertex coloring using two
+                                          colors, which partitions V into the stable sets {v1 , v3 , v5 } and {v2 , v4 , v6 }. Since no proper vertex coloring
+                                          with a single color exists, it follows that χ(G ) = 2. This example is used throughout the paper to illustrate
+                                          key algorithmic components.
+                                               The GCP is a classical and computationally challenging N P-hard combinatorial optimization problem
+                                          in graph theory (Garey and Johnson 1979). Beyond its theoretical relevance, it has numerous applications,
+
+                                                                                                              1
+2                                                                            Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+
+                        v2            v3                             v2                v3
+
+
+
+                  v1                         v4                v1                               v4
+
+
+
+                        v6            v5                             v6                v5
+
+Figure 1    An example graph and a proper vertex coloring using two colors.
+
+
+
+including scheduling, register allocation in compilers, and frequency assignment in wireless communica-
+tion systems (see, e.g., Pardalos et al. 1998). For a comprehensive survey, we refer the interested reader
+to Malaguti and Toth (2010).
+
+1.1.   Related Work on Exact Algorithms for the GCP
+The GCP has been extensively studied over the past decades, and numerous exact and heuristic algorithms
+have been proposed in the literature. Given the focus of this paper on exact methods, this section provides
+a brief overview of exact algorithms for the GCP. To the best of our knowledge, the most effective exact
+approaches can be broadly classified into two main research streams: Branch-and-Price (BP) algorithms
+and satisfiability (SAT)-based algorithms.
+    Significant progress has been made in developing exact BP algorithms for the GCP since the seminal
+work of Mehrotra and Trick (1996). Malaguti et al. (2011) proposed an approach combining an effective
+heuristic for computing tight upper bounds with advanced pricing methods and two alternative branching
+schemes. Held et al. (2012) improved the Column Generation (CG) bounding phase by introducing a method
+to compute safe lower bounds. Gualandi and Malucelli (2012) developed a hybrid method that integrates
+constraint programming into the column-generation framework to solve the Pricing Problem (PP) more effi-
+ciently and proposed an advanced approach to explore the branching tree. Morrison et al. (2014) designed
+advanced branching rules that preserve the PP structure throughout the branching tree. More recently, Deci-
+sion Diagrams (DDs) have emerged as a powerful enhancement to BP algorithms for the GCP. Morrison
+et al. (2016) incorporated Zero-Suppressed Binary Decision Diagrams (ZDDs) into a BP framework to
+efficiently represent and manage the set of maximal stable sets in the PP.
+    Machine learning has also been explored to improve CG and BP for the GCP by providing learned
+guidance on column selection and pricing. In earlier work, Shen et al. (2022) trained an offline linear support
+vector machine to predict structural properties of optimal solutions to the PP and used these predictions
+to guide sampling that generates many high-quality stable sets with negative reduced cost in one shot,
+accelerating the solution of the linear programming (LP) relaxation within CG. Later, Sun et al. (2022)
+Zheng et al.: Branch-and-Price for Graph Coloring                                                            3
+
+shifted the learning target from negative reduced cost to the likelihood that a column appears in an optimal
+integer coloring, and used the predictor to iteratively sample and filter maximal stable sets, producing a
+diverse, high-quality column pool for constructing primal solutions and for seeding CG. These works report
+mainly process-level BP/column-generation metrics for instances from the literature.
+   SAT-based approaches have also emerged as a powerful alternative for solving the GCP, supported by
+the rapid advances in modern SAT solvers. These algorithms can flexibly incorporate customized branching
+strategies, often achieving strong competitiveness compared to BP methods. Hebrard and Katsirelos (2020)
+proposed a hybrid Constraint Programming and SAT algorithm based on Zykov’s branching scheme, intro-
+duced Mycielskian-based lower bounds, and specialized pruning techniques to enhance efficiency. Heule
+et al. (2022) developed an exact SAT-based algorithm that alternates between identifying cliques of larger
+size and colorings with fewer colors to improve the performance of the algorithm. Faber et al. (2024) intro-
+duced a partial-ordering SAT encoding for graph coloring, also extended to handle bandwidth constraints.
+More recently, Brand et al. (2026) proposed a Zykov tree-inspired SAT algorithm that combines transitivity
+constraints and incremental search to improve propagation and solver performance. This recent algorithm
+is the current state-of-the-art SAT-based algorithm for the GCP.
+   Recently, Van Hoeve (2022) introduced a DD-based network-flow formulation, yielding another exact
+method for the GCP, although it is not yet competitive with BP and SAT-based algorithms. In addi-
+tion, several DSATUR-based branch-and-bound algorithms have been proposed; see, e.g., Sewell (1996),
+San Segundo (2012), and Furini et al. (2017).
+   Despite the significant progress in the literature, focusing on BP remains crucial because it directly
+addresses two persistent bottlenecks. First, many instances exhibit a very small optimality gap, yet existing
+BP methods often struggle to efficiently certify optimality; incorporating dual-information-based reduction
+techniques can substantially speed up the solution of the PP, thereby accelerating the solution of these “near-
+optimal but hard-to-prove” cases. Second, ZDD-based BP is often limited on large-scale or sparse instances
+due to the difficulty of fully enumerating stable sets, even though a portion of such instances can be proven
+optimal already at the root node; this calls for a more comprehensive BP framework that fully exploits the
+strengths of ZDDs when they are effective, while relying on a competitive pricing mechanism to certify
+optimality robustly when ZDD construction is not viable, thus covering a broader range of instances.
+
+1.2.     Contributions and Outline of the Paper
+This paper presents BPCOL+, a ZDD-based BP algorithm for the GCP. BPCOL+ carefully integrates
+state-of-the-art techniques, including numerically safe lower-bound computation, problem reductions, and
+primal-bound computation methods, with the following key contributions:
+   • BPCOL+ introduces novel maximal-stable-set-reduction techniques into the ZDD construction. Lever-
+aging alternative dual vectors, BPCOL+ builds a compact reduced ZDD that excludes maximal stable sets
+certified as irrelevant for the target value, thereby improving pricing efficiency.
+4                                                                               Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+
+     • BPCOL+ is evaluated through a comprehensive computational study on the 137 DIMACS benchmark
+instances and on recently proposed 5,000 Erdős–Rényi graph instances. All algorithms with publicly avail-
+able source code are tested under the same computational environment to ensure a fair comparison. The
+results show that BPCOL+ significantly outperforms existing exact BP algorithms in terms of computational
+efficiency while remaining highly competitive with state-of-the-art SAT-based exact solvers. BPCOL+ can
+solve 96 DIMACS instances within one hour, as well as several previously open Erdős–Rényi instances.
+     • To foster transparency, reproducibility, and future comparisons, we provide a public repository contain-
+ing all benchmark instances used in our experiments, the corresponding computational results, the complete
+source code, and detailed implementation information.
+     The remainder of this paper is organized as follows. Section 2 presents the set-covering formulation of
+the GCP and describes the computation of the lower bound, as well as the branching strategy embedded
+in BPCOL+. Section 3 details the design of the pricing algorithm based on ZDDs and the corresponding
+enhanced pricing strategy. An overview of BPCOL+ is provided in Section 4, followed by a computational
+study in Section 5 evaluating the performance of BPCOL+ and the effectiveness of its key components.
+Finally, we conclude the paper in Section 6. Additional material, including the proofs of formal statements,
+ZDD construction details, computational results, and experiments on the main algorithmic components are
+provided in the e-companion.
+
+2.     Formulation, Lower Bound Computation and Branching Scheme
+We introduce an Integer Linear Programming (ILP) formulation of the GCP with an exponential number of
+variables, originally proposed by Mehrotra and Trick (1996) and known as the set-covering formulation.
+     Let S denote the family of all maximal stable sets of G, and for each vertex v ∈ V let S (v ) ⊆ S be the
+subfamily of maximal stable sets containing v. For each S ∈ S , we introduce a binary variable ξS equal
+to 1 if and only if S is selected in the solution; in this case, the vertices in S take the same color. The
+set-covering formulation reads as follows:
+                                                                               
+                                       X               X                       
+                                 min       ξS :                 ξS ≥ 1, v ∈ V       .                                       (1)
+                              ξ∈{0,1}S                                         
+                                            S∈S       S∈S (v)
+
+     The objective function in (1) minimizes the number of selected maximal stable sets. The set-covering
+constraints in (1) ensure that every vertex is covered at least once. Any optimal integer solution of (1)
+corresponds to a minimum-cardinality collection of maximal stable sets covering V, and its value equals
+the chromatic number χ(G ). In an optimal solution of (1), vertices may be covered multiple times; a proper
+vertex coloring can always be obtained by assigning each vertex to exactly one selected stable set.
+     Replacing the binary variables in (1) with non-negative variables yields the Linear Programming (LP)
+relaxation, commonly referred to as the Fractional Graph Coloring Problem. Let χ(G ) denote the optimal
+value of this LP relaxation, called the fractional chromatic number, which typically provides a tight lower
+Zheng et al.: Branch-and-Price for Graph Coloring                                                             5
+
+bound on χ(G ). Since formulation (1) features an exponential number of variables, BPCOL+ solves it via
+a specialized BP algorithm. For general background on column generation and the design of BP solution
+approaches, we refer the reader to the books of Uchoa et al. (2024) and Desrosiers et al. (2024).
+   The remainder of this section discusses the computation of the lower bound and the adopted branching
+scheme (§2.1), followed by the formulation of the PP associated with the set-covering formulation (§2.2).
+
+2.1.     Column Generation and Branching Scheme
+At each node of the enumeration tree, BPCOL+ tackles the LP relaxation of (1), the master problem (MP),
+via CG, generating columns by repeatedly solving the PP. At each CG iteration, the restricted master prob-
+lem (RMP), i.e., the MP restricted to the columns generated so far, is solved with the simplex algorithm to
+obtain primal and dual solutions; then, the PP is solved to identify columns with negative reduced cost. If
+such columns are found, they are added to the RMP and a new CG iteration is performed; otherwise, CG
+terminates, and the current RMP solution is optimal for the LP relaxation at the branching node. We refer
+the interested reader to Barnhart et al. (1998), Lübbecke and Desrosiers (2005) for further details on CG.
+   BPCOL+ adopts the branching scheme commonly known as branching on master variables, which selects
+a fractional variable and creates two child branching nodes by fixing the selected variable to 0 or 1. This rule
+has been successfully employed in BP algorithms for the GCP by Malaguti et al. (2011) and Morrison et al.
+(2016). A known drawback is that it disrupts the structure of the PP (Morrison et al. 2014, 2016), because
+fixing a variable to 0 requires the PP to prevent regenerating the same variable at descendant branching
+nodes. In BPCOL+, this is handled efficiently via ZDD-based operations (see §4.5). Below, we first discuss
+the impact of the adopted branching scheme on the RMP and then formulate the resulting PP.
+   Consider the RMP at a generic node of the enumeration tree, and let S ⊆ S denote the set of maximal
+stable sets corresponding to the variables of the RMP. Let S 0 ⊆ S and S 1 ⊆ S denote the subsets of
+maximal stable sets whose associated variables are fixed to 0 and 1, respectively. These branching decisions
+are enforced directly in the RMP. Maximal stable sets associated with variables fixed to 1 already cover a
+subset of vertices; accordingly, we define the sets of covered and uncovered vertices as
+                                            [
+                                    Vc :=        S and Vu := V \ Vc .                                       (2)
+                                                    S∈S 1
+Fixing a variable ξS to 1 selects the maximal stable set S. In the current RMP, this is implemented by set-
+ting the lower bound of the corresponding variable to 1. During backtracking, when returning to a parent
+branching node, the original lower bound is restored. Fixing a variable ξS to 0 is implemented by setting its
+upper bound to 0 in the RMP; the corresponding maximal stable set is then implicitly forbidden when solv-
+ing the PP. This upper bound is removed during backtracking. This implementation preserves a consistent
+RMP structure throughout the algorithm, enabling the LP solver to warm start using previously computed
+simplex information (e.g., bases) across consecutive CG iterations and branching nodes.
+6                                                                              Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+
+2.2.    Pricing Problem
+            |V|
+Let π ∈ R≥0 be a dual solution of the RMP, where πv is the dual variable associated with the set-covering
+constraint in (1) associated with vertex v. The reduced cost of the variable associated with a maximal stable
+set S ∈ S computed with respect to the dual solution π is
+                                                               X
+                                            rc(S, π ) := 1 −         πv ,                                                  (3)
+                                                               v∈S
+which also corresponds to the slack of the corresponding dual constraint. At the current branching node,
+variables corresponding to sets in S 0 are forbidden by branching. Therefore, the PP amounts to finding a
+non-forbidden maximal stable set of minimum reduced cost, and is formulated as follows:
+
+                                                             / S0 .
+                                              
+                                  Se ∈ arg min rc(S, π ) : S ∈                                                             (4)
+                                              S∈S
+
+Let rc∗ (π ) := rc(S,
+                   e π ) denote the minimum reduced cost. If rc∗ (π ) < 0, the corresponding variable ξ e is
+                                                                                                       S
+
+added to the RMP; otherwise, no improving variable exists, and CG can terminate. At the root node, where
+S 0 = ∅, the PP reduces to a maximum weight stable set problem (MWSSP) with vertex weights given by
+the dual variables. BPCOL+ exploits exact and heuristic MWSSP techniques (see §4.4). At branching nodes,
+it uses ZDD-based operations to efficiently solve the PP, as described in the next section.
+
+3.     An Enhanced ZDD-Based Pricing Algorithm
+This section describes the pricing algorithm used to solve the PP (4). Section 3.1 briefly illustrates the
+construction of a ZDD and its use in solving the PP. Section 3.2 then presents techniques to reduce the size
+of a ZDD, thereby accelerating the column generation solution process.
+
+3.1.    Zero-Suppressed Decision Diagrams for Solving the Pricing Problem
+The ZDD is an extension of the Binary Decision Diagram (BDD). The use of ZDDs to solve the PP offers
+significant advantages within the BP framework for the GCP (Morrison et al. 2016). In particular, ZDDs
+provide a compact representation of the set of maximal stable sets, thereby capturing the entire solution
+space of the PP in a graph-based structure. Given the graph G, we fix an ordering of the vertices (see §4.1),
+denoted by V := {v1 , v2 , . . . , vn }. The chosen ordering can significantly affect the size of the resulting ZDD.
+A ZDD can then be constructed to represent the solution space of the PP on G. This ZDD is a layered
+directed acyclic graph Z := (N , A) with node set N and arc set A. The size of a ZDD is measured as
+|N | + |A|, where N includes all decision nodes and the two terminal nodes, and A is the set of arcs. Graph
+Z comprises n + 1 layers, where layer j consists of nodes associated with vertex vj ∈ V, for j = 1, . . . , n,
+and consists of the following components (see Figure 2 for an example with |V| = 6 and |E| = 7):
+    1. Root and terminal nodes. Z contains a unique root node, appearing first in the topological order of
+       the directed acyclic graph (node r in Figure 2(b)). It also includes two terminal nodes: the T RUE and
+       FALSE nodes, represented by 1 and 0, respectively (square nodes in Figure 2(b)).
+Zheng et al.: Branch-and-Price for Graph Coloring                                                               7
+
+                                                           r v1                             r v1
+
+                                              v1
+
+                                                                     f   v2                        e v2
+
+           v2            v3                   v2
+
+                                                    b v3                      e v3   b v3
+                                              v3
+    v1                           v4                        d v4                             d v4
+                                              v4
+
+                                                    a v5                             a v5
+           v6            v5                   v5
+
+                                                                     c v6                          c v6
+                  (a)
+                                              v6
+
+                                                           1             0                  1         0
+                                                               (b)                              (c)
+
+Figure 2        Example of construction of a ZDD and associated reduced ZDD: (a) Graph G = (V, E), (b) ZDD graph
+                Z = (N , A) and (c) ZDD reduced graph.
+
+
+
+  2. Non-terminal nodes and outgoing arcs. Each non-terminal node a ∈ N \ {0, 1} is associated with
+         a vertex in V. Let var(a) denote the index of the vertex associated with node a, i.e., var(a) = i if
+         a corresponds to vertex vi ∈ V. For example, in Figure 2(b), node d corresponds to vertex v4 , thus
+         var(d) = 4. Node d has two outgoing arcs: the high arc and the low arc. The high arc leads to its
+         high child node hi(d), while the low arc leads to its low child node lo(d). In Figure 2(b), the solid arc
+         from node d to node c represents the high arc (hi(d) = c), and the dashed arc from node d to node a
+         represents the low arc (lo(d) = a). The indices of the vertices associated with the children are strictly
+         larger than that of the parent node; that is, if var(d) = i, then var(hi(d)) > i and var(lo(d)) > i. For
+         example, var(hi(d)) = var(c) = 6 > 4 = var(d) and var(lo(d)) = var(a) = 5 > 4 = var(d).
+  3. Zero-suppression property. For any non-terminal node a ∈ N \ {0, 1}, its high child cannot be the
+         FALSE node; that is, hi(a) ̸= 0. This zero-suppression property is the key distinction between ZDDs
+         and conventional BDDs.
+   Any path PS from the root node to a terminal node in Z uniquely corresponds to a subset of vertices
+S ⊆ V. Starting from the root node, if the next node along the path is the high child hi(a), then vvar(a) ∈ S;
+otherwise, if the path follows the low child lo(a), then vvar(a) ∈
+                                                                 / S. The terminal node reached by PS
+represents the output of S on Z, denoted by Z (S ). The output Z (S ) takes only two values: Z (S ) = 1
+indicates that Z accepts S, whereas Z (S ) = 0 means that Z rejects S. Z is reduced by applying the standard
+node-merging rule: any two nodes in Z that correspond to the same vertex in G and have identical low and
+high children are merged into a single node, thereby reducing the total number of nodes in Z.
+   The example in Figure 2(a) shows that the graph has four maximal stable sets: S1 = {v1 , v3 , v5 }, S2 =
+{v2 , v4 , v6 }, S3 = {v2 , v5 }, and S4 = {v3 , v6 }. Figure 2(b) shows the complete ZDD, which contains seven
+8                                                                           Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+
+decision nodes (labeled r, f, b, e, d, a, c) and encodes all four maximal stable sets through distinct root-to-
+T RUE paths. For instance, consider the path {r, f, d, c, 1}. Since r and f are connected by a dashed arc (the
+low arc), the corresponding vertex v1 is excluded from the set. In contrast, f and d are connected by a solid
+arc (the high arc), so v2 is included. Similarly, the subsequent solid arcs imply that v4 and v6 are included as
+well. Hence, the path {r, f, d, c, 1} corresponds to the maximal stable set S2 = {v2 , v4 , v6 }. Since the path
+ends at the T RUE node, we have Z (S2 ) = 1, meaning that Z accepts S2 .
+
+    3.1.1.   Solving the Pricing Problem. Given the family S of all maximal stable sets of graph G, let
+ZS denote the ZDD encoding S . For a given instance of the PP (4) with dual vector π = (πv )v∈V , each
+non-terminal node a ∈ N \ {0, 1}, labeled by vertex vvar(a) , is assigned weight πvvar(a) on its high arc and
+weight 0 on its low arc. Thus, the PP reduces to finding a longest path from the root to the T RUE node in
+the weighted graph ZS , which can be efficiently solved by topological sorting and dynamic programming
+(Morrison et al. 2016). The resulting path corresponds to the maximal stable set Se ∈ S (see (4)) whose
+associated variable has minimum reduced cost rc∗ (π ).
+    After each pricing iteration, once the column associated with a maximal stable set S is added to the
+RMP, the ZDD is updated to avoid regenerating S. We adopt the RestrictSet procedure of Morrison et al.
+(2016), which removes exactly the path corresponding to S from the diagram ZS while preserving all other
+solutions, so that the updated ZDD directly represents the constrained PP at the next iteration. Specifically,
+the algorithm identifies the unique root-to-T RUE path PS and redirects its endpoint to the FALSE node. If
+PS shares a suffix with other solutions, RestrictSet duplicates the overlapping portion from the first node
+with indegree greater than one (the split node) and redirects only the duplicate to the FALSE node, thereby
+excluding only S while preserving all other feasible paths. Similarly, branching decisions encoded in the
+set S 0 are handled by removing the corresponding maximal stable sets from ZS . For additional details,
+see Algorithm 1 in Morrison et al. (2016).
+
+3.2.    Reduced-Cost Fixing and ZDD-Based Column Reduction
+A classical result in integer programming, often referred to as reduced-cost fixing and dating back to the
+seminal paper on the Traveling Salesman Problem by Dantzig et al. (1954), states that, given an upper
+bound U B and the optimal value LB of the LP relaxation of a binary integer program, any variable with
+reduced cost larger than the gap = U B − LB cannot take a positive value in an optimal integer solution.
+Reduced-cost fixing is a popular technique for accelerating the solution of compact mixed-integer linear
+programs (MILPs). For integer programming formulations with a huge number of variables, referred to
+as extensive formulations and typically solved by a BP algorithm, reduced-cost fixing is not straightfor-
+ward to apply directly to master-problem variables, because variables fixed to zero must also be prevented
+from being regenerated by the pricing subproblem. However, two main types of techniques have been used
+in the literature: (i) reduced-cost fixing within the pricing subproblem, see, e.g., Irnich et al. (2010) and
+Zheng et al.: Branch-and-Price for Graph Coloring                                                              9
+
+Desaulniers et al. (2020), and (ii) column enumeration approaches, see, e.g., Agarwal et al. (1989), Baldacci
+et al. (2008), and Baldacci et al. (2023). In the first case, fixing decisions are applied directly to the PP on
+local structures of the pricing graph (e.g., arcs or arc sequences in path-based formulations). Removing such
+a structure implicitly eliminates all master variables whose columns contain it. However, these tests rely on
+sufficient conditions that ensure all columns with the structure have reduced cost above the target gap; if a
+structure is not eliminated, no guarantee is provided that all associated columns lie within the gap. In the
+second case, all columns corresponding to maximal stable sets with reduced cost not exceeding the gap are
+generated and used to build a reduced master problem, which is then solved as a MILP. A recent work by
+Yang (2024) further investigates advanced techniques to reduce the set of generated columns.
+   In this section, we describe a reduced-cost fixing approach along the lines of the second strategy. Given a
+target objective value τ , instead of explicitly enumerating all columns that pass the reduced-cost fixing tests,
+we construct a reduced ZDD that represents them implicitly. Unlike classical reduced-cost fixing in the
+pricing problem, where local fixing rules may leave some columns in the reduced pricing graph with reduced
+costs exceeding the target gap, our reduction is embedded directly into the recursive ZDD construction. The
+algorithm discards a branch either when the maximal stable set represented by that branch violates a fixing
+threshold, or earlier when all maximal stable sets extending the current partial branch can be certified to
+violate such a threshold. As formalized below, the final reduced ZDD contains only maximal stable sets that
+are not certified for elimination by the adopted fixing tests. Additionally, we exploit alternative or multiple
+dual vectors to further strengthen the variable reduction and potentially improve the quality of the computed
+dual bounds. The following lemma underlies the reduced-cost fixing strategy using a dual-feasible vector.
+                                                                        |V|
+   L EMMA 1. Let τ ∈ Z≥0 be a target value, and let π ∈ R≥0 be a dual feasible solution of the MP. For a
+maximal stable set S̄ ∈ S , if
+                                                                       X
+                                                    rc(S̄, π ) > τ −         πv ,                            (5)
+                                                                       v∈V
+then no feasible integer solution of (1) with objective value at most τ can satisfy ξS̄ = 1.
+
+   Proof See §EC.1.1 in the e-companion.                □
+Lemma 1 eliminates columns that cannot improve the incumbent bound U B. Since the coloring objective
+is integer-valued, improving U B is equivalent to finding an integer solution of (1) with objective value at
+                                                                           P
+most τ := U B − 1. For a dual feasible solution π of the MP, the value v∈V πv provides a valid lower
+                                              P
+bound on the MP objective, and the term τ − v∈V πv represents the remaining gap to the target value τ .
+Therefore, any variable ξS̄ satisfying (5) can be fixed to zero for this target value. The ZDD construction
+below is defined with respect to τ .
+
+   3.2.1.      Generating Alternative or Multiple Dual Vectors. According to Sellmann (2004) and
+Mingozzi et al. (2013), suboptimal or feasible dual solutions can strengthen the effect of reduced-cost
+fixing. Both de Lima et al. (2023) and Yang (2024) design dual formulations to generate high-quality dual
+10                                                                                 Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+
+vectors for reduced-cost fixing. Their approaches are based on solving auxiliary optimization problems
+that maximize objective functions involving variable reduced costs and the dual bound, thereby seeking a
+favorable trade-off between increasing reduced costs and tightening the bound. However, these formulations
+aim at globally strong dual vectors and do not explicitly encode the fixing condition for any specific variable.
+The resulting dual vector may achieve a good overall trade-off while still failing to push a targeted variable
+beyond the fixing threshold, especially on instances with small optimality gaps, where proving optimality
+may hinge on eliminating variables whose reduced costs are close to the fixing threshold.
+     To address this issue, we introduce a new dual-based formulation that searches for diverse dual-feasible
+solutions tailored to certify the elimination of selected variables. For a given target value τ and a maximal
+stable set S, or equivalently the associated variable ξS , Lemma 1 implies that it suffices to find a dual
+                        |V|                         P
+feasible solution π ∈ R≥0 such that rc(S, π ) > τ − v∈V πv , which guarantees that ξS = 0 in any feasible
+integer solution of (1) with objective value at most τ . In practice, given a subset Sˆ ⊆ S , we solve the
+following parametric optimization problem, which is also referred to as the dual formulation DF in the
+sequel, to obtain such a vector, using ε > 0 as a numerical tolerance and M as a weighting constant:
+                                          X             X
+          DF (Sˆ)                max           πv − M        αS                                                               (6a)
+                                π≥0,α≥0
+                                           v∈V              S∈Sˆ
+                                                             X
+                                                                   πv ≤ 1,                                 S ∈S,             (6b)
+                                                             v∈S
+                                                      X                      X
+                                                 1−         πv + αS ≥ τ −          πv + ε,                 S ∈ Sˆ.            (6c)
+                                                      v∈S                    v∈V
+                         P
+In the objective (6a),    v∈V πv is the dual lower bound of the RMP, while the slacks αS measure how far
+
+each associated variable ξS is from meeting the fixing threshold based on constraints (6c) which link each
+αS to the reduced cost of ξS . Constraints (6b) impose dual feasibility. If αS = 0, then ξS can be safely
+excluded from any solution with objective value at most τ ; otherwise, the current dual solution π cannot
+certify its elimination. Hence, instead of rewarding reduced costs only through an aggregate objective,
+constraints (6c) directly enforce a threshold-driven mechanism, while the objective balances improvement
+                                               P
+of the dual bound against the total redundancy S∈Sˆ αS . This design favors dual solutions that are not only
+globally strong but also specifically effective at pushing selected variables to the fixing threshold, thereby
+differing from previous dual models in explicitly incorporating the fixing condition. The weight M controls
+the trade-off between redundancy reduction and dual-bound improvement, while the tolerance ε provides a
+safety margin and promotes diversity among dual solutions.
+   From an algorithmic standpoint, DF (Sˆ) naturally supports the generation of a diverse pool of dual-
+feasible solutions that are useful not only for reduced-cost fixing but also for strengthening the lower bound
+used to certify whether a feasible integer solution with objective value at most τ exists. Following de Lima
+et al. (2023), we focus on basic variables in the optimal RMP basis, since fixing such variables forces a
+basis violation and empirically yields high-quality, complementary suboptimal dual solutions. Accordingly,
+Zheng et al.: Branch-and-Price for Graph Coloring                                                                11
+
+we instantiate one DF (Sˆ) model, defined in (6), per targeted basic variable, seeking a dual solution that
+simultaneously pushes the targeted variable beyond the fixing threshold and maintains a strong dual objec-
+tive value. The benefit of this procedure is that some basic MP variables, corresponding to maximal stable
+sets that cannot be fixed by the optimal dual solution of the MP, may become certifiably irrelevant under the
+alternative dual solutions generated by DF (Sˆ). After these variables are removed, reoptimizing the MP
+over the reduced pricing space may yield a stronger lower bound for certifying whether a feasible integer
+solution with objective value at most τ exists. In some cases, the improved lower bound may directly certify
+optimality by closing the remaining gap to the incumbent upper bound. Because DF (Sˆ) contains a large
+family of covering constraints (6b), we solve it by row generation, using the same two-phase pricing oracle
+as in the root-node column generation. The heuristic pricer is used first to identify violated constraints. If
+none are found, the exact pricer is invoked, and row generation terminates only when it certifies that no
+negative reduced-cost maximal stable set exists. In this sense, the role of DF (Sˆ) is twofold: it is both a
+fixing mechanism and a lower-bound strengthening device.
+   Model DF (Sˆ) is used to generate alternative dual solutions that are feasible with respect to the dual of
+the MP. These feasible dual solutions can be directly used for reduced-cost fixing, as shown in Lemma 1.
+In addition to these feasible dual solutions, we also exploit the dual vectors obtained during the root-node
+column generation process. Before column generation terminates, such dual vectors may still be infeasible
+for the full MP, since some columns with negative reduced cost may not yet have been generated. Never-
+theless, these infeasible dual vectors can still provide valid fixing information under additional conditions.
+This motivates the following reduced-cost fixing lemma using a not necessarily dual-feasible vector.
+                                                                         |V|
+   L EMMA 2. Let τ ∈ Z≥0 be a target value, and let π ∈ R≥0 satisfy rc∗ (π ) < 0. If S̄ ∈ S satisfies
+                                                X
+                               rc(S̄, π ) > τ −     πv − (τ − 1)rc∗ (π ),                                        (7)
+                                                               v∈V
+then no feasible integer solution of (1) with objective value at most τ satisfies ξS̄ = 1.
+
+   Proof See §EC.1.2 in the e-companion.                   □
+Let ΠF and ΠI denote sets of feasible dual solutions and not necessarily dual-feasible vectors, respectively,
+and define the set of dual vectors for fixing as follows:
+                                         Π = ΠF ∪ ΠI = {π1 , π2 , . . . , πq },     q := |Π|.
+For h ∈ {1, 2, . . . , q} and v ∈ V, let πh,v denote the component of πh associated with vertex v. For each
+πh ∈ Π, we associate 
+                     a fixing threshold δh , defined as
+                            X
+                     τ −
+                     
+                               πh,v ,                                  πh ∈ ΠF ,
+                            v∈V
+              δh :=         X                                                           h ∈ {1, 2, . . . , q}.   (8)
+                     
+                     
+                      τ  −     πh,v − (τ − 1)rc∗ (πh ),                πh ∈ ΠI ,
+                                         v∈V
+We denote by δ = (δ1 , δ2 , . . . , δq ) the vector collecting these fixing thresholds. Each vector πh ∈ ΠF is dual
+feasible for the full MP. Each vector πh ∈ ΠI satisfies πh ≥ 0 and rc∗ (πh ) < 0, where rc∗ (πh ) denotes
+12                                                                             Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+
+the minimum reduced cost over the full family S , or equivalently a certified global lower bound on the
+reduced costs of all columns in S . For a maximal stable set S̄ ∈ S , if there exists h ∈ {1, 2, . . . , q} such
+that rc(S̄, πh ) > δh , then S̄ cannot belong to any feasible integer solution of (1) with objective value at
+most τ .
+
+     3.2.2.   ZDD-Based Column Reduction. To reduce the ZDD while preserving optimality, we inte-
+grate dual-based reduced-cost fixing into the ZDD construction. Using the set of alternative dual vectors
+and fixing thresholds (Π, δ ), we discard maximal stable sets certified as non-improving with respect to the
+target objective value τ . More importantly, whenever such a certificate applies to all feasible completions of
+a partial branch, the corresponding ZDD subtree is pruned altogether. We formalize this early-elimination
+test as a pruning rule. Theorem 1 establishes a monotonicity property that justifies the pruning and enables
+a reduced ZDD containing only promising maximal stable sets.
+
+Theorem 1 Let Π = {π1 , π2 , . . . , πq } and let δ = (δ1 , δ2 , . . . , δq ) be defined by (8). Let S̄ be a partial
+stable set and let C ⊆ V be such that every maximal stable set Ŝ generated below the current branch satisfies
+S̄ ⊆ Ŝ ⊆ S̄ ∪ C. If there exists h ∈ {1, 2, . . . , q} such that
+                                                         X
+                                                   1−         πh,v > δh ,                                                  (9)
+                                                      v∈S̄∪C
+then no feasible integer solution of (1) with objective value at most τ can satisfy ξŜ = 1.
+
+     Proof See §EC.1.3 in the e-companion.           □
+Figure 2(c) shows the reduced ZDD constructed with target value τ = 2, dual vector π = (1, 0, 0, 1, 0, 0),
+and fixing threshold δ = 0. The goal is to build a ZDD that preserves all maximal stable sets that may
+participate in a feasible solution of (1) using at most two colors, while pruning those certified as irrelevant
+by reduced-cost fixing. The complete ZDD in Figure 2(b) encodes four maximal stable sets. The reduced
+ZDD prunes node e and all branches that cannot participate in any feasible solution of value at most τ ,
+retaining only the two paths corresponding to S1 and S2 . The final reduced ZDD has size 20, consisting of
+six decision nodes, two terminal nodes, and twelve arcs; see §EC.2 for the construction details.
+
+4.      Overview of BPCOL+
+This section presents the main components of BPCOL+ and explains how they are integrated within the
+proposed BP framework. BPCOL+ proceeds in five main stages. It first applies a preprocessing phase to
+reduce the size of graph G and, whenever possible, certify optimality directly (§4.1). Next, high-quality
+primal solutions are computed using heuristic algorithms that provide an initial upper bound and an initial
+pool of columns, each associated with a feasible maximal stable set, for the CG process (§4.2). The algo-
+rithm then solves the root node of the BP tree by CG, based on the computation of safe lower bounds and
+early termination criteria (§4.3) and using a two-phase pricing strategy for the weighted maximum stable set
+Zheng et al.: Branch-and-Price for Graph Coloring                                                            13
+
+problem in order to compute strong lower bounds (§4.4). After the root node is solved, BPCOL+ attempts to
+construct either a complete or a reduced ZDD, which is subsequently used as an exact pricing structure in
+the branching nodes. The search proceeds through a branching strategy based on fractional variables, with
+updates of the RMP and the ZDD-based pricer (§4.5). Section 4.6 describes how ZDDs are constructed.
+
+4.1.     Preprocessing Strategies
+BPCOL+ begins with a preprocessing phase that reduces the number of vertices while preserving correct-
+ness, and may even certify optimality before the BP procedure starts. We employ two classical vertex-
+reduction techniques, as described in Lucet et al. (2004), and apply them iteratively until no further reduction
+is possible. The first technique removes dominated vertices: given two distinct vertices u and v, if every
+vertex adjacent to u is also adjacent to v, then u is dominated and can be deleted. The second technique
+removes low-degree vertices: any vertex with degree strictly less than a certified lower bound on the chro-
+matic number can be deleted. After each removal, degrees and neighborhoods are updated in the reduced
+graph. Moreover, if at any point the reduced graph has at most as many vertices as the certified lower bound,
+then optimality is established immediately. To make these reductions effective, we compute a strong certi-
+fied lower bound on the chromatic number χ(G ) as the maximum of two complementary bounds. The first
+is the clique bound, given by the size of a maximum clique, computed with CliSAT (San Segundo et al.
+2023), a state-of-the-art exact algorithm for the Maximum Clique Problem, with a time limit of 1 second.
+The second is the Mycielski-based bound introduced by Hebrard and Katsirelos (2020), which exploits
+pseudo-Mycielskian structures and can certify larger chromatic numbers even when the maximum clique
+is small. This technique is also used for reductions and optimality certification in Brand et al. (2026). We
+compute this bound with the greedy heuristic of Hebrard and Katsirelos (2020), which tries to identify
+the Mycielskian of a subgraph and can be applied iteratively to obtain stronger bounds. After applying
+the vertex-reduction rules, we also compute a vertex ordering used in the subsequent ZDD construction.
+We follow the maximal path decomposition ordering of Morrison et al. (2014), also adopted by Morrison
+et al. (2016). The method partitions the remaining vertices into vertex-disjoint paths, where each path is
+a sequence of distinct vertices such that consecutive vertices are adjacent, and orders the vertices by their
+appearance along these paths. In our implementation, each path starts from a minimum-degree vertex in the
+current residual graph and is extended by repeatedly selecting an unvisited neighbor of the last vertex with
+minimum degree. Once no further extension is possible, the path is closed, its vertices are removed, and the
+procedure continues on the residual graph until all vertices have been ordered.
+
+4.2.     Computing Primal Solutions
+After the preprocessing phase, BPCOL+ executes a heuristic algorithm from the literature to compute high-
+quality initial colorings and to establish an initial upper bound on the chromatic number. These solutions
+also populate the initial column pool with a feasible coloring. Specifically, BPCOL+ employs the first phase
+14                                                                          Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+
+of the MMT heuristic proposed by Malaguti et al. (2008), an evolutionary algorithm based on tabu search.
+The procedure starts with an initial upper bound computed by the Dsatur heuristic (Brélaz 1979) and then
+searches for feasible colorings with progressively fewer colors, moving toward a lower bound given by the
+size of a maximal clique. The heuristic terminates either when the prescribed time limit is reached or when
+no feasible coloring can be found for a target number of colors.
+     The time allocated to each MMT iteration is scaled based on the graph size after preprocessing, and a
+global time limit is imposed on the entire heuristic phase. Each tabu-search run follows the parameter setting
+proposed by Malaguti et al. (2008), including the maximum number of iterations, the initial population size,
+and the tabu tenure. The implementation of the first phase of the MMT heuristic was kindly provided by the
+authors of Malaguti et al. (2008) via personal communication.
+
+4.3.     Numerically Safe Lower Bounds and Early Termination Criteria
+Most modern LP solvers, including CPLEX used by BPCOL+, rely on floating-point arithmetic and may
+return dual solutions affected by small numerical errors. To obtain numerically safe lower bounds at any
+branching node, we adopt the scaling-and-rounding technique of Held et al. (2012), which has also been
+used by Baldacci et al. (2023) recently for the Bin Packing Problem.
+     Let π ∈ RV≥0 be an optimal dual solution of the RMP at the current CG iteration, and let k > 0 be
+an integer scaling factor. We define an integer vector π̌ ∈ ZV≥0 by setting π̌v = ⌊k πv ⌋ for all v ∈ V. By
+construction, for every v ∈ V, πv − k1 ≤ π̌kv ≤ πv , and thus v∈Vu πv − |Vku | ≤ v∈Vu π̌kv ≤ v∈Vu πv , so
+                                                             P                  P             P
+
+that π̌/k is a componentwise underestimator of π and reduced-cost tests performed with π̌ are conservative
+and can be carried out in exact integer arithmetic. Without loss of optimality, we set π̌v = 0 for all v ∈ Vc .
+We then solve the PP using π̌ so that all intermediate computations are performed in integer arithmetic.
+                                                      P
+Variables with negative scaled reduced cost, i.e., k − v∈S π̌v < 0, are generated and added to the RMP
+until no such variable exists.
+  At termination of this process, π̌/k is dual feasible for the LP relaxation of (1) at the current branching
+                                    P        π̌v
+                                                  
+node; hence, LBT (π̌ ) := |S 1 | +      v∈Vu k      is a numerically safe integer lower bound on the number
+of stable sets (colors) required, already accounting for the variables whose lower bound is set to 1, and can
+be compared directly with the incumbent value U B for pruning.
+     During CG, even before reaching dual feasibility with respect to all variables, we compute an additional
+numerically safe lower bound based on the classical result of Farley (1990) for set-covering problems; see
+also Baldacci et al. (2023). Let π̌ ∈ ZV≥0 be the scaled integer dual vector used in pricing at the current CG
+                                                                                     P
+iteration, and let Se be an optimal solution of the PP obtained with weights π̌. If v∈Se π̌v > k, we define
+the Farley bound at the current branching node as
+                                                          P
+                                                            v∈Vu π̌v
+                                                                      
+                                     LBF (π̌ ) := |S 1 | + P            .                                             (10)
+                                                             v∈Se π̌v
+Zheng et al.: Branch-and-Price for Graph Coloring                                                             15
+
+                                                                                                        P
+This bound follows from a scaling argument. The PP returns a maximal stable set Se maximizing v∈S π̌v
+                                                                                 P             P
+over all maximal stable sets allowed by branching; hence, for every such S, v∈S π̌v ≤ v∈Se π̌v . There-
+                             P
+fore, the rescaled vector π̌    v∈Se π̌v is dual feasible for the dual of the LP relaxation of (1) at the current
+
+branching node (i.e., feasible with respect to all dual constraints induced by maximal stable sets not forbid-
+                                                         P          P
+den by branching), and its dual objective value equals v∈Vu π̌v         v∈Se π̌v . Adding |S 1 | and rounding up
+
+yields the lower bound (10), which can be compared directly with the incumbent value U B for pruning.
+  Since LBF (π̌ ) is valid even when improving variables still exist, it can be used to accelerate CG and to
+                                                                                             P       π̌v
+                                                                                                          
+prune branching nodes safely. Early CG termination is triggered when LBF (π̌ ) = |S 1 | +        v∈Vu k , in
+
+which case further CG iterations cannot improve the resulting integer lower bound at the current branching
+node. Moreover, safe branching node fathoming is applied when LBF (π̌ ) ≥ U B, as the Farley bound is an
+integer lower bound already accounting for variables whose lower bound is set to 1, and therefore can be
+compared directly with the incumbent upper bound. These criteria complement the termination based on
+the safe dual-feasible bound of Held et al. (2012) and are applied throughout the branching tree of BPCOL+.
+
+4.4.     Pricing Strategies
+BPCOL+ employs two main pricing strategies: at the root node of the BP tree (§4.4.1), where column
+generation is used to compute a strong lower bound, and at the branching nodes (§4.4.2), where a ZDD-
+based exact pricer is applied once branching decisions alter the structure of the PP.
+
+   4.4.1.      Root-Node Pricing Strategy. At the root node, the PP aims at identifying maximal stable
+sets with negative reduced cost and corresponds to the MWSSP, where vertex weights are obtained from
+the dual solution of the RMP at each CG iteration (see §2). Specifically, the dual values are multiplied by
+the scaling factor and rounded down to obtain integer weights, which are then used to compute numerically
+safe reduced costs and lower bounds (see §4.3).
+   Since efficient heuristic and exact algorithms are available for the MWSSP, BPCOL+ adopts a two-phase
+pricing scheme. At each pricing iteration, a heuristic algorithm is invoked to find a variable with a negative
+reduced cost. Only if the heuristic fails to identify such a variable is an exact algorithm invoked to solve
+the PP to optimality. If the exact pricer generates a negative reduced-cost variable, the next pricing iteration
+restarts with the heuristic pricer; otherwise, the column-generation process terminates.
+   As a heuristic pricer, BPCOL+ employs MN/TS (Wu et al. 2012), a multi-start tabu search algorithm for
+the MWSSP. The algorithm searches for a stable set with weight at least k + 1, corresponding to a variable
+with negative reduced cost. Once such a stable set is found during a tabu-search run, the current run is
+allowed to finish, but no further restarts are performed, and the heuristic pricer terminates. As the exact
+pricer, BPCOL+ employs TSM-MWC (Jiang et al. 2018), a branch-and-bound algorithm for the MWSSP,
+used with its default parameter settings. To reduce the computational burden of both pricing procedures,
+vertices with zero dual value are discarded before solving the MWSSP. Whenever a negative reduced-cost
+16                                                                           Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+
+stable set is identified, a vertex-insertion procedure is applied to extend it into a maximal stable set, and the
+corresponding column is then added to the RMP.
+     During the root-node column generation process, we collect intermediate RMP dual vectors and add
+them to ΠI . Specifically, an intermediate dual vector π is retained only if the exact pricer has been called
+at the corresponding CG iteration, so that the value rc∗ (π ) is known exactly. This condition is necessary
+for safely applying Lemma 2. Dual vectors for which only the heuristic pricer has been applied are not
+used for reduced-cost fixing. Since the CG process may generate a large number of candidate intermediate
+dual vectors, we keep at most 10 vectors in ΠI , i.e., |ΠI | ≤ 10. We retain the 10 most recently generated
+vectors, because those produced in later CG iterations typically yield tighter lower bounds and are thus more
+informative for subsequent fixing. When the root-node CG terminates with exact pricing certification, the
+final dual vector is dual-feasible for the MP and is added to ΠF . After the root-node CG process terminates,
+if the fixing threshold associated with the converged dual feasible solution of the MP is smaller than 1, the
+set of dual feasible solutions is further enriched with alternative dual feasible solutions returned by model
+DF ; these dual feasible solutions are also added to ΠF . The resulting set Π = ΠF ∪ ΠI is then used in the
+fixing procedure, with vectors in ΠF and ΠI handled according to Lemma 1 and Lemma 2, respectively.
+
+     4.4.2.   Enumeration-Tree Pricing Strategy. After column generation terminates at the root node,
+BPCOL+ attempts to construct a ZDD, which is subsequently used as an exact pricing data structure in the
+branching nodes. Once branching decisions are imposed on the variables of the SC formulation, the root-
+node pricing strategy cannot be applied directly, as the pricing problem structure changes. Depending on the
+quality of the upper bound U B and lower bound LB computed at the root node, BPCOL+ constructs either
+a complete ZDD or a reduced ZDD. The reduced ZDD is built with respect to the target value τ = U B − 1.
+Since the objective value of (1) represents the number of colors and is therefore integer-valued, finding
+a solution strictly better than the incumbent U B is equivalent to finding a feasible integer solution with
+objective value at most U B − 1 (if any). Thus, the goal at this stage is to determine whether there exists a
+feasible integer solution of cost at most τ . If such an improving solution exists, the reduced ZDD preserves
+the maximal stable sets that may participate in a solution of cost at most τ , thereby reducing the search
+space and accelerating the search for a better incumbent. If no such improving solution exists, the reduced
+ZDD provides a restricted but valid search space for certifying that no solution of value at most τ exists,
+and hence that the incumbent value U B is optimal. Accordingly, maximal stable sets that are certified as
+unable to appear in any feasible integer solution of cost at most τ are removed during the reduction.
+     In both cases, pricing is performed by assigning each high arc its corresponding scaled dual weight and
+each low arc a weight of zero, so that the pricing problem reduces to finding a longest root-to-T RUE path in
+the ZDD, yielding a maximal stable set of minimum reduced cost. In the reduced-ZDD case, the root-node
+column-generation process is restarted over the reduced pricing space in order to recompute the correspond-
+ing lower bound. Since eliminated variables are certified irrelevant for any feasible integer solution with
+Zheng et al.: Branch-and-Price for Graph Coloring                                                              17
+
+objective value at most τ , reoptimizing the root-node column generation over the reduced pricing space
+remains valid for certifying whether such a solution exists and may strengthen the corresponding lower
+bound.
+
+4.5.     Branching Strategy
+At the root node, BPCOL+ solves the pricing problem by a two-phase strategy that combines heuristic and
+exact algorithms for the MWSSP. After branching, however, the additional constraints alter the structure
+of the pricing problem, so these algorithms cannot be applied directly. For this reason, BPCOL+ adopts
+a hybrid pricing strategy: the two-phase method is used at the root node, while the ZDD-based pricer is
+employed at the subsequent nodes of the BP tree.
+   Consider a generic node of the enumeration tree, where the current MP has been solved and yields an
+optimal solution ξ ∗ . If ξ ∗ is integral, the node is fathomed. Otherwise, we branch on a variable ξS associated
+with a maximal stable set S ∈ S such that 0 < ξS∗ < 1. In our implementation, ξS is selected as the most
+fractional variable in the current solution. Branching is then performed on ξS , generating two child nodes:
+in the left child, the variable ξS is enforced by setting ξS = 1, whereas in the right child it is forbidden by
+setting ξS = 0. Accordingly, the maximal stable set S associated with the branching variable is added to S 1
+in the left child and to S 0 in the right child. These branching decisions are enforced consistently in both
+the restricted master problem and the ZDD-based pricing procedure, as described in Section 2.1.
+   Excluding variables may render the RMP temporarily infeasible if some vertex constraints are no longer
+covered by any remaining maximal stable set. When necessary, BPCOL+ restores feasibility by adding arti-
+ficial singleton columns for the affected vertices, with the same covering structure as singleton stable sets.
+These columns are introduced only to re-establish RMP feasibility during reoptimization and are handled
+consistently within the pricing/bounding scheme.
+   At the root node, the RMP is solved using the primal simplex method, which is well-suited to column-
+generation reoptimization after adding new columns. After branching, child nodes differ from their parent
+mainly through bound changes, and the RMP is reoptimized by dual simplex from the inherited basis. The
+branching tree is explored by a depth-first search strategy.
+
+4.6.     ZDD Construction
+BPCOL+ employs the recursive algorithm proposed in Morrison et al. (2016) to construct the complete ZDD
+denoted by ZS representing all maximal stable sets in G. Specifically, the construction algorithm implicitly
+enumerates all possible maximal stable sets in the graph G = (V, E ) while simultaneously constructing the
+ZDD graph ZS = (N , A) through recursive calls to a procedure named M akeIndSetZDD. During each
+iteration of M akeIndSetZDD, it expands a partially constructed stable set R using a set U = {ui , ..., um }
+of uncovered vertices. Vertices in U can be inserted into the partial stable set R to produce a larger stable set.
+To further extend the path induced by R in the ZDD graph using vertices from U, the algorithm recursively
+18                                                                                         Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+
+ Algorithm 1: MakeReducedIndSetZDD(U, i, RC)
+   Input: A set U = {u1 , u2 , . . . , um } of uncovered vertices such that uj < uj+1 with respect to the vertex ordering on V, a
+            current index i, and an array RC storing the reduced costs of the current stable set with respect to the dual-vector
+            set Π.
+   Output: The root node of a ZDD characterizing candidate maximal stable sets in G[U ] that may yield improving solutions
+              and can be formed with vertices in {ui , ui+1 , . . . , um }.
+ 1 if set U1 = {u1 , u2 , . . . , ui−1 } has a vertex with no neighbor in U2 = {ui , ui+1 , . . . , um } then
+ 2       return 0;                                                                  // Maximality cannot be achieved
+ 3 if U = ∅ then
+ 4       for h ← 1 to q do
+ 5            if RC[h] > δh then
+ 6                 return 0;                                                          // Fixed by reduced-cost fixing
+ 7       return 1;                                                            // A maximal stable set is accepted
+ 8 UH ← U \ N [ui ];                                                                             // High branch includes ui
+ 9 RCH [h] ← RC[h] − πh,ui for all h ∈ {1, 2, . . . , q};                                            // Update reduced costs
+10 l ← min{j > i : uj ∈ UH }, or |UH | + 1 if none exists ;                                             // j is indexed in UH
+11 if PruneByProp(RCH , UH , l, Π, δ) then
+12       zh ← 0;                                                                                         // Prune high subtree
+13 else
+14       zh ← MakeReducedIndSetZDD(UH , l, RCH );                                                    // Continue high branch
+15 if PruneByProp(RC, U, i + 1, Π, δ) then
+16       zl ← 0;                                                                                          // Prune low subtree
+17 else
+18       zl ← MakeReducedIndSetZDD(U, i + 1, RC);                                                      // Continue low branch
+19 if zh = 0 then
+20       return zl ;                                                                                     // ZDD reduction rule
+21 if ∃z ∈ ZS such that v(z) = i, lo(z) = zl , and hi(z) = zh then
+22       return z;                                                                                  // Reuse equivalent node
+23 return ZS .insert(i, zl , zh );                                                                     // Create new ZDD node
+
+
+
+constructs a ZDD subgraph with these vertices, inserting the ZDD nodes from this subgraph right after
+the ZDD path associated with R. The algorithm constructs ZDD nodes corresponding to U through two
+recursive calls: in the high branch, it expands the stable set by adding ui to R and further explores a smaller
+set obtained by removing ui and its neighbors N [ui ] from U. In the low branch, ui is forbidden from being
+used in R, and the algorithm explores a smaller set obtained by omitting ui from U. To reduce the size of
+ZS , the algorithm introduces a hash table to store nodes already inserted into ZS . When a newly generated
+node has the same associated vertex, low child, and high child as a node in the hash table, it directly returns
+the existing node from the hash table to merge the nodes (see Morrison et al. (2016) for related details).
+     To implement the ZDD reduction, we adapt the recursive procedure of Morrison et al. (2016) by inte-
+grating reduced-cost fixing to build a reduced ZDD ZS ′ of potentially maximal stable sets in G [U ], where
+G [U ] denotes the subgraph of G induced by the vertex set U .
+     Algorithm 1, referred to as MakeReducedIndSetZDD, takes as input the uncovered set U =
+{u1 , . . . , um }, the current index i, and the reduced-cost array RC. During the recursion, for each h ∈
+{1, 2, . . . , q}, RC [h] stores the reduced cost of the current partial stable set with respect to the dual vec-
+tor πh . At the root call, since the partial stable set is empty, each entry of RC is initialized to 1. Hence,
+when vertex ui is selected, the reduced-cost array is updated by setting RCH [h] = RC [h] − πh,ui . Let
+Zheng et al.: Branch-and-Price for Graph Coloring                                                           19
+
+PruneByProp(RC, U, i, Π, δ ) denote the pruning test induced by Theorem 1, where the candidate set C
+in the theorem is instantiated as the subset of U consisting of vertices from the current index onward, i.e.,
+C = {uj ∈ U : j ≥ i}. A feasibility test prunes early (lines 1–2): if U1 contains a vertex with no neighbors in
+U2 , maximality cannot be achieved, and the false terminal is returned. When U = ∅, a reduced-cost check
+is applied (lines 3–7): if any entry of RC exceeds the corresponding fixing threshold in δ, the branch is cut,
+implementing reduced-cost fixing. The recursion branches on ui . In the high branch, ui and its neighbors
+are removed, RC is updated w.r.t. Π, and recursion continues (lines 8–14). In the low branch, ui is excluded
+(lines 15–18). Theorem 1 is applied in both cases for early pruning. To keep the ZDD compact, nodes with
+an empty high branch are collapsed to their low child (lines 19–20). Canonical representation is ensured via
+hashing: existing equivalent nodes are reused, otherwise new ones are created (lines 21–23).
+     We define the family of retained maximal stable sets as
+                                Sred := {S ∈ S : rc(S, πh ) ≤ δh for every h ∈ {1, 2, . . . , q}} .       (11)
+The following corollary justifies using ZSred as the pricing structure in the subsequent BP phase: all maxi-
+mal stable sets eliminated by reduced-cost fixing are guaranteed to be excluded from the ZDD.
+
+     C OROLLARY 1. Assume Algorithm 1 is initialized with RC [h] = rc(∅, πh ) = 1 for every h ∈
+{1, 2, . . . , q}, updates RC [h] according to the selected high-branch vertices, and applies the pruning rule
+of Theorem 1. Then the returned ZDD encodes exactly the maximal stable sets in Sred defined in (11).
+
+     Proof See §EC.1.4 in the e-companion.               □
+     The computations required to solve formulation DF (Sˆ) (6) and the implementation of Algorithm 1,
+based on Lemma 2, are also performed in a numerically safe manner using scaling techniques (see §4.3).
+In particular, the set of alternative dual solutions Π and the associated threshold vector δ are represented in
+scaled integer form. This ensures that all reduced-cost comparisons are numerically safe and can be carried
+out using exact integer arithmetic. Implementation details are omitted for brevity.
+
+5.     Computational Study
+This section presents a computational study evaluating the performance of BPCOL+ on the DIMACS and
+Erdős–Rényi benchmark sets for the GCP. It begins by describing the benchmark instances, computa-
+tional environment, main parameter settings, and the state-of-the-art approaches used for comparison (§5.1
+and §5.2). Sections 5.3 and 5.4 then report comparisons with literature results, distinguishing between
+approaches with and without publicly available code. Finally, Section 5.5 analyzes the impact and effective-
+ness of the main phases of BPCOL+.
+
+5.1.     Benchmark Instances
+The DIMACS instances, introduced during the Second DIMACS Implementation Challenge on Cliques,
+Coloring, and Satisfiability (Johnson and Trick 1996), comprise 137 GCP instances and have served for over
+20                                                                            Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+
+30 years as a standard benchmark for evaluating both heuristic and exact algorithms. Despite significant
+algorithmic progress in recent years, many large and difficult DIMACS instances remain unsolved and
+continue to serve as open benchmarks that drive further research on the GCP.
+     To analyze and present the features of these 137 DIMACS instances, see Table EC.1 in the e-companion
+for details, we grouped them into 22 families based on similar structural characteristics, using their name
+prefixes as the main grouping criterion. The testbed is highly diverse in size: the smallest instance has 11
+vertices, while the largest has 10,000; the number of edges ranges from 20 to over four million.
+     In addition to the classical DIMACS benchmark set, we use the Erdős–Rényi random graph instances
+of Brand et al. (2026) to evaluate performance on graphs with varying densities. The instances
+follow the classical G(n, p) model (Erdős and Rényi 1959), with n ∈ {70, 80, 90, 100, 110}, p ∈
+{0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.7, 0.9}, and 100 graphs for each parameter pair, for a total of 5,000
+instances. We report results for BPCOL+ on the full set. For the controlled comparison with publicly
+available algorithms, we use the first 10 instances from each parameter group, yielding a representative
+subset of 500 instances that still covers sparse to dense graphs. The original instance set is available at
+https://zenodo.org/records/17328845.
+
+5.2.     Computational Environment and State-of-the-art Approaches
+This section first describes the computational setting of BPCOL+ (§5.2.1) and then briefly presents the
+state-of-the-art approaches used to compare the performance of BPCOL+ (§5.2.2).
+
+     5.2.1.   Computational Environment and Parameter Settings of BPCOL+. BPCOL+ was
+implemented in Java, and all experiments were conducted on a Windows machine equipped with an Intel
+i7-12700 processor (2.1 GHz), 32 GB of RAM, and Java version 17.0.13. Our computational platform
+requires approximately 3.00 CPU seconds to execute the DIMACS MC Machine Benchmark on instance
+r500.5 (see http://archive.dimacs.rutgers.edu/pub/dsj/clique/). The RMP arising
+in the column-generation process (see §2) and model DF (Sˆ) (6) are handled by the LP solver of IBM
+CPLEX 12.8 in single-thread mode.
+     We provide a public repository containing all benchmark instances, their corresponding computational
+results, and the main implementation details, including an executable version of BPCOL+ for testing and
+validation, along with the optimal colorings computed for instances solved to proven optimality.
+     The main parameter settings of BPCOL+ are summarized as follows. For numerically safe reduced-cost
+computations and lower-bound evaluation, discussed in Section 4.3, the dual values are scaled by the factor
+k = 105 . In the dual-based formulation DF (Sˆ) of Section 3.2.1, the penalty weight and tolerance are set
+to M = 104 and ε = 0.05, respectively. In addition, at most 10 dual vectors generated during the root-
+node CG process are retained for the subsequent column-enumeration phase described in Section 3.2.2.
+In the preprocessing phase, described in Section 4.1, CliSAT is run with a time limit of 1 second. For
+Zheng et al.: Branch-and-Price for Graph Coloring                                                             21
+
+the computation of initial heuristic colorings, BPCOL+ applies the first phase of the MMT heuristic to all
+instances after preprocessing. The procedure starts from an initial upper bound obtained by D SATUR and
+then attempts to find feasible colorings with progressively fewer colors. For each target number of colors,
+the tabu-search procedure is limited to 10,000 iterations, with an initial population size of 10 and a tabu
+tenure of 45. The time limit for each target-color search is set to 0.1|V| seconds when the reduced graph
+has at most 400 vertices, and to 100 seconds otherwise. In addition, a global time limit of 100 seconds is
+imposed on the whole heuristic phase. The heuristic terminates either when the global time limit is reached
+or when no feasible coloring can be found for a target number of colors.
+   At the root node, within the pricing scheme of Section 4.4, the heuristic MWSSP pricer MN/TS is used
+to search for a stable set with a weight at least k + 1, i.e., a variable with negative reduced cost. Once such a
+stable set is found, the current tabu-search run is allowed to finish, but no further restarts are performed, and
+the heuristic pricer terminates. Its tabu-search depth is set to 10(1 − µ)|V|, where µ denotes the edge density
+of the graph, and the maximum number of restarts is fixed to |V|/2. The exact MWSSP pricer TSM-MWC is
+used with its default parameter settings.
+
+   5.2.2.      State-of-the-art Approaches. Two groups of methods are considered separately, depend-
+ing on whether their source code is publicly available. The first group consists of exact algorithms whose
+source code is not publicly available. These methods are relevant because they represent important state-
+of-the-art approaches based on different exact-solution paradigms. In particular, the method of Van Hoeve
+(2022) relies on a network-flow ILP formulation combined with decision diagrams, whereas the methods of
+Malaguti et al. (2011), Gualandi and Malucelli (2012), and Morrison et al. (2016) belong to the BP family.
+Among them, Morrison et al. (2016) is especially close in spirit to the present work, since it also inte-
+grates decision diagrams into the pricing phase. Since these algorithms were tested on different subsets of
+DIMACS instances and under different time limits, a fully controlled comparison is not possible. Therefore,
+we report an aggregate comparison based on the results available in the literature.
+   The second group consists of exact algorithms with publicly available source code, enabling more repro-
+ducible, controlled computational evaluation. These methods can be further divided into two main classes.
+The first class includes SAT-based approaches, such as ZykovColor and Assignment from Brand
+et al. (2026), as well as gc-cdcl (Hebrard and Katsirelos 2020), CliColCom (Heule et al. 2022), and
+POP-S (Faber et al. 2024). The second class includes exactcolors, the BP algorithm proposed by Held
+et al. (2012), and DSATUR, the DSatur-based exact algorithm of San Segundo (2012). Together, these algo-
+rithms represent some of the strongest publicly available exact methods for the GCP and cover a broad
+spectrum of modeling and search paradigms, including BP, SAT encodings, and DSatur-based branch-and-
+bound. All these publicly available algorithms are executed under the computational environment described
+in Section 5.2.1, thereby enabling a controlled assessment of the computational performance of BPCOL+.
+22                                                                            Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+
+In addition, on the selected 500 Erdős–Rényi benchmark instances, BPCOL+ is compared with the same set
+of publicly available algorithms under this common experimental setting.
+     In the following, Sections 5.3 and 5.4 compare BPCOL+ with state-of-the-art exact algorithms, distin-
+guishing between approaches without and with publicly available source code.
+
+5.3.     Comparison with Approaches without Publicly Available Source Code
+An aggregate comparison with BPCOL+ is summarized below. However, differences in the tested DIMACS
+subsets and time limits preclude a comprehensive assessment.
+     • The best method reported by Van Hoeve (2022) solves 50 instances from the full set of 137 DIMACS
+instances within a 1-hour time limit. On the same 137-instance benchmark set, BPCOL+ solves all these 50
+instances and 46 additional DIMACS instances, for a total of 96 solved instances under the same time limit.
+     • Malaguti et al. (2011) reports solving 65 instances on a subset of 109 DIMACS instances within a
+10-hour time limit. On the same 109-instance subset, BPCOL+ solves all 65 instances and 10 additional
+instances within 1 hour, for a total of 75 instances solved on that subset.
+     • Gualandi and Malucelli (2012) reports solving 10 instances on a subset of 17 DIMACS instances within
+a 10-hour time limit. On the same 17-instance subset, BPCOL+ solves all 10 instances and 4 additional
+instances within 1 hour, for a total of 14 instances solved on that subset.
+     • Morrison et al. (2016) reports solving 15 instances on a subset of 47 DIMACS instances within a 10-
+hour time limit. On the same 47-instance subset, BPCOL+ solves 26 instances within 1 hour. This includes
+14 of the 15 instances solved by Morrison et al. (2016); the only instance solved by Morrison et al. (2016)
+but not by BPCOL+ is flat300 28 0.
+     In summary, although the comparisons are not fully controlled due to differences in machines, time limits,
+and benchmark subsets, the available results indicate that BPCOL+ is highly competitive with, and often
+substantially stronger than, previous exact BP and DD-based approaches on the reported DIMACS subsets.
+BPCOL+ consistently solves substantially more instances, confirming its competitiveness as a state-of-the-
+art exact algorithm for the GCP. It is also worth noting that BPCOL+ significantly improves upon previous
+BP algorithms. Although based on the same algorithmic framework, it is substantially stronger than the
+methods of Gualandi and Malucelli (2012) and Malaguti et al. (2011), solving more instances in much
+shorter time. BPCOL+ also surpasses the BP approach with decision diagrams proposed by Morrison et al.
+(2016) in both the number of solved instances and computational efficiency.
+
+5.4.     Comparison with Approaches with Publicly Available Source Code
+The group of publicly available exact algorithms enables a more detailed and reproducible comparison. In
+particular, the recent study of Brand et al. (2026) introduced two exact methods for the GCP, ZykovColor
+and Assignment. Together with exactcolors (Held et al. 2012), DSATUR (San Segundo 2012),
+gc-cdcl (Hebrard and Katsirelos 2020), CliColCom (Heule et al. 2022), and POP-S (Faber et al. 2024),
+Zheng et al.: Branch-and-Price for Graph Coloring                                                           23
+
+these methods form the benchmark algorithms used in the following reproducible comparison. The corre-
+sponding source-code repositories are reported in the bibliographic entries of the cited papers. The compu-
+tational study is carried out on the DIMACS instances and the selected Erdős–Rényi random instances.
+
+   5.4.1.      Comparison on DIMACS Instances. Table 1 presents a detailed comparison of BPCOL+
+against the seven exact algorithms discussed above, evaluated on the full set of 137 DIMACS instances
+grouped by families. The first two columns report the family names and the corresponding number of
+instances (“#inst”). The next 18 columns show, for each algorithm and each family, the number of instances
+solved to optimality (“#opt”) and the average running time in seconds (“time”), computed over the solved
+instances. All algorithms were run on the same machine used for BPCOL+, with a time limit of 1 hour.
+Detailed computational results for the 137 DIMACS instances are reported in the e-companion; see §EC.3.2.
+   BPCOL+ is tested in two variants: one without using any upper bound as input, and one that incorporates
+the best known upper bound from the literature. The former allows a fair comparison with all other exact
+algorithms, which are fully self-contained and include their own internal heuristic subroutines. The latter,
+referred to as BPCOL+UB, measures the performance of our exact method when assisted by the best avail-
+able upper bound. Both variants are run with a 1-hour time limit. When the supplied upper bound equals
+the optimal chromatic number, the reported time corresponds to the time required to certify optimality.
+   Since our goal is to highlight performance, especially on hard instances of the GCP, all values below 0.01
+seconds are reported in the table as “≤ 0.01”. A dash (“-”) is reported in the table when none of the instances
+in a family are solved by a given algorithm. To facilitate comparison, the best results are highlighted in
+bold, prioritizing the number of solved instances and, in case of ties, the average running time. BPCOL+UB
+is excluded from the boldface comparison because it uses external best-known upper bounds.
+   According to Table 1, among methods that do not use externally supplied upper bounds, BPCOL+
+achieves the strongest overall performance, solving 96 instances. BPCOL+UB solves 103 instances. In com-
+parison, ZykovColor solves two fewer instances, while Assignment, CliColCom, and POP-S solve
+five fewer, gc-cdcl solves 13 fewer, DSATUR solves 25 fewer, and exactcolors solves 31 fewer
+instances. It is worth noting that, for POP-S, the results reported in the literature correspond to 91 solved
+instances, whereas on our machine we obtain 90. The difference is due to instance wap02a, which is
+solved in the literature results but not in our rerun, likely because of randomization in POP-S. For consis-
+tency with the reference study, the comparison below is therefore based on the literature value of 91 solved
+instances. It is worth noting that the only other BP algorithm considered, exactcolors, demonstrates
+significantly lower computational performance than BPCOL+, despite using the same algorithmic paradigm.
+These results are consistent with those presented in the previous section and confirm that BPCOL+ is by far
+the most effective BP algorithm for the GCP. While all the other approaches are based on different frame-
+works, most of which heavily rely on SAT solvers, BPCOL+ still achieves highly competitive performance.
+24                                                                                                       Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+      Table 1      Computational results of BPCOL+, BPCOL+UB, and state-of-the-art exact GCP algorithms with
+                                         available source code on the 137 DIMACS instances.
+                         exactcolors      DSATUR       gc-cdcl       CliColCom      POP-S        Assignment ZykovColor        BPCOL+        BPCOL+UB
+
+     Family       #inst #opt      time #opt     time #opt     time #opt     time #opt     time #opt      time #opt     time #opt     time #opt      time
+
+     C               3    0          -     0       -    0        -     0       -    0        -     0        -    0        -    0        -     0        -
+     DSJC           12    2     818.62     1 ≤ 0.01    1      0.72     1    0.03   1      0.20     1     1.31   2    341.62    4    60.85     4    45.31
+     DSJR            3    3    1368.59     1    0.14    1     0.07     3   22.08    1     0.93     2     1.36    3    30.12    3    12.50     3     0.11
+     FullIns        14    5    ≤ 0.01     12    0.20   13    12.00    14   46.00   14     8.23    14     4.57   14     3.06   11     1.70    11     0.15
+     GPIA            4    0          -     2    2.60    3   115.46     3    0.30    4     7.24     4     8.68    4   393.87    2 1301.81      2 1202.79
+     Insertions     11    1     587.41     3 799.53     3 1006.42      4    0.37    4     0.37     4     0.21    4    36.82    1     5.24     1     1.97
+     SocialNet       5    5       0.02     5 ≤ 0.01    5    ≤ 0.01     5    0.02   5      0.24     5     0.06   5      0.06    5   ≤ 0.01     5   ≤ 0.01
+     flat            6    2     714.64     0       -    0        -     0       -    0        -     0        -    0        -    2   261.49    3    157.24
+     fpsol           3    3       0.38     3 ≤ 0.01    3      2.22     3    0.06   3      8.16     3     0.07   3      0.07    3   ≤ 0.01     3   ≤ 0.01
+     inithx          3    3       0.71     3    0.08    3     2.36     3    0.11    3    14.33     3     0.08    3     0.08    3   ≤ 0.01     3   ≤ 0.01
+     le             12    3     878.58     4    3.21    8   309.01    10    9.65    8     2.00     8     7.57   10   112.24   12     6.77    12   ≤ 0.01
+     miles           5    5       0.08     5 ≤ 0.01    5      0.53     5    0.03   5      4.65     5     0.06   5      0.06    5   ≤ 0.01     5   ≤ 0.01
+     mug             4    4       0.87     2 356.65     4     0.08     4    0.03    4     0.21     4     0.45    4     0.66    4     9.74     4     0.67
+     mulsol          5    5       0.09     5 ≤ 0.01    5      0.42     5    0.04   5      3.94     5     0.06   5      0.07    5   ≤ 0.01     5   ≤ 0.01
+     myciel          5    2       9.57     3    0.48    5     0.02     4 206.43     4   383.06     5     0.06    5     0.06    5   ≤ 0.01     5   ≤ 0.01
+     others          3    2       0.74     2    0.12    2     0.24     2    0.11    2     1.36     2     0.40    2     0.69    2    55.19     2     5.68
+     qg.order        4    0          -     1    0.67    3   594.41     3   73.84    3 1066.31      4   521.33    3 1186.36     4    20.05     4   ≤ 0.01
+     queen          13    7      35.15     6 106.15     6    35.06     5    2.26    8   463.91     6    80.80    8    38.55    9   329.23    12     4.35
+     r               9    7      42.21     7   35.03    7     5.72     8 417.27     7    27.46     8   155.66    7    14.09    9   471.45     9   145.93
+     school          2    2    1618.10     2    6.21    2     2.24     2    0.33    2     8.74     2     0.15    2     0.15    2   ≤ 0.01     2   ≤ 0.01
+     wap             8    1       5.49     1    0.91    1     4.29     4 116.98     4 1412.76      3 1322.23     2   226.27    2     2.85     5   ≤ 0.01
+     zeroin          3    3       0.04     3 ≤ 0.01    3      0.42     3    0.03   3      4.02     3     0.06   3      0.07    3   ≤ 0.01     3   ≤ 0.01
+
+     Total         137   65               71           83             91           90             91            94            96            103
+
+
+
+
+     As far as the number of solved instances is concerned, BPCOL+ outperforms all other approaches on
+several families of instances. BPCOL+ is the only algorithm able to solve 4 out of the 12 instances in the
+DSJC family (all other algorithms solve at most 2). In the le family, BPCOL+ solves all 12 instances, while
+the second-best algorithm, CliColCom, solves only 10. In case of ties in the number of instances solved,
+we consider the second-best algorithm to be the one with the lowest average running time. In the queen
+family, BPCOL+ solves 9 out of 13 instances, outperforming the second-best algorithm, ZykovColor,
+which solves 8. On the other hand, BPCOL+ is outperformed on the following families: in the FullIns
+family, the best-performing algorithm is ZykovColor, which solves all 14 instances, whereas BPCOL+
+solves only 11. In the GPIA family, POP-S solves all 4 instances, while BPCOL+ solves only 2. For the
+Insertions family, Assignment performs best, solving 4 out of 11 instances, compared to only 1 by
+BPCOL+. The performance of BPCOL+ is largely complementary to that of existing approaches, achieving
+state-of-the-art results on some instance families while being outperformed on others.
+     Regarding the efficiency on solved instances, BPCOL+ demonstrates superior performance on several
+families. In the DSJR family, it achieves an average running time of 12.5 seconds, significantly faster than
+the second-best method CliColCom, which also solves all instances but requires 22.08 seconds. In the
+Zheng et al.: Branch-and-Price for Graph Coloring                                                                                    25
+
+Figure 3                     Number of DIMACS instances solved over time by BPCOL+ and seven state-of-the-art exact GCP
+                             algorithms (137 instances, 1 hour time limit).
+
+                       100
+
+
+                        90
+    Solved instances
+
+
+
+
+                        80
+
+
+                        70
+
+
+                        60
+                                                                                    BPCOL+              POP-S          DSATUR
+                                                                                    ZykovColor          ClicolCom      exactcolors
+                                                                                    Assignment          gc-cdcl
+                        50 0            500          1000          1500        2000              2500           3000         3500
+                                                                      CPU time(s)
+
+qg.order family, BPCOL+ solves all instances in 20.05 seconds, outperforming Assignment by a large
+margin, as the latter requires 521.33 seconds. Similarly, in the school family, BPCOL+ completes all
+instances in less than 0.01 seconds, while the second-best method, again Assignment, takes 0.15 seconds.
+On the other hand, in families such as SocialNet, fpsol, inithx, miles, mulsol and zeroin,
+BPCOL+ solves all instances within 0.01 seconds, consistent with most of the other algorithms, indicating
+these families are relatively easier across methods.
+   When best-known upper bounds are provided to BPCOL+, BPCOL+UB demonstrates superior perfor-
+mance in terms of both the number of solved instances and average running time. It successfully solves 7
+additional instances that BPCOL+ fails to solve, particularly from the flat, queen, and wap families.
+Moreover, among the 96 instances solved by both methods, BPCOL+UB significantly reduces the average
+runtime across several families, with notable improvements observed in DSJR (from 12.5s to 0.11s), le
+(from 6.77s to ≤0.01s), others (from 55.19s to 5.68s), and qg.order (from 20.05s to ≤0.01s).
+   Figure 3 shows the number of instances solved as a function of computing time to visually compare the
+computational behavior of the eight algorithms over the full set of 137 DIMACS instances. The horizontal
+axis reports the elapsed running time, while the vertical axis shows the cumulative number of instances
+solved by each algorithm up to that time. Thus, each curve increases as more instances are solved. A
+curve that rises more rapidly indicates that the algorithm solves instances faster, whereas a higher final
+plateau indicates that more instances are solved within the prescribed time limit. The figure shows that
+BPCOL+ exhibits the best overall behavior. Its curve rises very rapidly at the beginning, indicating that many
+26                                                                                                             Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+ Table 2        Computational results of BPCOL+and state-of-the-art exact GCP algorithms with available source
+               code on the 500 Erdős–Rényi instances grouped by density and by number of vertices.
+                              exactcolors       DSATUR          gc-cdcl        CliColCom         POP-S          Assignment       ZykovColor         BPCOL+
+
+     Group    µ (%)   #inst   #opt     time   #opt     time   #opt      time   #opt     time   #opt     time    #opt      time   #opt      time   #opt     time
+
+     ER*.05    5        50     49     23.70    50    ≤ 0.01    50       0.03    50      0.09    50      0.33      50      0.24    50       0.24    50     67.20
+     ER*.1     10       50     49    130.54    50    ≤ 0.01    50       0.59    50      0.09    50      0.35      50      0.47    50       0.72    49    204.93
+     ER*.15    15       50     43    310.04    50      9.08    46      45.23    50     38.41    50      4.99      50      6.02    50      65.98    48    270.39
+     ER*.2     20       50     35    380.06    49    273.43    36     112.50    42     51.48    45    135.93      45     67.21    42     133.59    38    108.36
+     ER*.25    25       50     34    422.44    47    322.59    29     610.69    38    267.12    40     60.92      42    207.69    38     191.70    44    112.14
+     ER*.3     30       50     29    390.35    32    130.32    18     198.98    31    199.62    36    265.77      34    180.48    29     193.65    43    228.28
+     ER*.4     40       50     33    274.93    29    124.48    13    1807.30    20    319.72    28    377.05      27     73.58    25     377.49    43     56.58
+     ER*.5     50       50     37    497.88    22    348.25     6    1085.35    12    316.25    12    180.69      15    846.04    11     239.25    46     88.75
+     ER*.7     70       50     49    213.03    20    302.64     2    2329.52    13    616.80    12    461.94      19    135.33    10    1020.57    50     19.39
+     ER*.9     90       50     50      1.95    38    151.02    15     510.71    32    418.21    28    289.65      48    138.42    50      18.73    50      8.81
+
+     Group     |V|    #inst   #opt     time   #opt     time   #opt      time   #opt     time   #opt     time    #opt      time   #opt      time   #opt     time
+
+     ER70      70      100    100     17.45   100      1.82    87     401.55   100     59.76    99     20.40      99      6.57    99     115.24   100      8.34
+     ER80      80      100     93    260.41   100    140.71    67     261.93    83    144.08    83    105.99      89     88.96    82      83.87   100    103.96
+     ER90      90      100     91    205.86    79     63.29    46     243.13    68    183.85    74    237.93      82    130.97    74     150.46    97    194.09
+     ER100    100      100     74    358.20    60    187.92    39     110.42    51    187.65    58    140.97      64    149.25    57     123.49    93    114.97
+     ER110    110      100     50    534.04    48    535.81    26      69.44    36    333.74    37    221.19      46    288.14    43     200.25    71    175.00
+
+     Total             500    408             387             265              338             351               380             355              461
+
+
+
+easy and medium-difficulty instances are solved within a short time. It reaches about 90 solved instances
+within the first 100 seconds and continues to improve afterward, eventually attaining a final plateau of
+96. ZykovColor is the closest competitor: it also shows strong early performance and reaches a high
+final plateau, but remains below BPCOL+ over most of the time horizon. CliColCom, Assignment,
+and POP-S form a second group of competitive methods. They solve many instances quickly at the
+beginning, but their curves plateau earlier and at lower levels. The remaining methods are less competi-
+tive on this benchmark set. gc-cdcl reaches a final plateau of 83 solved instances, while DSATUR and
+exactcolors solve substantially fewer instances, with final plateaus of 71 and 65 instances, respectively.
+Overall, the results indicate that BPCOL+ is both efficient and robust, achieving the highest number of
+solved instances while maintaining strong early performance.
+
+     5.4.2.    Comparison on Erdős–Rényi Instances. For a controlled comparison with publicly avail-
+able exact algorithms, we use the previously selected subset of 500 Erdős–Rényi instances. Table 2 and
+Figure 4 summarize the performance of BPCOL+ and the seven publicly available exact algorithms on the
+selected Erdős–Rényi instances. Table 2 reports aggregated results, grouped first by graph density (“µ”)
+and then by the number of vertices (“|V|”). The number of instances in each group is reported in column
+“#inst”. For each algorithm, column “#opt” denotes the number of instances solved to proven optimality
+within the one-hour time limit, and column “time” denotes the average running time in seconds over the
+instances solved by that algorithm in the corresponding group. Figure 4 complements the table by showing
+the cumulative number of solved instances over CPU time.
+Zheng et al.: Branch-and-Price for Graph Coloring                                                                                   27
+
+Figure 4                     Number of Erdős–Rényi instances solved over time by BPCOL+ and seven exact GCP algorithms
+                             (500 instances, 1 hour time limit).
+
+                       500
+
+                       450
+
+                       400
+    Solved instances
+
+
+
+
+                       350
+
+                       300
+
+                       250
+
+                       200                                                         BPCOL+              POP-S          DSATUR
+                                                                                   ZykovColor          ClicolCom      exactcolors
+                                                                                   Assignment          gc-cdcl
+                       150 0             500          1000         1500       2000              2500           3000          3500
+                                                                     CPU time(s)
+
+
+   Overall, BPCOL+ achieves the best performance in terms of the total number of solved instances. It solves
+461 out of 500 instances, substantially more than the closest competitors, namely exactcolors (408
+solved instances) and DSATUR (387 solved instances). This advantage is clearly visible in Figure 4: the
+curve of BPCOL+ rises sharply at the beginning and remains above all other curves throughout almost the
+entire time horizon, eventually reaching the highest plateau. This indicates that BPCOL+ is not only robust
+in terms of the number of solved instances, but also competitive in terms of time-to-solution.
+   The aggregated results further show that the advantage of BPCOL+ is most pronounced on larger
+and higher-density instances. In terms of graph density, several algorithms perform well on very sparse
+instances, such as ER*.05 and ER*.1, where almost all methods solve nearly all instances. On these low-
+density groups, BPCOL+ does not show a clear advantage. However, as density increases, BPCOL+ becomes
+clearly more competitive. It solves the largest number of instances for densities 30%, 40%, 50%, and 70%,
+and ties for the best result at density 90%. This suggests that the proposed method is particularly effective
+on denser random graphs, where several SAT-based and Dsatur-based methods exhibit a substantial drop in
+the number of solved instances. A similar pattern is observed for the number of vertices. While all methods
+are relatively competitive on smaller graphs with 70 vertices, the gap widens as the graph size increases.
+For n = 90, n = 100, and n = 110, BPCOL+ solves 97, 93, and 71 instances, respectively, achieving the best
+result in each of these groups. These results indicate that BPCOL+ scales better than the other algorithms
+on larger Erdős–Rényi instances, especially when combined with higher graph densities.
+28                                                                         Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+
+     We also evaluated BPCOL+ on the full set of 5,000 Erdős–Rényi instances. Within the one-hour time
+limit, BPCOL+ solves 4,641 instances to proven optimality, leaving 359 instances unsolved. The phase-by-
+phase progression of these instances is discussed in the next section and summarized in Table 3.
+
+5.5.    Effectiveness of the Main Phases of BPCOL+
+This section summarizes the contribution of the main phases of BPCOL+. We focus the discussion on
+the DIMACS benchmark instances, for which we provide a detailed phase-by-phase analysis of prepro-
+cessing, heuristic initialization, root-node column generation, and ZDD-based branch-and-price. For each
+phase, we report the numbers of input instances, optimally solved instances, and remaining instances.
+Table 3 reports the corresponding phase-level statistics for both the DIMACS and Erdős–Rényi benchmark
+instances. Additional experiments on the effectiveness of the main algorithmic components are reported in
+the e-companion; see §EC.3.3. Detailed results are available in the online repository.
+     • In the preprocessing phase (§4.1), vertex reduction is substantial. Among the 137 DIMACS instances,
+77 exhibit a decrease in the number of vertices. For these instances, the average reduction is nearly 60%,
+and the maximum reduction reaches 100%. In particular, more than half of the vertices are eliminated in
+46 instances. The preprocessing phase is also very fast: in most cases, its running time essentially coin-
+cides with that of CliSAT. The latter computes a strong clique within the 1-second time limit on 123
+instances, with an average running time of 0.19 seconds; on the remaining 14 very large instances, it reaches
+the time limit while still providing high-quality lower bounds. The greedy heuristic used to compute the
+Mycielski-based bound requires, on average, 0.02 seconds. Over the testbed, the clique bound is stronger
+on 87 instances, the Mycielski-based bound is stronger on 11 instances, and the two bounds coincide on 39
+instances. Preprocessing alone certifies optimality in 22 instances, leaving 115 for later phases.
+     • The heuristic initialization phase (§4.2) also proves effective on the remaining 115 DIMACS instances.
+In this phase, BPCOL+ applies the first phase of the MMT heuristic to compute high-quality initial colorings
+and upper bounds. The heuristic takes about 8 seconds on average when the time limit is not reached, and
+exceeds it in 30 cases. It matches the best-known upper bound from the literature in 87 instances. In the
+remaining 28 instances, the obtained upper bound is worse than the best-known one; nevertheless, several
+of these instances are eventually solved to optimality by the subsequent phases of BPCOL+. By combining
+the heuristic upper bounds with the clique-based lower bounds obtained in preprocessing, 43 additional
+instances are solved to proven optimality before entering the main BP process. Consequently, 72 instances
+remain unsolved after preprocessing and heuristic initialization.
+     • Root-node column generation (§4.3 and §4.4) is then applied to these 72 remaining DIMACS instances.
+It solves the root node and computes a valid lower bound within the one-hour time limit for 52 instances,
+with an average running time of about 90 seconds. Among these 52 instances, 15 are solved in less than
+0.1 seconds, 36 under 10 seconds, and only 3 require more than 10 minutes. In 16 cases, the root-node
+Zheng et al.: Branch-and-Price for Graph Coloring                                                                  29
+
+   Table 3        Progress of BPCOL+ across the main phases of the algorithm on the DIMACS and Erdős–Rényi
+                                                        instances.
+                                                                DIMACS                     Erdős–Rényi
+        Phase
+                                                        #Input #Solved #Remaining #Input #Solved #Remaining
+        Preprocessing phase (§4.1)                        137        22      115   5,000        46         4,954
+        Heuristic initialization phase (§4.2)             115        43       72   4,954       336         4,618
+        Root-node CG phase (§4.3 and §4.4)                 72        16       56   4,618     2,471         2,147
+        ZDD construction and BP phase (§4.5 and §4.6)      36        15       21   2,147     1,788           359
+        Total                                             137        96       41   5,000     4,641          359
+
+
+
+lower bound is sufficient to certify optimality. The other 36 instances whose root nodes are solved but not
+proven optimal are passed to the ZDD construction and BP phases. In the remaining 20 cases, the root
+node is not solved within the time limit; the main difficulty stems from the graph’s sparsity, which makes
+exact pricing particularly challenging. For the 52 instances whose root node is solved, about 99% of the
+generated columns are produced by the heuristic pricer, which accounts for roughly 15% of the total time;
+exact pricing accounts for about 35%, and solving the RMP accounts for another 45%. The number of
+generated columns ranges from a few to more than 10,000, with an average of about 1,000 per instance.
+   • After root-node column generation, ZDD construction (§4.5 and §4.6) is attempted on the remain-
+ing 36 DIMACS instances that are not proven optimal at the root node. In terms of ZDD construction, a
+complete ZDD is successfully produced for 13 instances, and a reduced ZDD for 18 instances; in 5 cases,
+neither construction completes within the one-hour time limit. For reduced ZDDs, the average proportion
+of eliminated maximal stable sets is about 45%, and the average construction time is about 60 seconds,
+whereas complete ZDD construction requires about 130 seconds on average. With ZDD-based pricing, the
+subsequent BP procedure solves 15 of these 36 instances, while the remaining 21 reach the overall time
+limit. Restarting CG on the reduced ZDD improves the corresponding fractional lower bound in 10 cases,
+and in 5 of them, optimality is established directly from the updated bound.
+   Table 3 summarizes the aforementioned progress through the main phases of BPCOL+ for the DIMACS
+instances, reporting the number of input, solved, and remaining instances at each stage. The same analysis is
+also provided for the 5,000 Erdős–Rényi instances, for which preprocessing solves 46 instances and leaves
+4,954 instances for heuristic initialization. The heuristic initialization phase solves another 336 instances,
+leaving 4,618 instances for root-node column generation. The root-node CG phase is particularly effective
+on this benchmark, solving 2,471 additional instances and reducing the number of instances not yet proven
+optimal to 2,147. Among these, 2,129 instances successfully complete ZDD construction and proceed to
+the BP phase, while 18 instances remain unsolved because the ZDD cannot be constructed within the time
+limit. The ZDD-based BP phase then solves 1,788 of the 2,129 processed instances, leaving 341 unsolved.
+Consequently, BPCOL+ solves 46 + 336 + 2,471 + 1,788 = 4,641 out of the 5,000 Erdős–Rényi instances
+to proven optimality within the one-hour time limit, while 18 + 341 = 359 instances remain unsolved.
+30                                                                        Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+
+6.     Conclusions
+This paper addressed the exact solution of the GCP and proposed BPCOL+, a state-of-the-art BP algorithm
+enhanced with preprocessing, heuristic initialization, and ZDD-based pricing. The main contribution is the
+integration of reduced-cost fixing with ZDD construction in a unified exact framework. Instead of building
+a complete ZDD of all maximal stable sets, BPCOL+ exploits reduced-cost information to safely eliminate
+redundant ones during the construction of a reduced ZDD. We further introduce a new dual formulation that
+generates alternative dual solutions, strengthening reduced-cost fixing. Overall, these components signifi-
+cantly reduce the pricing space before branching while preserving exactness.
+     The computational results confirm the effectiveness of BPCOL+ on both the classical DIMACS bench-
+mark set and the recently proposed Erdős–Rényi instances. On the 137 DIMACS instances, BPCOL+ solves
+96 instances to proven optimality within the prescribed time limit, a result that is highly competitive among
+state-of-the-art exact algorithms with publicly available source code and slightly improves upon the lat-
+est ZykovColor solver, which solves 94 instances on the same benchmark set. The comparison with
+algorithms whose source code is not publicly available also shows that BPCOL+ is competitive with state-
+of-the-art exact approaches reported in the literature, even though these methods were often tested under
+different time limits and on different subsets of instances. For example, on the subset considered by Mor-
+rison et al. (2016), BPCOL+ solves 26 instances in one hour, whereas their method solves 15 in ten hours.
+The results on Erdős–Rényi random graphs provide an additional validation of the method: on the full
+set of 5,000 instances, BPCOL+ solves 4,641 instances within one hour; and in the controlled comparison
+with publicly available exact algorithms on the selected 500-instance subset, BPCOL+ solves 461 instances,
+outperforming the closest competing methods, including exactcolors with 408 solved instances and
+DSATUR with 387 solved instances. For the instances where both the complete ZDD and the reduced ZDD
+can be constructed, the reduced-cost-fixing strategy reduces the number of maximal stable sets by about
+50% on average, with a maximum reduction exceeding 99%. In aggregate, over these instances, the total
+number of maximal stable sets is reduced by about 82%. These results show that BPCOL+ is robust and
+competitive across both DIMACS and randomly generated instances, especially on larger, denser graphs.
+     Beyond graph coloring, the proposed ZDD reduction mechanism may be useful for other optimization
+problems in which ZDDs represent large families of feasible structures, such as scheduling, packing, and
+related enumeration or pricing problems. In these settings, using dual information to reduce the represented
+solution space may improve the scalability of ZDD-based exact methods.
+     Several directions remain for future research. The ZDD-based pricing procedure could be strengthened
+by generating multiple useful columns in a single pricing call, thereby reducing the number of column-
+generation iterations. Another important direction is to accelerate the construction of reduced ZDDs, which
+can still be costly on large instances. Finally, the constructed ZDDs could be exploited more directly in
+mathematical programming formulations for the GCP and adapted to related coloring variants, such as
+weighted graph coloring, partition coloring, and other constrained coloring problems.
+Zheng et al.: Branch-and-Price for Graph Coloring                                                               31
+
+References
+Agarwal Y, Mathur K, Salkin HM (1989) A set-partitioning-based exact algorithm for the vehicle routing problem.
+       Networks 19(7):731–749.
+
+Baldacci R, Christofides N, Mingozzi A (2008) An exact algorithm for the vehicle routing problem based on the set
+       partitioning formulation with additional cuts. Mathematical Programming 115:351–385.
+
+Baldacci R, Coniglio S, Cordeau JF, Furini F (2023) A numerically exact algorithm for the bin-packing problem.
+       INFORMS Journal on Computing .
+
+Baldacci R, Hadjiconstantinou E, Maniezzo V, Mingozzi A (2002) A new method for solving capacitated location
+       problems based on a set partitioning approach. Computers & operations research 29(4):365–386.
+
+Barnhart C, Johnson EL, Nemhauser GL, Savelsbergh MWP, Vance PH (1998) Branch-and-price: Column generation
+       for solving huge integer programs. Operations Research 46(3):316–329.
+
+Brand T, Faber D, Held S, Mutzel P (2026) A customized sat-based solver for graph coloring. 2026 Proceedings of
+       the SIAM Symposium on Algorithm Engineering and Experiments (ALENEX), 142–155 (SIAM), code and data:
+       https://zenodo.org/records/17328845.
+
+Brélaz D (1979) New methods to color the vertices of a graph. Communications of the ACM 22(4):251–256.
+
+Dantzig G, Fulkerson R, Johnson S (1954) Solution of a large-scale traveling-salesman problem. Journal of the Oper-
+       ations Research Society of America 2(4):393–410.
+
+de Lima VL, Iori M, Miyazawa FK (2023) Exact solution of network flow models with strong relaxations. Mathemat-
+       ical Programming 197(2):813–846.
+
+Desaulniers G, Gschwind T, Irnich S (2020) Variable fixing for two-arc sequences in branch-price-and-cut algorithms
+       on path-based models. Transportation Science 54(5):1170–1188.
+
+Desrosiers J, Lübbecke M, Desaulniers G, Gauthier J (2024) Branch-and-price. Les Cahiers du GERAD ISSN
+       711:2440.
+
+Erdős P, Rényi A (1959) On random graphs i. Publicationes Mathematicae Debrecen 6:290–297.
+
+Faber D, Jabrayilov A, Mutzel P (2024) SAT Encoding of Partial Ordering Models for Graph Coloring Prob-
+       lems. Chakraborty S, Jiang JHR, eds., 27th International Conference on Theory and Applications of Sat-
+       isfiability Testing (SAT 2024), volume 305 of Leibniz International Proceedings in Informatics (LIPIcs),
+       12:1–12:20 (Dagstuhl, Germany: Schloss Dagstuhl – Leibniz-Zentrum für Informatik), ISBN 978-3-95977-
+       334-8, ISSN 1868-8969, URL http://dx.doi.org/10.4230/LIPIcs.SAT.2024.12, source code:
+       https://github.com/s6dafabe/popsatgcpbcp.
+
+Farley AA (1990) A note on bounding a class of linear programming problems, including cutting stock problems.
+       Operations Research 38(5):922–923.
+
+Furini F, Gabrel V, Ternier IC (2017) An improved dsatur-based branch-and-bound algorithm for the vertex coloring
+       problem. Networks 69(1):124–141.
+32                                                                              Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+
+Garey MR, Johnson DS (1979) Computers and intractability: A guide to the theory of NP-Completeness. W. H. Free-
+      man .
+
+Gualandi S, Malucelli F (2012) Exact solution of graph coloring problems via constraint programming and column
+      generation. INFORMS Journal on Computing 24(1):81–100.
+
+Hebrard E, Katsirelos G (2020) Constraint and satisfiability reasoning for graph coloring. Journal of Artifi-
+      cial Intelligence Research 69:33–65, source code: https://bitbucket.org/gkatsi/gc-cdcl/src/
+      master/.
+
+Held S, Cook W, Sewell EC (2012) Maximum-weight stable sets and safe lower bounds for graph coloring. Mathe-
+      matical Programming Computation 4(4):363–381, source code: https://github.com/heldstephan/
+      exactcolors.
+
+Heule MJH, Karahalios A, van Hoeve WJ (2022) From cliques to colorings and back again. 28th International Con-
+      ference on Principles and Practice of Constraint Programming (CP 2022), source code: https://github.
+      com/marijnheule/clicolcom.
+
+Irnich S, Desaulniers G, Desrosiers J, Hadjar A (2010) Path-reduced costs for eliminating arcs in routing and schedul-
+      ing. INFORMS Journal on Computing 22(2):297–313.
+
+Jiang H, Li CM, Liu Y, Manya F (2018) A two-stage maxsat reasoning approach for the maximum weight clique
+      problem. Proceedings of the AAAI Conference on Artificial Intelligence, volume 32.
+
+Johnson DS, Trick MA (1996) Cliques, coloring, and satisfiability: second DIMACS implementation challenge, Octo-
+      ber 11-13, 1993, volume 26 (American Mathematical Soc.).
+
+Lübbecke ME, Desrosiers J (2005) Selected topics in column generation. Operations Research 53(6):1007–1023.
+
+Lucet C, Mendes F, Moukrim A (2004) Pre-processing and linear-decomposition algorithm to solve the k-colorability
+      problem. International Workshop on Experimental and Efficient Algorithms, 315–325 (Springer).
+
+Malaguti, Monaci M, Toth P (2008) A metaheuristic approach for the vertex coloring problem. INFORMS Journal on
+      Computing 20(2):302–316.
+
+Malaguti, Monaci M, Toth P (2011) An exact approach for the vertex coloring problem. Discrete Optimization
+      8(2):174–190.
+
+Malaguti, Toth P (2010) A survey on vertex coloring problems. International Transactions in Operational Research
+      17(1):1—-34.
+
+Mehrotra A, Trick MA (1996) A column generation approach for graph coloring. INFORMS Journal on Computing
+      8(4):344–354.
+
+Mingozzi A, Roberti R, Toth P (2013) An exact algorithm for the multitrip vehicle routing problem. INFORMS Journal
+      on Computing 25(2):193–207.
+
+Morrison DR, Sewell EC, Jacobson SH (2014) Characteristics of the maximal independent set zdd. Journal of Com-
+      binatorial Optimization 28:121–139.
+Zheng et al.: Branch-and-Price for Graph Coloring                                                                 33
+
+Morrison DR, Sewell EC, Jacobson SH (2016) Solving the pricing problem in a branch-and-price algorithm for graph
+       coloring using zero-suppressed binary decision diagrams. INFORMS Journal on Computing 28(1):67–82.
+
+Pardalos PM, Mavridou T, Xue J (1998) The graph coloring problem: A bibliographic survey. Handbook of Combina-
+       torial Optimization: Volume1–3 1077–1141.
+
+San Segundo P (2012) A new dsatur-based algorithm for exact vertex coloring. Computers & Operations Research
+       39(7):1724–1733, source code: https://bitbucket.org/gkatsi/gc-cdcl/src/master/sota/
+       Segundo/DSATUR/.
+
+San Segundo P, Furini F, Álvarez D, Pardalos PM (2023) Clisat: A new exact algorithm for hard maximum clique
+       problems. European Journal of Operational Research 307:1008–1025.
+
+Sellmann M (2004) Theoretical foundations of cp-based lagrangian relaxation. International Conference on Principles
+       and Practice of Constraint Programming, 634–647 (Springer).
+
+Sewell EC (1996) An improved algorithm for exact graph coloring. DIMACS Series in Computer Mathematics and
+       Theoretical Computer Science 26:359–373.
+
+Shen Y, Sun Y, Li X, Eberhard A, Ernst A (2022) Enhancing column generation by a machine-learning-based pricing
+       heuristic for graph coloring. Proceedings of the AAAI conference on artificial intelligence, volume 36, 9926–
+       9934.
+
+Sun Y, Ernst AT, Li X, Weiner J (2022) Learning to generate columns with application to vertex coloring. The Eleventh
+       International Conference on Learning Representations.
+
+Uchoa E, Pessoa A, Moreno L (2024) Optimizing with Column Generation: Advanced branch-cut-and-price algo-
+       rithms (Part I). Technical Report L-2024-3, Cadernos do LOGIS-UFF, Universidade Federal Fluminense, Engen-
+       haria de Produção, URL https://optimizingwithcolumngeneration.github.io.
+
+Van Hoeve WJ (2022) Graph coloring with decision diagrams. Mathematical Programming 192(1-2):631–674.
+
+Wu Q, Hao J, Glover F (2012) Multi-neighborhood tabu search for the maximum weight clique problem. Annals of
+       Operations Research 196(1):611–634.
+
+Yang Y (2024) Deluxing: Deep lagrangian underestimate fixing for column-generation-based exact methods. Opera-
+       tions Research 73(3):1184–1207.
+e-companion to Zheng et al.: Branch-and-Price for Graph Coloring                                                                  ec1
+
+
+
+E-Companion to the Paper Titled “Advancing Branch-and-Price for
+Graph Coloring: New Pricing Strategies and Benchmark Results”
+
+EC.1.         Proof of Statements
+This section provides proofs of the statements reported in the main paper.
+
+
+EC.1.1.        Proof of Lemma 1
+The result can be established using arguments analogous to those in Agarwal et al. (1989), Baldacci et al.
+(2002), and Baldacci et al. (2008). For completeness, we present a corresponding proof below.
+                                                                       P
+  Proof. Let ξ be a feasible integer solution of (1) with value z := S∈S ξS ≤ τ . By the definition of
+reduced cost in (3),
+                                            X     X        X        X
+                                    rc(S, π )ξS =     ξS −     πv         ξS .                      (EC.1)
+                                S∈S P             S∈S      v∈V    S∈S (v)
+Since ξ is feasible for (1), we have S∈S (v) ξS ≥ 1 for every v ∈ V. Together with π ≥ 0, this implies
+                                        X        X         X
+                                             πv       ξS ≥     πv .
+                                                          v∈V      S∈S (v)         v∈V
+              P
+Since z =         S∈S ξS , (EC.1) gives
+                             X                 X    X      X               X
+                        z=       rc(S, π )ξS +   πv   ξS ≥   rc(S, π )ξS +   πv .
+                                  S∈S                        v∈V     S∈S (v)        S∈S                    v∈V
+
+If ξS̄ = 1, dual feasibility gives rc(S, π ) ≥ 0 for every S ∈ S , and hence
+                                                             X
+                                            z ≥ rc(S̄, π ) +   πv > τ,
+                                                                             v∈V
+contradicting z ≤ τ .           □
+
+
+EC.1.2.        Proof of Lemma 2
+                                                                                               P
+   Proof. Let ξ be a feasible integer solution of (1) with value z :=                              S∈S ξS ≤ τ , and suppose by contra-
+
+diction that ξS̄ = 1. As for the proof of Lemma 1, we have
+                                             X                X
+                                         z≥     rc(S, π )ξS +   πv .
+                                                             S∈S                    v∈V
+Since rc(S, π ) ≥ rc∗ (π ) for every S ∈ S , we obtain
+                                                                                          X
+                                                z ≥ rc(S̄, π ) + (z − 1)rc∗ (π ) +              πv .
+                                                                                          v∈V
+Because z ≤ τ and rc∗ (π ) < 0, (z − 1)rc∗ (π ) ≥ (τ − 1)rc∗ (π ). Hence
+                                                                  X
+                               z ≥ rc(S̄, π ) + (τ − 1)rc∗ (π ) +    πv > τ,
+                                                                                         v∈V
+where the last inequality follows from (7). This contradicts z ≤ τ .                           □
+ec2                                                                       e-companion to Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+EC.1.3.     Proof of Theorem 1
+  Proof Let Ŝ ∈ S be a maximal stable set generated below the current branch. Then S̄ ⊆ Ŝ ⊆ S̄ ∪ C.
+               |V|
+Since πh ∈ R≥0 , condition (9) implies
+                                                     X                    X
+                                 rc(Ŝ, πh ) = 1 −          πh,v ≥ 1 −            πh,v > δh .
+                                                     v∈Ŝ                v∈S̄∪C
+By the definition of δh in (8), Lemma 1 applies if πh ∈ ΠF , and Lemma 2 applies if πh ∈ ΠI . Thus no
+feasible integer solution of (1) with objective value at most τ can satisfy ξŜ = 1.                   □
+
+EC.1.4.     Proof of Corollary 1
+  Proof. Consider first the recursive ZDD construction without reduced-cost pruning. By the correctness
+of the standard maximal-stable-set ZDD construction, the recursion generates exactly the root-to-T RUE
+paths associated with maximal stable sets in S .
+  We now show that the additional reduced-cost tests remove exactly the maximal stable sets that do not
+belong to Sred . At a terminal call, the current path corresponds to a maximal stable set S. The algorithm
+rejects this path if and only if there exists h ∈ {1, 2, . . . , q} such that
+                                                   rc(S, πh ) > δh .
+Equivalently, the terminal test accepts exactly those complete paths satisfying
+                                       rc(S, πh ) ≤ δh ,        h ∈ {1, 2, . . . , q},
+which are precisely the inequalities defining Sred .
+  It remains to verify that early pruning cannot remove any element of Sred . Suppose that a subtree is
+pruned by the test of Theorem 1. Then, for every maximal stable set Ŝ represented by a completion of that
+subtree, there exists h ∈ {1, 2, . . . , q} such that
+                                                   rc(Ŝ, πh ) > δh .
+Thus no such Ŝ belongs to Sred . Conversely, if S ∈ Sred , then along the unique recursive path represent-
+                                                                                             / Sred , a
+ing S, no reduced-cost pruning test can be satisfied; otherwise Theorem 1 would imply that S ∈
+contradiction.
+  Finally, the node-merging and zero-suppression operations are standard ZDD reductions and preserve the
+represented family of sets. Therefore, the returned ZDD encodes exactly the family Sred defined in (11).
+  □
+
+EC.2.      Illustration of Complete and Reduced ZDD Construction
+In this section, we present step-by-step examples of the complete and reduced ZDDs on a small, representa-
+tive graph. These examples demonstrate how the recursive branching procedure builds the complete ZDD,
+and how the reduced-cost pruning selectively discards branches to yield a more compact reduced ZDD.
+  For the example of graph in Figure 2(a), Figure EC.1 illustrates the key steps for constructing the com-
+plete ZDD that encodes all maximal stable sets S . Here, the notation [n] denotes the set {1, 2, . . . , n}
+e-companion to Zheng et al.: Branch-and-Price for Graph Coloring                                            ec3
+
+and a set listed in braces {·} indicates the uncovered set U for the corresponding recursive call in the
+M akeIndSetZDD procedure of Morrison et al. (2016).
+   As shown in Figure EC.1a, the construction starts from the root node associated with v1 , with the initial
+uncovered set U = [6]. We denote by R the partial stable set induced by the vertices selected along the
+current root-to-node path. When the search takes the root’s high branch (solid arc), vertex v1 is added to
+R, and v1 together with its neighbors (v2 , v4 , v6 ) is removed from U, yielding U = {3, 5}; the algorithm
+then proceeds to construct a node for v3 . If v3 is selected, it is added to R, and since v5 is not adjacent
+to v3 , the uncovered set becomes U = {5}. Selecting v5 next yields U = ∅, meaning that R = {v1 , v3 , v5 }
+is a maximal stable set; therefore, the high branch of v5 is connected to the T RUE node. Conversely, if v5
+is not selected, maximality cannot be satisfied, and the low branch of v5 is connected to the FALSE node.
+This completes the exploration of the high branch of v3 . We now backtrack and consider the low branch
+of v3 , as illustrated in Figure EC.1b. At this point, v3 is removed from the current partial stable set R, so
+the algorithm restores R to its state before selecting v3 . If v3 is not selected, the only selectable uncovered
+vertex in U is v5 , which is not adjacent to v3 . Therefore, this branch cannot lead to a maximal stable set,
+and the low branch of v3 is pruned and connected to the FALSE node.
+   When the low branch (dashed arc) is taken from the root, v1 is excluded from the current branch. The
+algorithm then backtracks to the state before selecting v1 , so the partial stable set is set to R = ∅, and
+proceeds to the next vertex in the ordering, namely v2 . Figures EC.1b–EC.1d illustrate the subsequent
+construction steps for the branches associated with S2 = {v2 , v4 , v6 } and S3 = {v2 , v5 }, which are obtained
+through different high/low decisions after excluding v1 . Along the branch generating S3 , the node to be
+created, denoted by a′ , is equivalent to the existing node a. Hence, a′ is merged with a, reducing the
+size of the ZDD while preserving its representation. Continuing the recursive exploration over all possible
+branches produces the complete ZDD shown in Figure EC.1i, which encodes the four maximal stable sets
+S1 = {v1 , v3 , v5 }, S2 = {v2 , v4 , v6 }, S3 = {v2 , v5 }, and S4 = {v3 , v6 }.
+   Figure EC.2 illustrates the key steps for constructing the reduced ZDD under U B = 3 and the feasible
+dual vector π = (1, 0, 0, 1, 0, 0). Although the graph in Figure 2(a) has chromatic number χ(G ) = 2, we set
+U B = 3 in this illustrative example so that the reduced ZDD is constructed with respect to the target value
+τ = U B − 1 = 2. In this way, the reduction aims to preserve the maximal stable sets that may appear in
+an optimal coloring of cost 2, while pruning only those branches that cannot contribute to any solution that
+improves the incumbent upper bound.
+   We use the same notation as in Figure EC.1: [n] denotes {1, 2, . . . , n}, and the set in braces represents
+the uncovered set U of the corresponding recursive call. In addition, the two values shown in parentheses
+(x, y ) have the following meaning. The first value x is the cumulative reduced cost of the current partial
+path, computed from the vertices selected by high-branch decisions up to the current node. The second
+value y is a valid lower bound on the reduced cost of any maximal stable set that can still be generated from
+     ec4                                                                                           e-companion to Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+                           v1 [6]                                         v1 [6]                                                 v1 [6]
+v1
+
+                                                                                    v2 [6]                                                v2 [6]
+v2
+                                                          b                                                           b
+           v3 {3, 5}                                  v3                                                          v3
+v3
+
+                                                                          v4 {4, 5, 6}                                           v4 {4, 5, 6}
+v4
+       a                                              a                                                           a             a′
+           v5 {5}                                     v5                                                          v5             v5
+v5
+                                                                                        c                                                   c
+                                                                                    v6 {6}                                                v6 {6}
+v6
+
+                       1              0                           1                     0                                   1               0
+                                (a)                                               (b)                                                 (c)
+                           v1 [6]                                          v1 [6]                                                v1 [6]
+v1
+
+                                    v2 [6]                                              v2 [6]                                            v2 [6]
+v2
+           b                                                  b                                                       b
+           v3                                             v3                                     v3 [6]           v3                                 v3 [6]
+v3
+                           d                                                  d                                                  d
+                           v4 {4, 5, 6}                                    v4                                                    v4
+v4
+       a                                                  a                                                       a
+           v5                                             v5                                     v5 {1, 5, 6} v5                                     v5
+v5
+                                      c                                                     c                                               c   c′
+                                    v6                                                  v6                                                v6         v6 {1, 5, 6}
+v6
+
+                       1              0                               1                     0                               1               0
+                                (d)                                               (e)                                                 (f)
+                           v1 [6]                                         v1 [6]                                                 v1
+v1
+                                                                                                                                            f
+                                    v2 [6]                                          v2 [6]                                                v2
+v2
+           b                                              b                                                           b                              e
+           v3                                v3 [6]   v3                                        v3 [6]            v3                                 v3
+v3
+                           d                                              d                                                      d
+                           v4                                             v4                             v4 [6]                  v4
+v4
+       a                                              a                                                           a
+           v5                                         v5                                                          v5
+v5
+                                      c                                                 c                                                   c
+                                    v6                                              v6                                                    v6
+v6
+
+                       1              0                           1                     0                                   1               0
+                                (g)                                               (h)                                                 (i)
+     Figure EC.1           Example of construction of the complete ZDD for the graph of Figure 2.
+e-companion to Zheng et al.: Branch-and-Price for Graph Coloring                                                                                                   ec5
+
+                     (1, −1) v1 [6]                                        v1 [6]                                                 v1 [6]
+v1
+
+                                                                            (1, 0) v2 [6]                                                  v2 [6]
+v2
+                                                                b                                                b
+     (0, 0) v3 {3, 5}                                           v3                                           v3
+v3
+
+                                                                     (1, 0) v4 {4, 5, 6}                                  (1, 0) v4 {4, 5, 6}
+
+v4
+          a                                                 a                                                a
+     (0, 0) v5 {5}                                              v5                                           v5
+v5
+                                                                                                                                             c
+                                                                                                                                  (0, 0) v6 {6}
+
+v6
+
+                  (0, 0)   1                0                          1              0                              (0, 0)   1              0
+                                      (a)                                       (b)                                                    (c)
+                                 v1 [6]                                    v1 [6]                                                 v1 [6]
+v1
+
+                                          v2 [6]                                    v2 [6]                                                 v2 [6]
+v2
+              b                                                 b                                                b
+           v3                                                   v3                                           v3                              (1, 0) v3 [6]
+
+v3
+                                                                            d                                                     d
+                                 v4 {4, 5, 6}                              v4                                                     v4
+v4
+          a                                                 a                                                a
+           v5          (1, 1) v5                                v5                                           v5                              (1, 1) v5 {1, 5, 6}
+
+v5
+                                            c                                         c                                                      c
+                                          v6                                        v6                                                     v6
+v6
+
+                           1                0                          1              0                                       1              0
+                                      (d)                                       (e)                                                    (f)
+                                 v1 [6]                                    v1                                                     v1
+v1
+                                                                                                                                             e
+                                          v2 [6]                                    v2 [6]                                                 v2
+v2
+              b                                                 b                                                b
+           v3                                      v3 [6]       v3                           v3 [6]          v3
+v3
+                                  d                                         d                                                     d
+                                 v4                                        v4                (1, 0) v4 [6]                        v4
+v4
+          a                                                 a                                                a
+           v5                                                   v5                                           v5
+v5
+                                            c                                         c                                                      c
+                                          v6                                        v6                                                     v6
+v6
+
+                           1                0                          1              0                                       1              0
+                                      (g)                                       (h)                                                    (i)
+Figure EC.2                    Example of construction of the reduced ZDD for the graph of Figure 2, using the feasible dual
+                               vector π = (1, 0, 0, 1, 0, 0).
+ec6                                                                     e-companion to Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+the corresponding branch. Thus, if y exceeds the fixing threshold, the whole branch can be safely pruned.
+This lower bound is computed according to the pruning test described in Algorithm 1 and Theorem 1. The
+detailed explanation of each figure follows.
+EC.2(a): Along the v1 -associated branch, the reduced cost remains below 1, hence the path is directed to
+          the T RUE node. When the search takes the root’s high branch, the uncovered set is U = {v3 , v5 },
+          and Theorem 1 yields a branch lower bound of 0, so no pruning is applied. Along the path
+          S1 = {v1 , v3 , v5 }, upon reaching node a and examining its high branch, we obtain the cumulative
+          reduced cost of this path RChi(a) = 0, which does not exceed the fixing threshold δ = 0. Hence,
+          S1 is retained in the reduced ZDD.
+EC.2(b): When v2 is selected, the pruning test does not apply, and the recursion proceeds to the next branch-
+          ing vertex, v4 .
+EC.2(c): Selecting v4 then forces the selection of v6 , since excluding v6 would violate maximality.
+EC.2(d): If v4 is not selected, the reduced-cost lower bound of the corresponding branch triggers pruning,
+          and the node associated with v5 is linked to the FALSE node. Consequently, the path corresponding
+          to S3 = {v2 , v5 } is not inserted into the reduced ZDD.
+EC.2(e): By the ZDD property, the node associated with v5 is eliminated, and the low arc of the node
+          associated with v4 is connected directly to the FALSE node.
+EC.2(f): On the branch associated with v3 , selecting v3 yields a reduced-cost lower bound equal to 1, which
+          triggers pruning. Therefore, this branch is rejected.
+EC.2(g): Since the path associated with v3 satisfies the pruning condition, it is connected to the FALSE
+          node. Consequently, the path corresponding to S4 = {v3 , v6 } is pruned.
+EC.2(h): When branching on v4 , note that v4 , v5 , and v6 are all non-neighbors of v2 . Hence, any stable
+          set generated along this branch could still be augmented by v2 , and therefore cannot be maximal.
+          Consequently, the branch is rejected.
+EC.2(i): Nodes whose high arc is connected to the FALSE node are eliminated. As a result, the node
+          associated with v2 is also connected to the FALSE node. All branches have been processed. The
+          algorithm terminates, yielding the reduced ZDD shown in Figure EC.2i.
+  To summarize, the complete ZDD in Figure EC.1i contains 7 decision nodes and 2 terminal nodes,
+together with 14 arcs, for a total size of 23. It encodes all four maximal stable sets for the example graph in
+Figure 2(a):
+                  S1 = {v1 , v3 , v5 },   S2 = {v2 , v4 , v6 },   S3 = {v2 , v5 },        S4 = {v3 , v6 }.
+In contrast, the reduced ZDD in Figure EC.2i contains six decision nodes and two terminal nodes, together
+with twelve arcs, for a total size of 20. It retains only two maximal stable sets:
+
+                                   S1 = {v1 , v3 , v5 }   and     S2 = {v2 , v4 , v6 },
+e-companion to Zheng et al.: Branch-and-Price for Graph Coloring                                           ec7
+
+whereas the paths corresponding to S3 and S4 are pruned by the reduced-cost fixing techniques. The two
+retained maximal stable sets exactly form an optimal coloring of the graph, since they cover all vertices
+using two colors. From a computational perspective, the ZDD-based pricing procedure can be implemented
+by dynamic programming over the ZDD and has complexity linear in the size of the diagram, namely
+O(|N | + |A|), where N and A denote the sets of ZDD nodes and arcs, respectively. In this example, the
+complete ZDD requires O(9 + 14) = O(23), whereas the reduced ZDD requires O(8 + 12) = O(20). This
+small example, therefore, illustrates how reduced-cost fixing decreases the size of the pricing structure while
+preserving the maximal stable sets required for optimality.
+
+EC.3.         Additional Details on the Computational Results
+This section presents additional details about the computational evaluation of BPCOL+. We first report
+details on the classical DIMACS benchmark instances (§EC.3.1). We then provide a detailed comparison
+with state-of-the-art exact algorithms for which source code is available, highlighting the relative perfor-
+mance of BPCOL+ (§EC.3.2). Finally, we analyze the effectiveness of the algorithm’s main components to
+assess their individual contributions to overall performance (§EC.3.3).
+
+EC.3.1.        DIMACS Instances
+The DIMACS instances can be divided into 22 different families. For example, the DSJC class consists
+of random graphs with varying densities, which pose severe challenges for exact algorithms because of
+their extremely high edge density. The myciel class is constructed with special structures. Although these
+graphs have relatively few edges, they hide high chromatic numbers, making them particularly challenging.
+Other categories include structured graphs, such as the queen instances, and real-world problem-based
+instances, such as the fpsol2 class, each presenting unique computational difficulties. The number of
+instances per family ranges from 2, for the school family, to 14, for the FullIns family, with an
+average of approximately 6.2. Three instances, games120, latin square 10, and will199GPIA,
+which do not belong to any larger group, are collected under the family labeled others. Instances with
+proper names, namely anna, david, homer, huck, and jean, are grouped into the family labeled
+SocialNet, as they are derived from social settings.
+   The computational results presented in Van Hoeve (2022) summarize the state-of-the-art upper and lower
+bounds for the DIMACS instances available at the time. In this work, these values are further updated by
+incorporating results from more recent exact and heuristic algorithms for the GCP. The resulting bounds,
+therefore, reflect the best-known values currently available from the literature. Based on these results,
+Table EC.1 reports, for each instance family, the number of instances solved to optimality in the literature
+(column “#solved”). These are instances for which the current lower and upper bounds on the chromatic
+number χ(G ) coincide. It is worth noting that the best-known lower and upper bounds often stem from
+different algorithmic approaches. Moreover, neither the computing times required to obtain them nor the
+ec8                                                              e-companion to Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+specific algorithms used are reported in Van Hoeve (2022). As a result, it is difficult to directly compare the
+performance of any new exact or heuristic algorithm against these results. Nevertheless, we include them
+to indicate which instances have been solved to optimality in the literature and to provide a broader context
+for evaluating the performance of BPCOL+ (see Van Hoeve (2022) for further details).
+  As shown in Table EC.1, several families contain only solved instances. These include DSJR, FullIns,
+GPIA, SocialNet, fpsol, inithx, le, miles, mug, mulsol, myciel, qg.order, school, and
+zeroin, where all instances have been solved to optimality. These families generally consist of instances
+with moderate size and structure that are well-suited to existing exact algorithms. On the other hand, some
+families remain particularly challenging because they contain a significant number of unresolved instances.
+In particular, the C family remains completely unsolved. Other difficult families include DSJC, with only 4
+out of 12 instances solved; Insertions (9 out of 11); flat (5 out of 6); queen (12 out of 13); r (8 out
+of 9); wap (5 out of 8); and others (2 out of 3). These families tend to include larger and denser graphs,
+which make them more challenging for current exact methods.
+  The last six columns of Table EC.1 report, for each family, the minimum and maximum number of
+vertices |V|, number of edges |E|, and edge density values µ, expressed as percentages. The smallest instance
+has 11 vertices, while the largest has 10,000; the number of edges ranges from 20 to over four million.
+The edge densities vary considerably across the benchmark: some families, such as FullIns, GPIA,
+Insertions, and SocialNet, include very sparse instances with minimum densities around or below
+1%, while others, like C, DSJC, DSJR, and r, contain highly connected graphs with densities of 90%
+or higher. This wide range of densities illustrates the structural diversity of the DIMACS instances and
+highlights the varying difficulty these instances pose for exact GCP algorithms.
+
+EC.3.2.    Detailed Comparative Results with Exact Algorithms with Available Source Code
+Table EC.2 reports detailed comparative results between BPCOL+ and the exact algorithms with publicly
+available source code on the full set of 137 DIMACS instances. These include the BP algorithm of Held et al.
+(2012), called exactcolors, and the DSatur-based algorithm of San Segundo (2012), called DSATUR.
+The remaining five are SAT-based algorithms: gc-cdcl by Hebrard and Katsirelos (2020), CliColCom
+by Heule et al. (2022), POP-S by Faber et al. (2024), Assignment and ZykovColor by Brand et al.
+(2026). The first six columns present the instance name (Instance), the family of the instance (Family),
+the number of vertices (|V|), the number of edges (|E|), the best known lower bound (LB), and the best
+known upper bound (U B) on the chromatic number. These bounds are initialized from the values reported
+by Van Hoeve (2022) and subsequently updated with more recent results from the literature and improve-
+ments from our computational experiments. The lower bound updated by BPCOL+ is highlighted in bold,
+for instance C2000.9. We improved the lower bound of instance C2000.9 and successfully closed the
+previously open instance r1000.1c by proving its optimality. The computing time of the fastest algorithm
+e-companion to Zheng et al.: Branch-and-Price for Graph Coloring                                                         ec9
+
+                        Table EC.1          Main features of the 22 families in the 137 DIMACS instances.
+                                                                          |V|                  |E|           µ (%)
+                      Family              #inst #solved             min         max      min         max   min max
+                      C                       3           0        2,000 4,000        999,836 4,000,268    50.0   90.0
+                      DSJC                   12           4          125 1,000            736   449,449     9.5   90.1
+                      DSJR                    3           3          500    500         3,555   121,275     2.8   97.2
+                      FullIns                14          14           30 4,146            100    77,305     0.9   23.0
+                      GPIA                    4           4          662 1,916          4,185    65,390     0.7    5.4
+                      Insertions             11           9           37 1,406             72     9,695     1.0   10.8
+                      SocialNet               5           5           74    561           254     1,628     1.0   11.1
+                      flat                    6           5          300 1,000         21,375   246,708    47.7   49.4
+                      fpsol                   3           3          425    496         8,688    11,654     8.6    9.6
+                      inithx                  3           3          621    864        13,969    18,707     5.0    7.3
+                      le                     12          12          450    450         5,714    17,425     5.7   17.2
+                      miles                   5           5          128    128           387     5,198     4.8   64.0
+                      mug                     4           4           88    100           146       166     3.4    3.8
+                      mulsol                  5           5          184    197         3,885     3,973    20.3   23.3
+                      myciel                  5           5           11    191            20     2,360    13.0   36.4
+                      others                  3           2          120    900           638   307,350     2.9   76.0
+                      qg.order                4           4          900 10,000        26,100   990,000     2.0    6.5
+                      queen                  13          12           25    256           160     6,320    19.4   53.3
+                      r                       9           8          125 1,000            209   485,090     2.7   97.1
+                      school                  2           2          352    385        14,612    19,095    23.7   25.8
+                      wap                     8           5          905 5,231         43,081   294,902     2.2   10.5
+                      zeroin                  3           3          206    211         3,540     4,100    16.0   18.5
+                      total/min/max         137         117          11 10,000            20 4,000,268      0.7   97.2
+
+
+for each instance is also shown in bold. Columns 7–15 report the running times of BPCOL+, BPCOL+UB,
+and seven reference algorithms, all evaluated with a time limit of 3600 seconds. To ensure a fair com-
+parison, all algorithms with publicly available source code were executed on the same machine under the
+computational environment described in Section 5.2.1.
+Table EC.2: Comparison of the exact algorithms for the GCP on the 137 DIMACS instances, with a time limit of 3600 seconds. Computing times
+
+
+
+
+                                                                                                                                                                     ec10
+below 0.01 seconds are reported as ≤ 0.01 seconds.
+
+       Instance            Family       |V|    |E|   LB U B exactcolors DSATUR gc-cdcl CliColCom POP-S Assignment ZykovColor BPCOL+ BPCOL+UB
+       1-FullIns 3          FullIns       30     100   4   4      ≤ 0.01     ≤ 0.01        0.02       0.03      0.187      0.06        0.11 ≤ 0.01        ≤ 0.01
+       1-FullIns 4          FullIns       93     593   5   5          t.l.   ≤ 0.01        0.02       0.03      0.184      0.06        0.06 ≤ 0.01        ≤ 0.01
+       1-FullIns 5          FullIns      282    3247   6   6          t.l.   ≤ 0.01        0.11       0.17      0.714      0.06        0.06 ≤ 0.01        ≤ 0.01
+       1-Insertions 4 Insertions          67     232   5   5          t.l.       t.l.        t.l.     1.28      0.916      0.37      136.82       t.l.        t.l.
+       1-Insertions 5 Insertions         202    1227   6   6          t.l.       t.l.        t.l.       t.l.       t.l.      t.l.        t.l.     t.l.        t.l.
+       1-Insertions 6 Insertions         607    6337   4   7          t.l.       t.l.        t.l.       t.l.       t.l.      t.l.        t.l.     t.l.        t.l.
+       2-FullIns 3          FullIns       52     201   5   5      ≤ 0.01     ≤ 0.01      ≤ 0.01       0.03      0.169      0.06        0.06     0.03        0.02
+       2-FullIns 4          FullIns      212    1621   6   6          t.l.   ≤ 0.01        0.08       0.05      0.358      0.12        0.13     3.25        0.26
+       2-FullIns 5          FullIns      852   12201   7   7          t.l.     1.96      149.95       1.93      2.879      0.18        0.85       t.l.        t.l.
+       2-Insertions 3 Insertions          37      72   4   4      587.41     ≤ 0.01        0.28       0.03       0.15      0.08        0.18     5.24        1.97
+       2-Insertions 4 Insertions         149     541   5   5          t.l.       t.l.        t.l.       t.l.       t.l.      t.l.        t.l.     t.l.        t.l.
+       2-Insertions 5 Insertions         597    3936   6   6          t.l.       t.l.        t.l.       t.l.       t.l.      t.l.        t.l.     t.l.        t.l.
+       3-FullIns 3          FullIns       80     346   6   6      ≤ 0.01     ≤ 0.01        0.02       0.02      0.173       0.1        0.11     1.01        0.01
+       3-FullIns 4          FullIns      405    3524   7   7          t.l.   ≤ 0.01        0.15       0.13      0.671      0.12        0.14     4.37        0.37
+       3-FullIns 5          FullIns     2030   33751   8   8          t.l.       t.l.      3.64         24     14.963      4.55        4.87       t.l.        t.l.
+       3-Insertions 3 Insertions          56     110   4   4          t.l.     2.59        8.49       0.04       0.17      0.12         0.9       t.l.        t.l.
+       3-Insertions 4 Insertions         281    1046   5   5          t.l.       t.l.        t.l.       t.l.       t.l.      t.l.        t.l.     t.l.        t.l.
+       3-Insertions 5 Insertions        1406    9695   4   6          t.l.       t.l.        t.l.       t.l.       t.l.      t.l.        t.l.     t.l.        t.l.
+       4-FullIns 3          FullIns      114     541   7   7        0.02     ≤ 0.01        0.02       0.03      0.172       0.1         0.1     1.01        0.01
+       4-FullIns 4          FullIns      690    6650   8   8          t.l.     0.06        0.69       0.59       1.46      0.13        0.13     3.41        0.42
+       4-FullIns 5          FullIns     4146   77305   9   9          t.l.       t.l.        t.l.   611.93     89.189     58.12       35.91       t.l.        t.l.
+       4-Insertions 3 Insertions          79     156   4   4          t.l.    2396      3010.51       0.14      0.225      0.28        9.38       t.l.        t.l.
+       4-Insertions 4 Insertions         475    1795   5   5          t.l.       t.l.        t.l.       t.l.       t.l.      t.l.        t.l.     t.l.        t.l.
+       5-FullIns 3          FullIns      154     792   8   8      ≤ 0.01     ≤ 0.01        0.02        0.1      0.212       0.1        0.11     1.01        0.01
+       5-FullIns 4          FullIns     1085   11395   9   9          t.l.     0.25        1.21       4.96      3.823      0.16        0.17     4.51        0.53
+       abb313GPIA           GPIA        1557   65390   9   9          t.l.       t.l.        t.l.       t.l.   14.259     12.62      324.31       t.l.        t.l.
+
+
+
+
+                                                                                                                                                                     e-companion to Zheng et al.: Branch-and-Price for Graph Coloring
+       anna                 SocialNet    138     493 11 11        ≤ 0.01     ≤ 0.01      ≤ 0.01       0.02      0.171      0.06        0.06 ≤ 0.01        ≤ 0.01
+       ash331GPIA           GPIA         662    4185   4   4          t.l.     0.24        4.92       0.09      1.072      1.67       11.27 109.64         10.63
+       ash608GPIA           GPIA        1216    7844   4   4          t.l.       t.l.     24.36       0.24      3.046     10.17      130.41 2493.98      2394.95
+       ash958GPIA           GPIA        1916   12506   4   4          t.l.     4.97      317.09       0.56     10.564     10.25     1109.49       t.l.        t.l.
+       C2000.5              C           2000 999836 99 145            t.l.       t.l.        t.l.       t.l.       t.l.      t.l.        t.l.     t.l.        t.l.
+       C2000.9              C           2000 1799532 390 400          t.l.       t.l.        t.l.       t.l.       t.l.      t.l.        t.l.     t.l.        t.l.
+       C4000.5              C           4000 4000268 107 259          t.l.       t.l.        t.l.       t.l.       t.l.      t.l.        t.l.     t.l.        t.l.
+       david                SocialNet     87     406 11 11        ≤ 0.01     ≤ 0.01      ≤ 0.01       0.02      0.197      0.06        0.06 ≤ 0.01        ≤ 0.01
+       DSJC1000.1           DSJC        1000   49629 10 20            t.l.       t.l.        t.l.       t.l.       t.l.      t.l.        t.l.     t.l.        t.l.
+       DSJC1000.5           DSJC        1000 249826 73 82             t.l.       t.l.        t.l.       t.l.       t.l.      t.l.        t.l.     t.l.        t.l.
+       DSJC1000.9           DSJC        1000 449449 216 222           t.l.       t.l.        t.l.       t.l.       t.l.      t.l.        t.l.     t.l.        t.l.
+       DSJC125.1            DSJC         125     736   5   5     1630.02     ≤ 0.01        0.72       0.03      0.201      1.31        1.86    16.24        4.24
+       DSJC125.5            DSJC         125    3891 17 17            t.l.       t.l.        t.l.       t.l.       t.l.      t.l.        t.l.  38.14       25.57
+       DSJC125.9            DSJC         125    6961 44 44          7.21         t.l.        t.l.       t.l.       t.l.      t.l.    681.38    16.26        4.26
+       DSJC250.1            DSJC         250    3218   7   8          t.l.       t.l.        t.l.       t.l.       t.l.      t.l.        t.l.     t.l.        t.l.
+       DSJC250.5            DSJC         250   15668 26 28            t.l.       t.l.        t.l.       t.l.       t.l.      t.l.        t.l.     t.l.        t.l.
+       DSJC250.9            DSJC         250   27897 72 72            t.l.       t.l.        t.l.       t.l.       t.l.      t.l.        t.l. 172.77      147.18
+       DSJC500.1            DSJC         500   12458   9 12           t.l.       t.l.        t.l.       t.l.       t.l.      t.l.        t.l.     t.l.        t.l.
+       DSJC500.5            DSJC         500   62624 43 47            t.l.       t.l.        t.l.       t.l.       t.l.      t.l.        t.l.     t.l.        t.l.
+       DSJC500.9            DSJC         500 112437 123 126           t.l.       t.l.        t.l.       t.l.       t.l.      t.l.        t.l.     t.l.        t.l.
+       Continued on next page
+                                                                                                                                                         e-companion to Zheng et al.: Branch-and-Price for Graph Coloring
+Continued
+Instance          Family     |V|    |E|   LB U B exactcolors DSATUR gc-cdcl CliColCom POP-S Assignment ZykovColor BPCOL+ BPCOL+UB
+DSJR500.1            DSJR       500   3555 12 12       267.18       0.14        0.07      0.04      0.929      0.06       0.07     ≤ 0.01     ≤ 0.01
+DSJR500.1c           DSJR       500 121275 85 85       642.79         t.l.        t.l.   27.07         t.l.    2.67       2.85      32.35       0.34
+DSJR500.5            DSJR       500  58862 122 122    3195.78         t.l.        t.l.   39.12         t.l.      t.l.    87.43       5.15     ≤ 0.01
+flat1000 50 0        flat      1000 245000 50 50           t.l.       t.l.        t.l.      t.l.       t.l.      t.l.       t.l.       t.l.       t.l.
+flat1000 60 0        flat      1000 245830 60 60           t.l.       t.l.        t.l.      t.l.       t.l.      t.l.       t.l.       t.l.       t.l.
+flat1000 76 0        flat      1000 246708 72 81           t.l.       t.l.        t.l.      t.l.       t.l.      t.l.       t.l.       t.l.       t.l.
+flat300 20 0         flat       300  21375 20 20        526.1         t.l.        t.l.      t.l.       t.l.      t.l.       t.l.   441.71     411.56
+flat300 26 0         flat       300  21633 26 26       903.18         t.l.        t.l.      t.l.       t.l.      t.l.       t.l.    81.28      49.57
+flat300 28 0         flat       300  21695 28 28           t.l.       t.l.        t.l.      t.l.       t.l.      t.l.       t.l.       t.l.    10.58
+fpsol2.i.1           fpsol      496  11654 65 65         0.41     ≤ 0.01        2.28      0.07      9.505      0.07       0.07     ≤ 0.01     ≤ 0.01
+fpsol2.i.2           fpsol      451   8691 30 30         0.44     ≤ 0.01        0.84      0.06      7.105      0.07       0.07     ≤ 0.01     ≤ 0.01
+fpsol2.i.3           fpsol      425   8688 30 30          0.3     ≤ 0.01        3.54      0.05      7.876      0.07       0.07     ≤ 0.01     ≤ 0.01
+games120             other      120    638   9   9       0.02     ≤ 0.01      ≤ 0.01      0.02      0.155      0.06       0.06     ≤ 0.01     ≤ 0.01
+homer                SocialNet 561    1628 13 13         0.09     ≤ 0.01        0.02      0.03      0.469      0.06       0.07     ≤ 0.01     ≤ 0.01
+huck                 SocialNet   74    301 11 11       ≤ 0.01     ≤ 0.01      ≤ 0.01      0.02      0.146      0.06       0.06     ≤ 0.01     ≤ 0.01
+inithx.i.1           inithx     864  18707 54 54         1.47        0.1        3.32      0.13     15.221      0.08       0.09     ≤ 0.01     ≤ 0.01
+inithx.i.2           inithx     645  13979 31 31          0.3       0.08        1.91       0.1     11.648      0.07       0.08     ≤ 0.01     ≤ 0.01
+inithx.i.3           inithx     621  13969 31 31         0.36       0.07        1.86      0.08     16.132      0.07       0.08     ≤ 0.01     ≤ 0.01
+jean                 SocialNet   80    254 10 10       ≤ 0.01     ≤ 0.01      ≤ 0.01      0.02      0.229      0.06       0.07     ≤ 0.01     ≤ 0.01
+latin square 10 other           900 307350 90 97           t.l.       t.l.        t.l.      t.l.       t.l.      t.l.       t.l.       t.l.       t.l.
+le450 15a            le         450   8168 15 15           t.l.       t.l.     20.86      0.12      2.569      7.14       19.6       0.04     ≤ 0.01
+le450 15b            le         450   8169 15 15           t.l.       t.l.      5.99      0.12       2.11      8.73      23.08     ≤ 0.01     ≤ 0.01
+le450 15c            le         450  16680 15 15           t.l.       t.l.        t.l.   53.28         t.l.      t.l.   709.35       0.53     ≤ 0.01
+le450 15d            le         450  16750 15 15           t.l.       t.l.        t.l.   42.62         t.l.      t.l.   310.19       0.55     ≤ 0.01
+le450 25a            le         450   8260 25 25         1.99       0.11         0.6      0.07      2.608      0.06       0.07     ≤ 0.01     ≤ 0.01
+le450 25b            le         450   8263 25 25         3.16       0.09        0.29      0.08      2.511      0.06       0.07     ≤ 0.01     ≤ 0.01
+le450 25c            le         450  17343 25 25           t.l.       t.l.        t.l.      t.l.       t.l.      t.l.       t.l.    40.27     ≤ 0.01
+le450 25d            le         450  17425 25 25           t.l.       t.l.        t.l.      t.l.       t.l.      t.l.       t.l.    39.80     ≤ 0.01
+le450 5a             le         450   5714   5   5         t.l.       t.l.    899.63      0.04       1.22     12.28      16.19     ≤ 0.01     ≤ 0.01
+le450 5b             le         450   5734   5   5         t.l.       t.l.   1529.99      0.04      1.179      10.1       18.2     ≤ 0.01     ≤ 0.01
+le450 5c             le         450   9803   5   5         t.l.     0.18         9.2      0.04       1.98      10.1      12.58     ≤ 0.01     ≤ 0.01
+le450 5d             le         450   9757   5   5     2630.6      12.45         5.5      0.04      1.789     12.08       13.1     ≤ 0.01     ≤ 0.01
+miles1000            miles      128   3216 42 42         0.15     ≤ 0.01        0.46      0.03      4.253      0.06       0.06     ≤ 0.01     ≤ 0.01
+miles1500            miles      128   5198 73 73         0.17     ≤ 0.01        1.92      0.04     17.147      0.08       0.08     ≤ 0.01     ≤ 0.01
+miles250             miles      128    387   8   8     ≤ 0.01     ≤ 0.01      ≤ 0.01      0.02      0.217      0.06       0.06     ≤ 0.01     ≤ 0.01
+miles500             miles      128   1170 20 20         0.03     ≤ 0.01        0.05      0.02      0.214      0.06       0.06     ≤ 0.01     ≤ 0.01
+miles750             miles      128   2113 31 31         0.06     ≤ 0.01        0.21      0.02      1.433      0.06       0.06     ≤ 0.01     ≤ 0.01
+mug100 1             mug        100    166   4   4       1.13         t.l.      0.11      0.02      0.205      0.59       0.58      10.95       0.83
+mug100 25            mug        100    166   4   4       1.03         t.l.      0.08      0.03      0.212      0.52       0.62      10.88       0.84
+mug88 1              mug         88    146   4   4       0.66      433.2        0.09      0.03      0.219      0.33       0.98       8.57       0.47
+mug88 25             mug         88    146   4   4       0.65      280.1        0.06      0.03      0.204      0.36       0.46       8.58       0.53
+mulsol.i.1           mulsol     197   3925 49 49         0.19     ≤ 0.01        0.67      0.04      3.311      0.06       0.07     ≤ 0.01     ≤ 0.01
+mulsol.i.2           mulsol     188   3885 31 31         0.04     ≤ 0.01        0.33      0.05      3.652      0.06       0.07     ≤ 0.01     ≤ 0.01
+mulsol.i.3           mulsol     184   3916 31 31         0.07     ≤ 0.01        0.36      0.05      4.464      0.06       0.07     ≤ 0.01     ≤ 0.01
+mulsol.i.4           mulsol     185   3946 31 31         0.08     ≤ 0.01        0.36      0.05      4.205      0.06       0.07     ≤ 0.01     ≤ 0.01
+mulsol.i.5           mulsol     186   3973 31 31         0.06     ≤ 0.01        0.39      0.03      4.077      0.06       0.07     ≤ 0.01     ≤ 0.01
+myciel3              myciel      11     20   4   4       0.04     ≤ 0.01      ≤ 0.01      0.03      0.215      0.06       0.06     ≤ 0.01     ≤ 0.01
+myciel4              myciel      23     71   5   5      19.11     ≤ 0.01      ≤ 0.01      0.03      0.224      0.06       0.06     ≤ 0.01     ≤ 0.01
+                     myciel      47    236   6   6         t.l.     1.43      ≤ 0.01      0.36       0.46      0.06       0.06     ≤ 0.01     ≤ 0.01
+
+
+
+
+                                                                                                                                                         ec11
+myciel5
+Continued on next page
+                                                                                                                                                           ec12
+Continued
+Instance      Family      |V|     |E|   LB U B exactcolors DSATUR gc-cdcl CliColCom POP-S Assignment ZykovColor BPCOL+ BPCOL+UB
+myciel6       myciel        95      755   7   7          t.l.       t.l.      0.02     825.29 1531.341          0.06        0.06 ≤ 0.01         ≤ 0.01
+myciel7       myciel       191     2360   8   8          t.l.       t.l.      0.07         t.l.       t.l.      0.06        0.06 ≤ 0.01         ≤ 0.01
+qg.order100   qg.order   10000   990000 100 100          t.l.       t.l.        t.l.       t.l.       t.l.   2044.34          t.l.   78.61      ≤ 0.01
+qg.order30    qg.order     900    26100 30 30            t.l.     0.67         0.2       2.93     17.964       12.22      144.13 ≤ 0.01         ≤ 0.01
+qg.order40    qg.order    1600    62400 40 40            t.l.       t.l.     47.32      54.21     62.571       11.04     1867.48      0.05      ≤ 0.01
+qg.order60    qg.order    3600   212400 60 60            t.l.       t.l.   1735.72     164.38 3118.388         17.72     1547.46      1.51      ≤ 0.01
+queen10 10    queen        100     1470 11 11        209.76         t.l.        t.l.       t.l. 247.477           t.l.     174.2     48.44       39.90
+queen11 11    queen        121     1980 11 11            t.l.       t.l.        t.l.       t.l. 3436.09           t.l.    104.15     57.02      ≤ 0.01
+queen12 12    queen        144     2596 12 12            t.l.       t.l.        t.l.       t.l.       t.l.        t.l.        t.l. 2827.82      ≤ 0.01
+queen13 13    queen        169     3328 13 13            t.l.       t.l.        t.l.       t.l.       t.l.        t.l.        t.l.      t.l.    ≤ 0.01
+queen14 14    queen        196     4186 14 14            t.l.       t.l.        t.l.       t.l.       t.l.        t.l.        t.l.      t.l.    ≤ 0.01
+queen15 15    queen        225     5180 15 15            t.l.       t.l.        t.l.       t.l.       t.l.        t.l.        t.l.      t.l.    ≤ 0.01
+queen16 16    queen        256     6320 16 17            t.l.       t.l.        t.l.       t.l.       t.l.        t.l.        t.l.      t.l.        t.l.
+queen5 5      queen         25      160   5   5      ≤ 0.01     ≤ 0.01      ≤ 0.01       0.02       0.35         0.1        0.06 ≤ 0.01         ≤ 0.01
+queen6 6      queen         36      290   7   7        0.58     ≤ 0.01        0.21       0.04      0.378        0.69        0.62      3.03        0.04
+queen7 7      queen         49      476   7   7        1.16     ≤ 0.01        0.22       0.02      0.506         0.1        0.11 ≤ 0.01         ≤ 0.01
+queen8 12     queen         96     1368 12 12         10.72     ≤ 0.01        0.08       0.03      0.873        0.13        0.26 ≤ 0.01         ≤ 0.01
+queen8 8      queen         64      728   9   9        8.09       1.05        18.7      11.19      2.563        0.52        1.28      6.11        0.14
+queen9 9      queen         81     1056 10 10         15.69      635.8      191.12         t.l.    23.07      483.29       27.74     20.64       12.11
+r1000.1       r           1000    14378 20 20              1      0.85        0.35       0.15      6.081        0.08        0.07 ≤ 0.01         ≤ 0.01
+r1000.1c      r           1000   485090 98 98            t.l.       t.l.        t.l.       t.l.       t.l.        t.l.        t.l. 1653.99     1313.40
+r1000.5       r           1000   238267 234 234          t.l.       t.l.        t.l.   3335.6         t.l.   1241.52          t.l. 2588.45      ≤ 0.01
+r125.1        r            125      209   5   5      ≤ 0.01     ≤ 0.01      ≤ 0.01       0.02      0.211        0.07        0.06 ≤ 0.01         ≤ 0.01
+r125.1c       r            125     7501 46 46          0.02     ≤ 0.01        2.75       0.04       29.1        0.08        0.07 ≤ 0.01         ≤ 0.01
+r125.5        r            125     3838 36 36         14.86       0.09        1.06       0.05      9.281        0.87        4.35 ≤ 0.01         ≤ 0.01
+r250.1        r            250      867   8   8        0.03     ≤ 0.01      ≤ 0.01       0.02      0.345        0.06        0.06 ≤ 0.01         ≤ 0.01
+r250.1c       r            250    30227 64 64            40       1.31       24.07        0.2 101.655            0.1        0.15 ≤ 0.01         ≤ 0.01
+r250.5        r            250    14849 65 65        239.52      242.9       11.77       2.06     45.566        2.52       93.86      0.59      ≤ 0.01
+school1       school       385    19095 14 14       1143.01       6.59        2.64       0.59     10.623        0.23        0.22 ≤ 0.01         ≤ 0.01
+
+
+
+
+                                                                                                                                                           e-companion to Zheng et al.: Branch-and-Price for Graph Coloring
+school1 nsh   school       352    14612 14 14       2093.18       5.84        1.85       0.07      6.848        0.07        0.07 ≤ 0.01         ≤ 0.01
+wap01a        wap         2368   110871 41 41            t.l.       t.l.        t.l.   216.59 2402.687            t.l.        t.l.      t.l.    ≤ 0.01
+wap02a        wap         2464   111742 40 40            t.l.       t.l.        t.l.   207.63         t.l.        t.l.        t.l.      t.l.    ≤ 0.01
+wap03a        wap         4730   286722 40 45            t.l.       t.l.        t.l.       t.l.       t.l.        t.l.        t.l.      t.l.        t.l.
+wap04a        wap         5231   294902 40 42            t.l.       t.l.        t.l.       t.l.       t.l.        t.l.        t.l.      t.l.        t.l.
+wap05a        wap          905    43081 50 50          5.49       0.91        4.29       0.51     52.665        0.11         0.1 ≤ 0.01         ≤ 0.01
+wap06a        wap          947    43571 40 40            t.l.       t.l.        t.l.    43.18 119.649         774.34      452.45      5.70      ≤ 0.01
+wap07a        wap         1809   103368 40 41            t.l.       t.l.        t.l.       t.l.       t.l.        t.l.        t.l.      t.l.        t.l.
+wap08a        wap         1870   104176 40 40            t.l.       t.l.        t.l.       t.l. 3076.052     3192.24          t.l.      t.l.    ≤ 0.01
+will199GPIA   other        701     7065   7   7        1.46       0.24        0.47       0.20      2.568        0.73        1.32 110.37          11.36
+zeroin.i.1    zeroin       211     4100 49 49          0.07     ≤ 0.01         0.7       0.03       4.42        0.07        0.07 ≤ 0.01         ≤ 0.01
+zeroin.i.2    zeroin       211     3541 30 30          0.03     ≤ 0.01         0.3       0.03      3.786        0.06        0.07 ≤ 0.01         ≤ 0.01
+zeroin.i.3    zeroin       206     3540 30 30          0.03     ≤ 0.01        0.27       0.03      3.862        0.06        0.08 ≤ 0.01         ≤ 0.01
+e-companion to Zheng et al.: Branch-and-Price for Graph Coloring                                     ec13
+
+   Running times below or equal to 0.01 seconds are reported as “≤ 0.01” to avoid comparisons of very
+small values and because our focus is on evaluating performance on the harder instances. If an algorithm
+fails to solve an instance within the time limit, the entry is marked as “t.l.” (time limit).
+   The results reported in Table EC.2 demonstrate the competitiveness of our approach. Overall, BPCOL+
+solves 96 instances, outperforming all competing algorithms with publicly available source code. In terms
+of computational efficiency, BPCOL+ achieves the fastest running time on 73 instances among the seven
+reference algorithms considered in the comparison. When compared with exactcolors, the only other
+BP algorithm in this set, BPCOL+ demonstrates markedly superior performance: it solves 31 additional
+instances. Among the 65 instances solved by exactcolors, our method achieves faster runtimes on 45
+cases, while matching its performance on the remaining 5.
+   These findings confirm that BPCOL+ provides substantial runtime advantages, even against algorithms
+employing the same exact framework.
+
+EC.3.3.        Effectiveness of the Main Components of BPCOL+
+This section presents an analysis of the effectiveness of the main BPCOL+ components (§EC.3.3.1) and of
+the ZDD reduction strategies (§EC.3.3.2).
+
+   EC.3.3.1.         Key Efficiency Drivers of BPCOL+. To assess the contribution of each component, we
+evaluate the following BPCOL+ variants on the DIMACS instances, each obtained by modifying or disabling
+a single algorithmic component:
+   • RootZDDPric: ZDD-based pricing at the root node only (§4.4).
+   • NoHeurPric: Removes the heuristic pricing algorithm at the root node (§4.4).
+   • CompleteZDD: Disables all reduced-cost fixing strategies (§3.2).
+   Figure EC.3 reports the number of instances solved as a function of computing time for BPCOL+ and its
+three variants on the 137 DIMACS benchmark instances, where the x-axis denotes CPU time, and the y-axis
+denotes the cumulative number of solved instances. Overall, BPCOL+ achieves the best performance, solv-
+ing 96 instances within the 1-hour time limit, compared with 94 for NoHeurPric, 94 for CompleteZDD,
+and 85 for RootZDDPric. Its curve stays above the others for most of the time horizon, showing that
+the full combination of algorithmic components improves both robustness and time-to-solution. The rela-
+tively poor performance of RootZDDPric indicates that replacing the root-node pricing procedure with
+the ZDD-based dynamic programming approach substantially weakens the algorithm, as constructing and
+processing complete ZDDs can be difficult for large or sparse instances. The smaller but consistent gaps
+between BPCOL+ and NoHeurPric or CompleteZDD further demonstrate the value of the heuristic
+pricing mechanism and reduced-cost fixing strategies. Although these two variants remain competitive on
+easier instances, they eventually fall behind BPCOL+, confirming that both components contribute to faster
+convergence and stronger overall solving capability.
+ec14                                                                            e-companion to Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+Figure EC.3                   Number of instances solved as a function of computing time: comparison of three variant algo-
+                              rithms with BPCOL+ for the GCP.
+
+                      100
+
+
+                       90
+   Solved instances
+
+
+
+
+                       80
+
+
+                       70
+
+
+                       60
+
+                                                                                                   BPCOL+               CompleteZDD
+                                                                                                   NoHeurPric           RootZDDPric
+                       50 0          500          1000          1500       2000               2500              3000              3500
+                                                                  CPU time(s)
+
+  EC.3.3.2.                   Effectiveness of ZDD Reduction Strategies. To evaluate the effectiveness of the pro-
+posed ZDD reduction mechanism, we compare several reduction strategies derived from different fixing
+rules and dual formulations. The comparison is conducted on a selected subset of DIMACS instances for
+which the effect of eliminating maximal stable sets can be explicitly assessed. We retain instances satisfying
+the following criteria: (i) the LP optimum at the root node is non-integral; and (ii) the gap between the initial
+upper and lower bounds does not exceed 2. This selection yields 18 instances in total.
+  The baseline, denoted by “Complete”, corresponds to the complete ZDD containing all maximal sta-
+ble sets. The remaining strategies construct reduced ZDDs by using dual vectors generated either from
+Lemma 1 or from dual-formulation-based variants consistent with the framework described in Section 3.2.1.
+Specifically, “Lemma 1” reports the number of maximal stable sets retained in the reduced ZDD when only
+Lemma 1 is used. The strategies “DFY ” and “DFL ” generate dual vectors using two alternative formulations
+adapted from Yang (2024) and de Lima et al. (2023), respectively. Both variants follow the same dual-vector
+generation framework described in Section 3.2.1. Finally, “DF” denotes the proposed dual-formulation-
+based approach of Section 3.2.1, which combines the reduced-cost-based redundancy test with Lemma 2.
+  Table EC.3 reports the remaining number of maximal stable sets (columns “#mss”) and, for dual-
+formulation-based strategies, the time required to generate the corresponding dual vectors (columns “time”).
+For the columns #mss, the smallest value in each row is highlighted in bold.
+  The results show that the proposed DF strategy is consistently the strongest, producing the fewest remain-
+ing maximal stable sets or tying for the best result. This indicates that the proposed dual formulation is at
+e-companion to Zheng et al.: Branch-and-Price for Graph Coloring                                                               ec15
+
+       Table EC.3          Comparison of different ZDD reduction strategies over 18 selected DIMACS instances
+
+                                       Complete        Lemma 1             DFY               DFL                  DF
+           Instance
+                                         #mss            #mss          #mss      time    #mss      time    #mss        time
+
+           2-FullIns 4                         218            218         112     0.27      112     0.25       85       0.27
+           2-Insertions 3                    3161            3161        2679     0.55     2679     0.53     2632       0.69
+           3-FullIns 4                         953            953         575     0.40      575     0.39      540       0.37
+           3-Insertions 3                 228439          228439       219406     0.81   219406     0.81   218732       1.60
+           4-FullIns 4                         138            138          79     0.42       79     0.43       79       0.41
+           4-Insertions 3              37833929        37833929 37302681          1.34 37302681     1.35 37274394       4.40
+           5-FullIns 4                         182            182         106     0.51      106     0.48       92       0.48
+           DSJC125.5                        43268           22609       22318    25.26    22325    26.45    22294      25.60
+           DSJC125.9                           524            392         360     4.74      361     4.70      356       4.53
+           DSJC250.9                         2580            2567        2556    35.16     2555    35.44     2555      35.82
+           DSJR500.1c                          385            383         377     4.20      379     4.18      377       4.09
+           queen10 10                     376692             1540         579    37.68      707    39.01      550      36.13
+           queen11 11                    2640422         1820566        21857    32.39     4043    31.08     3739      33.21
+           queen12 12                  19469324        13602600         32295    44.35    22088    43.66     9440      50.91
+           queen13 13                 151978440 106620568               52008    73.39    52008    67.20    52008      75.94
+           queen14 14                             -                -   385384 117.25     582384 123.61     238088 122.41
+           queen15 15                             -                -   3177110 194.35    1484400 190.77    1484400 197.97
+           queen9 9                         57600            1496         751    13.00     1045    13.57       93      12.04
+
+
+
+least as effective as the competing formulations on all tested instances, and strictly improves the reduction
+on several cases.
+   The benefit of dual-based reduction is particularly clear when compared with the complete ZDD. For
+example, on queen11 11, the complete ZDD represents 2,640,422 maximal stable sets, whereas the pro-
+posed DF strategy reduces this number to 3,739. Similarly, on queen12 12, the number of represented
+maximal stable sets decreases from 19,469,324 to 9,440. On the large queen instances, queen14 14
+and queen15 15, the complete ZDD cannot be constructed within the one-hour time limit, whereas the
+reduced variants remain constructible, with DF retaining only 238,088 and 1,484,400 maximal stable sets,
+respectively.
+   Applying only Lemma 1 is not sufficient in general. On several instances, such as 2-FullIns 4,
+2-Insertions 3, 3-FullIns 4, and 4-Insertions 3, it leaves exactly the same number of max-
+imal stable sets as the complete ZDD. Although it can be effective on some structured instances, especially
+in the queen family, its reduction power is much weaker than that of the dual-formulation-based strategies.
+This confirms the need for a stronger fixing mechanism based on additional dual information.
+   Compared with the formulations inspired by Yang (2024) and de Lima et al. (2023), the proposed DF
+formulation achieves the best or tied-best result on every tested instance. Although the two alternative for-
+ec16                                                              e-companion to Zheng et al.: Branch-and-Price for Graph Coloring
+
+
+mulations already remove a substantial number of maximal stable sets, DF consistently matches or further
+strengthens their reduction effect over the entire selected test set.
+  The computational overhead of the proposed reduction remains moderate. For small- and medium-sized
+instances, generating dual vectors typically takes less than a few seconds. For larger instances, especially
+in the queen family, this time increases but remains acceptable relative to the substantial reduction in the
+number of maximal stable sets represented in the ZDD. Overall, Table EC.3 confirms that the proposed DF
+strategy provides the most robust reduction among the tested variants, significantly decreasing the size of
+the represented set of maximal stable sets while keeping the additional computational cost manageable.
+

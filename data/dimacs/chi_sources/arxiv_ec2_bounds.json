@@ -1,0 +1,933 @@
+{
+ "1-FullIns 3": {
+  "family": "FullIns",
+  "n": 30,
+  "m": 100,
+  "LB": 4,
+  "UB": 4
+ },
+ "1-FullIns 4": {
+  "family": "FullIns",
+  "n": 93,
+  "m": 593,
+  "LB": 5,
+  "UB": 5
+ },
+ "1-FullIns 5": {
+  "family": "FullIns",
+  "n": 282,
+  "m": 3247,
+  "LB": 6,
+  "UB": 6
+ },
+ "1-Insertions 4": {
+  "family": "Insertions",
+  "n": 67,
+  "m": 232,
+  "LB": 5,
+  "UB": 5
+ },
+ "1-Insertions 5": {
+  "family": "Insertions",
+  "n": 202,
+  "m": 1227,
+  "LB": 6,
+  "UB": 6
+ },
+ "1-Insertions 6": {
+  "family": "Insertions",
+  "n": 607,
+  "m": 6337,
+  "LB": 4,
+  "UB": 7
+ },
+ "2-FullIns 3": {
+  "family": "FullIns",
+  "n": 52,
+  "m": 201,
+  "LB": 5,
+  "UB": 5
+ },
+ "2-FullIns 4": {
+  "family": "FullIns",
+  "n": 212,
+  "m": 1621,
+  "LB": 6,
+  "UB": 6
+ },
+ "2-FullIns 5": {
+  "family": "FullIns",
+  "n": 852,
+  "m": 12201,
+  "LB": 7,
+  "UB": 7
+ },
+ "2-Insertions 3": {
+  "family": "Insertions",
+  "n": 37,
+  "m": 72,
+  "LB": 4,
+  "UB": 4
+ },
+ "2-Insertions 4": {
+  "family": "Insertions",
+  "n": 149,
+  "m": 541,
+  "LB": 5,
+  "UB": 5
+ },
+ "2-Insertions 5": {
+  "family": "Insertions",
+  "n": 597,
+  "m": 3936,
+  "LB": 6,
+  "UB": 6
+ },
+ "3-FullIns 3": {
+  "family": "FullIns",
+  "n": 80,
+  "m": 346,
+  "LB": 6,
+  "UB": 6
+ },
+ "3-FullIns 4": {
+  "family": "FullIns",
+  "n": 405,
+  "m": 3524,
+  "LB": 7,
+  "UB": 7
+ },
+ "3-FullIns 5": {
+  "family": "FullIns",
+  "n": 2030,
+  "m": 33751,
+  "LB": 8,
+  "UB": 8
+ },
+ "3-Insertions 3": {
+  "family": "Insertions",
+  "n": 56,
+  "m": 110,
+  "LB": 4,
+  "UB": 4
+ },
+ "3-Insertions 4": {
+  "family": "Insertions",
+  "n": 281,
+  "m": 1046,
+  "LB": 5,
+  "UB": 5
+ },
+ "3-Insertions 5": {
+  "family": "Insertions",
+  "n": 1406,
+  "m": 9695,
+  "LB": 4,
+  "UB": 6
+ },
+ "4-FullIns 3": {
+  "family": "FullIns",
+  "n": 114,
+  "m": 541,
+  "LB": 7,
+  "UB": 7
+ },
+ "4-FullIns 4": {
+  "family": "FullIns",
+  "n": 690,
+  "m": 6650,
+  "LB": 8,
+  "UB": 8
+ },
+ "4-FullIns 5": {
+  "family": "FullIns",
+  "n": 4146,
+  "m": 77305,
+  "LB": 9,
+  "UB": 9
+ },
+ "4-Insertions 3": {
+  "family": "Insertions",
+  "n": 79,
+  "m": 156,
+  "LB": 4,
+  "UB": 4
+ },
+ "4-Insertions 4": {
+  "family": "Insertions",
+  "n": 475,
+  "m": 1795,
+  "LB": 5,
+  "UB": 5
+ },
+ "5-FullIns 3": {
+  "family": "FullIns",
+  "n": 154,
+  "m": 792,
+  "LB": 8,
+  "UB": 8
+ },
+ "5-FullIns 4": {
+  "family": "FullIns",
+  "n": 1085,
+  "m": 11395,
+  "LB": 9,
+  "UB": 9
+ },
+ "abb313GPIA": {
+  "family": "GPIA",
+  "n": 1557,
+  "m": 65390,
+  "LB": 9,
+  "UB": 9
+ },
+ "anna": {
+  "family": "SocialNet",
+  "n": 138,
+  "m": 493,
+  "LB": 11,
+  "UB": 11
+ },
+ "ash331GPIA": {
+  "family": "GPIA",
+  "n": 662,
+  "m": 4185,
+  "LB": 4,
+  "UB": 4
+ },
+ "ash608GPIA": {
+  "family": "GPIA",
+  "n": 1216,
+  "m": 7844,
+  "LB": 4,
+  "UB": 4
+ },
+ "ash958GPIA": {
+  "family": "GPIA",
+  "n": 1916,
+  "m": 12506,
+  "LB": 4,
+  "UB": 4
+ },
+ "C2000.5": {
+  "family": "C",
+  "n": 2000,
+  "m": 999836,
+  "LB": 99,
+  "UB": 145
+ },
+ "C2000.9": {
+  "family": "C",
+  "n": 2000,
+  "m": 1799532,
+  "LB": 390,
+  "UB": 400
+ },
+ "C4000.5": {
+  "family": "C",
+  "n": 4000,
+  "m": 4000268,
+  "LB": 107,
+  "UB": 259
+ },
+ "david": {
+  "family": "SocialNet",
+  "n": 87,
+  "m": 406,
+  "LB": 11,
+  "UB": 11
+ },
+ "DSJC1000.1": {
+  "family": "DSJC",
+  "n": 1000,
+  "m": 49629,
+  "LB": 10,
+  "UB": 20
+ },
+ "DSJC1000.5": {
+  "family": "DSJC",
+  "n": 1000,
+  "m": 249826,
+  "LB": 73,
+  "UB": 82
+ },
+ "DSJC1000.9": {
+  "family": "DSJC",
+  "n": 1000,
+  "m": 449449,
+  "LB": 216,
+  "UB": 222
+ },
+ "DSJC125.1": {
+  "family": "DSJC",
+  "n": 125,
+  "m": 736,
+  "LB": 5,
+  "UB": 5
+ },
+ "DSJC125.5": {
+  "family": "DSJC",
+  "n": 125,
+  "m": 3891,
+  "LB": 17,
+  "UB": 17
+ },
+ "DSJC125.9": {
+  "family": "DSJC",
+  "n": 125,
+  "m": 6961,
+  "LB": 44,
+  "UB": 44
+ },
+ "DSJC250.1": {
+  "family": "DSJC",
+  "n": 250,
+  "m": 3218,
+  "LB": 7,
+  "UB": 8
+ },
+ "DSJC250.5": {
+  "family": "DSJC",
+  "n": 250,
+  "m": 15668,
+  "LB": 26,
+  "UB": 28
+ },
+ "DSJC250.9": {
+  "family": "DSJC",
+  "n": 250,
+  "m": 27897,
+  "LB": 72,
+  "UB": 72
+ },
+ "DSJC500.1": {
+  "family": "DSJC",
+  "n": 500,
+  "m": 12458,
+  "LB": 9,
+  "UB": 12
+ },
+ "DSJC500.5": {
+  "family": "DSJC",
+  "n": 500,
+  "m": 62624,
+  "LB": 43,
+  "UB": 47
+ },
+ "DSJC500.9": {
+  "family": "DSJC",
+  "n": 500,
+  "m": 112437,
+  "LB": 123,
+  "UB": 126
+ },
+ "DSJR500.1": {
+  "family": "DSJR",
+  "n": 500,
+  "m": 3555,
+  "LB": 12,
+  "UB": 12
+ },
+ "DSJR500.1c": {
+  "family": "DSJR",
+  "n": 500,
+  "m": 121275,
+  "LB": 85,
+  "UB": 85
+ },
+ "DSJR500.5": {
+  "family": "DSJR",
+  "n": 500,
+  "m": 58862,
+  "LB": 122,
+  "UB": 122
+ },
+ "flat1000 50 0": {
+  "family": "flat",
+  "n": 1000,
+  "m": 245000,
+  "LB": 50,
+  "UB": 50
+ },
+ "flat1000 60 0": {
+  "family": "flat",
+  "n": 1000,
+  "m": 245830,
+  "LB": 60,
+  "UB": 60
+ },
+ "flat1000 76 0": {
+  "family": "flat",
+  "n": 1000,
+  "m": 246708,
+  "LB": 72,
+  "UB": 81
+ },
+ "flat300 20 0": {
+  "family": "flat",
+  "n": 300,
+  "m": 21375,
+  "LB": 20,
+  "UB": 20
+ },
+ "flat300 26 0": {
+  "family": "flat",
+  "n": 300,
+  "m": 21633,
+  "LB": 26,
+  "UB": 26
+ },
+ "flat300 28 0": {
+  "family": "flat",
+  "n": 300,
+  "m": 21695,
+  "LB": 28,
+  "UB": 28
+ },
+ "fpsol2.i.1": {
+  "family": "fpsol",
+  "n": 496,
+  "m": 11654,
+  "LB": 65,
+  "UB": 65
+ },
+ "fpsol2.i.2": {
+  "family": "fpsol",
+  "n": 451,
+  "m": 8691,
+  "LB": 30,
+  "UB": 30
+ },
+ "fpsol2.i.3": {
+  "family": "fpsol",
+  "n": 425,
+  "m": 8688,
+  "LB": 30,
+  "UB": 30
+ },
+ "games120": {
+  "family": "other",
+  "n": 120,
+  "m": 638,
+  "LB": 9,
+  "UB": 9
+ },
+ "homer": {
+  "family": "SocialNet",
+  "n": 561,
+  "m": 1628,
+  "LB": 13,
+  "UB": 13
+ },
+ "huck": {
+  "family": "SocialNet",
+  "n": 74,
+  "m": 301,
+  "LB": 11,
+  "UB": 11
+ },
+ "inithx.i.1": {
+  "family": "inithx",
+  "n": 864,
+  "m": 18707,
+  "LB": 54,
+  "UB": 54
+ },
+ "inithx.i.2": {
+  "family": "inithx",
+  "n": 645,
+  "m": 13979,
+  "LB": 31,
+  "UB": 31
+ },
+ "inithx.i.3": {
+  "family": "inithx",
+  "n": 621,
+  "m": 13969,
+  "LB": 31,
+  "UB": 31
+ },
+ "jean": {
+  "family": "SocialNet",
+  "n": 80,
+  "m": 254,
+  "LB": 10,
+  "UB": 10
+ },
+ "latin square 10": {
+  "family": "other",
+  "n": 900,
+  "m": 307350,
+  "LB": 90,
+  "UB": 97
+ },
+ "le450 15a": {
+  "family": "le",
+  "n": 450,
+  "m": 8168,
+  "LB": 15,
+  "UB": 15
+ },
+ "le450 15b": {
+  "family": "le",
+  "n": 450,
+  "m": 8169,
+  "LB": 15,
+  "UB": 15
+ },
+ "le450 15c": {
+  "family": "le",
+  "n": 450,
+  "m": 16680,
+  "LB": 15,
+  "UB": 15
+ },
+ "le450 15d": {
+  "family": "le",
+  "n": 450,
+  "m": 16750,
+  "LB": 15,
+  "UB": 15
+ },
+ "le450 25a": {
+  "family": "le",
+  "n": 450,
+  "m": 8260,
+  "LB": 25,
+  "UB": 25
+ },
+ "le450 25b": {
+  "family": "le",
+  "n": 450,
+  "m": 8263,
+  "LB": 25,
+  "UB": 25
+ },
+ "le450 25c": {
+  "family": "le",
+  "n": 450,
+  "m": 17343,
+  "LB": 25,
+  "UB": 25
+ },
+ "le450 25d": {
+  "family": "le",
+  "n": 450,
+  "m": 17425,
+  "LB": 25,
+  "UB": 25
+ },
+ "le450 5a": {
+  "family": "le",
+  "n": 450,
+  "m": 5714,
+  "LB": 5,
+  "UB": 5
+ },
+ "le450 5b": {
+  "family": "le",
+  "n": 450,
+  "m": 5734,
+  "LB": 5,
+  "UB": 5
+ },
+ "le450 5c": {
+  "family": "le",
+  "n": 450,
+  "m": 9803,
+  "LB": 5,
+  "UB": 5
+ },
+ "le450 5d": {
+  "family": "le",
+  "n": 450,
+  "m": 9757,
+  "LB": 5,
+  "UB": 5
+ },
+ "miles1000": {
+  "family": "miles",
+  "n": 128,
+  "m": 3216,
+  "LB": 42,
+  "UB": 42
+ },
+ "miles1500": {
+  "family": "miles",
+  "n": 128,
+  "m": 5198,
+  "LB": 73,
+  "UB": 73
+ },
+ "miles250": {
+  "family": "miles",
+  "n": 128,
+  "m": 387,
+  "LB": 8,
+  "UB": 8
+ },
+ "miles500": {
+  "family": "miles",
+  "n": 128,
+  "m": 1170,
+  "LB": 20,
+  "UB": 20
+ },
+ "miles750": {
+  "family": "miles",
+  "n": 128,
+  "m": 2113,
+  "LB": 31,
+  "UB": 31
+ },
+ "mug100 1": {
+  "family": "mug",
+  "n": 100,
+  "m": 166,
+  "LB": 4,
+  "UB": 4
+ },
+ "mug100 25": {
+  "family": "mug",
+  "n": 100,
+  "m": 166,
+  "LB": 4,
+  "UB": 4
+ },
+ "mug88 1": {
+  "family": "mug",
+  "n": 88,
+  "m": 146,
+  "LB": 4,
+  "UB": 4
+ },
+ "mug88 25": {
+  "family": "mug",
+  "n": 88,
+  "m": 146,
+  "LB": 4,
+  "UB": 4
+ },
+ "mulsol.i.1": {
+  "family": "mulsol",
+  "n": 197,
+  "m": 3925,
+  "LB": 49,
+  "UB": 49
+ },
+ "mulsol.i.2": {
+  "family": "mulsol",
+  "n": 188,
+  "m": 3885,
+  "LB": 31,
+  "UB": 31
+ },
+ "mulsol.i.3": {
+  "family": "mulsol",
+  "n": 184,
+  "m": 3916,
+  "LB": 31,
+  "UB": 31
+ },
+ "mulsol.i.4": {
+  "family": "mulsol",
+  "n": 185,
+  "m": 3946,
+  "LB": 31,
+  "UB": 31
+ },
+ "mulsol.i.5": {
+  "family": "mulsol",
+  "n": 186,
+  "m": 3973,
+  "LB": 31,
+  "UB": 31
+ },
+ "myciel3": {
+  "family": "myciel",
+  "n": 11,
+  "m": 20,
+  "LB": 4,
+  "UB": 4
+ },
+ "myciel4": {
+  "family": "myciel",
+  "n": 23,
+  "m": 71,
+  "LB": 5,
+  "UB": 5
+ },
+ "myciel6": {
+  "family": "myciel",
+  "n": 95,
+  "m": 755,
+  "LB": 7,
+  "UB": 7
+ },
+ "myciel7": {
+  "family": "myciel",
+  "n": 191,
+  "m": 2360,
+  "LB": 8,
+  "UB": 8
+ },
+ "queen10 10": {
+  "family": "queen",
+  "n": 100,
+  "m": 1470,
+  "LB": 11,
+  "UB": 11
+ },
+ "queen11 11": {
+  "family": "queen",
+  "n": 121,
+  "m": 1980,
+  "LB": 11,
+  "UB": 11
+ },
+ "queen12 12": {
+  "family": "queen",
+  "n": 144,
+  "m": 2596,
+  "LB": 12,
+  "UB": 12
+ },
+ "queen13 13": {
+  "family": "queen",
+  "n": 169,
+  "m": 3328,
+  "LB": 13,
+  "UB": 13
+ },
+ "queen14 14": {
+  "family": "queen",
+  "n": 196,
+  "m": 4186,
+  "LB": 14,
+  "UB": 14
+ },
+ "queen15 15": {
+  "family": "queen",
+  "n": 225,
+  "m": 5180,
+  "LB": 15,
+  "UB": 15
+ },
+ "queen16 16": {
+  "family": "queen",
+  "n": 256,
+  "m": 6320,
+  "LB": 16,
+  "UB": 17
+ },
+ "queen5 5": {
+  "family": "queen",
+  "n": 25,
+  "m": 160,
+  "LB": 5,
+  "UB": 5
+ },
+ "queen6 6": {
+  "family": "queen",
+  "n": 36,
+  "m": 290,
+  "LB": 7,
+  "UB": 7
+ },
+ "queen7 7": {
+  "family": "queen",
+  "n": 49,
+  "m": 476,
+  "LB": 7,
+  "UB": 7
+ },
+ "queen8 12": {
+  "family": "queen",
+  "n": 96,
+  "m": 1368,
+  "LB": 12,
+  "UB": 12
+ },
+ "queen8 8": {
+  "family": "queen",
+  "n": 64,
+  "m": 728,
+  "LB": 9,
+  "UB": 9
+ },
+ "queen9 9": {
+  "family": "queen",
+  "n": 81,
+  "m": 1056,
+  "LB": 10,
+  "UB": 10
+ },
+ "r1000.1": {
+  "family": "r",
+  "n": 1000,
+  "m": 14378,
+  "LB": 20,
+  "UB": 20
+ },
+ "r1000.1c": {
+  "family": "r",
+  "n": 1000,
+  "m": 485090,
+  "LB": 98,
+  "UB": 98
+ },
+ "r1000.5": {
+  "family": "r",
+  "n": 1000,
+  "m": 238267,
+  "LB": 234,
+  "UB": 234
+ },
+ "r125.1": {
+  "family": "r",
+  "n": 125,
+  "m": 209,
+  "LB": 5,
+  "UB": 5
+ },
+ "r125.1c": {
+  "family": "r",
+  "n": 125,
+  "m": 7501,
+  "LB": 46,
+  "UB": 46
+ },
+ "r125.5": {
+  "family": "r",
+  "n": 125,
+  "m": 3838,
+  "LB": 36,
+  "UB": 36
+ },
+ "r250.1": {
+  "family": "r",
+  "n": 250,
+  "m": 867,
+  "LB": 8,
+  "UB": 8
+ },
+ "r250.1c": {
+  "family": "r",
+  "n": 250,
+  "m": 30227,
+  "LB": 64,
+  "UB": 64
+ },
+ "r250.5": {
+  "family": "r",
+  "n": 250,
+  "m": 14849,
+  "LB": 65,
+  "UB": 65
+ },
+ "school1": {
+  "family": "school",
+  "n": 385,
+  "m": 19095,
+  "LB": 14,
+  "UB": 14
+ },
+ "school1 nsh": {
+  "family": "school",
+  "n": 352,
+  "m": 14612,
+  "LB": 14,
+  "UB": 14
+ },
+ "wap01a": {
+  "family": "wap",
+  "n": 2368,
+  "m": 110871,
+  "LB": 41,
+  "UB": 41
+ },
+ "wap02a": {
+  "family": "wap",
+  "n": 2464,
+  "m": 111742,
+  "LB": 40,
+  "UB": 40
+ },
+ "wap03a": {
+  "family": "wap",
+  "n": 4730,
+  "m": 286722,
+  "LB": 40,
+  "UB": 45
+ },
+ "wap04a": {
+  "family": "wap",
+  "n": 5231,
+  "m": 294902,
+  "LB": 40,
+  "UB": 42
+ },
+ "wap05a": {
+  "family": "wap",
+  "n": 905,
+  "m": 43081,
+  "LB": 50,
+  "UB": 50
+ },
+ "wap06a": {
+  "family": "wap",
+  "n": 947,
+  "m": 43571,
+  "LB": 40,
+  "UB": 40
+ },
+ "wap07a": {
+  "family": "wap",
+  "n": 1809,
+  "m": 103368,
+  "LB": 40,
+  "UB": 41
+ },
+ "wap08a": {
+  "family": "wap",
+  "n": 1870,
+  "m": 104176,
+  "LB": 40,
+  "UB": 40
+ },
+ "will199GPIA": {
+  "family": "other",
+  "n": 701,
+  "m": 7065,
+  "LB": 7,
+  "UB": 7
+ },
+ "zeroin.i.1": {
+  "family": "zeroin",
+  "n": 211,
+  "m": 4100,
+  "LB": 49,
+  "UB": 49
+ },
+ "zeroin.i.2": {
+  "family": "zeroin",
+  "n": 211,
+  "m": 3541,
+  "LB": 30,
+  "UB": 30
+ },
+ "zeroin.i.3": {
+  "family": "zeroin",
+  "n": 206,
+  "m": 3540,
+  "LB": 30,
+  "UB": 30
+ },
+ "myciel5": {
+  "family": "myciel",
+  "n": 47,
+  "m": 236,
+  "LB": 6,
+  "UB": 6
+ }
+}

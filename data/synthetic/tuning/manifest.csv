@@ -1,0 +1,14 @@
+name,family,n,m,k_planted,k_dsatur,k_hi
+planted_n60_k5,planted,60,692,5,5,5
+planted_n100_k12,planted,100,2695,12,20,12
+planted_n120_k8,planted,120,2547,8,13,8
+planted_n200_k40,planted,200,9856,40,31,31
+planted_n250_k15,planted,250,8798,15,22,15
+planted_n450_k25,planted,450,19246,25,24,24
+er_n100_p0.3,erdos_renyi,100,1427,,12,12
+er_n250_p0.1,erdos_renyi,250,3094,,10,10
+er_n450_p0.5,erdos_renyi,450,50484,,59,59
+regular_n200_d20,random_regular,200,2000,,9,9
+regular_n400_d10,random_regular,400,2000,,6,6
+ws_n200_k20,watts_strogatz,200,2000,,11,11
+ws_n450_k10,watts_strogatz,450,2250,,7,7

@@ -1,0 +1,166 @@
+<html>
+<head>
+<title>Graph Coloring Instances</title>
+<!-- Changed by: Michael A. Trick, 27-Sep-1995 -->
+</head>
+<body>
+<h1><img SRC="color.gif" WIDTH="96" HEIGHT="96"> Graph Coloring Instances</h1>
+Instances below ending in .col are in <a HREF="general/ccformat.ps">DIMACS standard format</a>.  Instances in
+.col.b are in <a HREF="format/README.binformat">compressed format</a>
+(a binary format).  A <a HREF="format/binformat.shar">translator</a>
+can go between formats.  There is a <a HREF="instances/contents.ps">description</a> on where many of these
+files came from.  You can get all the instances (except the latin instance) in a <a HREF="instances/instances.tar">tar file</a>.<p>
+
+Each instance includes the information: (nodes, edges), optimal
+coloring, source.
+
+<ul>
+<li><a HREF="instances/DSJC1000.1.col.b"> DSJC1000.1.col.b </a> (1000,99258), ?, <a HREF="#XXDSJ">DSJ</a>
+<li><a HREF="instances/DSJC1000.5.col.b"> DSJC1000.5.col.b </a> (1000,499652), ?, <a HREF="#XXDSJ">DSJ</a>
+<li><a HREF="instances/DSJC1000.9.col.b"> DSJC1000.9.col.b </a> (1000,898898), ?, <a HREF="#XXDSJ">DSJ</a>
+<li><a HREF="instances/DSJC125.1.col.b"> DSJC125.1.col.b </a> (125,1472), ?, <a HREF="#XXDSJ">DSJ</a>
+<li><a HREF="instances/DSJC125.5.col.b"> DSJC125.5.col.b </a> (125,7782), ?, <a HREF="#XXDSJ">DSJ</a>
+<li><a HREF="instances/DSJC125.9.col.b"> DSJC125.9.col.b </a> (125,13922), ?, <a HREF="#XXDSJ">DSJ</a>
+<li><a HREF="instances/DSJC250.1.col.b"> DSJC250.1.col.b </a> (250,6436), ?, <a HREF="#XXDSJ">DSJ</a>
+<li><a HREF="instances/DSJC250.5.col.b"> DSJC250.5.col.b </a> (250,31366), ?, <a HREF="#XXDSJ">DSJ</a>
+<li><a HREF="instances/DSJC250.9.col.b"> DSJC250.9.col.b </a> (250,55794), ?, <a HREF="#XXDSJ">DSJ</a>
+<li><a HREF="instances/DSJC500.1.col.b"> DSJC500.1.col.b </a> (500,24916), ?, <a HREF="#XXDSJ">DSJ</a>
+<li><a HREF="instances/DSJC500.5.col.b"> DSJC500.5.col.b </a> (500,125249), ?, <a HREF="#XXDSJ">DSJ</a>
+<li><a HREF="instances/DSJC500.9.col.b"> DSJC500.9.col.b </a> (500,224874), ?, <a HREF="#XXDSJ">DSJ</a>
+<li><a HREF="instances/DSJR500.1.col.b"> DSJR500.1.col.b </a> (500,7110), ?, <a HREF="#XXDSJ">DSJ</a>
+<li><a HREF="instances/DSJR500.1c.col.b"> DSJR500.1c.col.b </a> (500,242550), ?, <a HREF="#XXDSJ">DSJ</a>
+<li><a HREF="instances/DSJR500.5.col.b"> DSJR500.5.col.b </a> (500, 117724), ?, <a HREF="#XXDSJ">DSJ</a>
+<li><a HREF="instances/flat1000_50_0.col.b"> flat1000_50_0.col.b </a> (1000,245000), 50, <a HREF="#XXCUL">CUL</a>
+<li><a HREF="instances/flat1000_60_0.col.b"> flat1000_60_0.col.b </a> (1000,245830), 60, <a HREF="#XXCUL">CUL</a>
+<li><a HREF="instances/flat1000_76_0.col.b"> flat1000_76_0.col.b </a> (1000,246708), 76, <a HREF="#XXCUL">CUL</a>
+<li><a HREF="instances/flat300_20_0.col.b"> flat300_20_0.col.b </a> (300,21375), 20, <a HREF="#XXCUL">CUL</a>
+<li><a HREF="instances/flat300_26_0.col.b"> flat300_26_0.col.b </a> (300, 21633), 26, <a HREF="#XXCUL">CUL</a>
+<li><a HREF="instances/flat300_28_0.col.b"> flat300_28_0.col.b </a> (300, 21695), 28, <a HREF="#XXCUL">CUL</a>
+<li><a HREF="instances/fpsol2.i.1.col">  fpsol2.i.1.col </a> (496,11654), 65, <a HREF="#XXREG">REG</a>
+<li><a HREF="instances/fpsol2.i.2.col">  fpsol2.i.2.col </a> (451,8691), 30, <a HREF="#XXREG">REG</a>
+<li><a HREF="instances/fpsol2.i.3.col">  fpsol2.i.3.col </a> (425,8688), 30, <a HREF="#XXREG">REG</a>
+<li><a HREF="instances/inithx.i.1.col">  inithx.i.1.col </a> (864,18707), 54, <a HREF="#XXREG">REG</a>
+<li><a HREF="instances/inithx.i.2.col">  inithx.i.2.col </a> (645, 13979), 31, <a HREF="#XXREG">REG</a>
+<li><a HREF="instances/inithx.i.3.col">  inithx.i.3.col </a> (621,13969), 31, <a HREF="#XXREG">REG</a>
+<li><a HREF="instances/latin_square_10.col"> latin_square_10.col </a>
+     (900,307350), ?, <a HREF="#XXLAT&gt;LAT&lt;/A&gt; (Caution: 3 MB!)&lt;li&gt;&lt;A HREF=" instances/le450_15a.col">  le450_15a.col </a> (450,8168), 15, <a HREF="#XXLEI">LEI</a>
+<li><a HREF="instances/le450_15b.col">  le450_15b.col </a> (450,8169), 15, <a HREF="#XXLEI">LEI</a>
+<li><a HREF="instances/le450_15c.col">  le450_15c.col </a> (450,16680), 15, <a HREF="#XXLEI">LEI</a>
+<li><a HREF="instances/le450_15d.col">  le450_15d.col </a> (450,16750), 15, <a HREF="#XXLEI">LEI</a>
+<li><a HREF="instances/le450_25a.col">  le450_25a.col </a> (450,8260), 25, <a HREF="#XXLEI">LEI</a>
+<li><a HREF="instances/le450_25b.col">  le450_25b.col </a> (450,8263), 25, <a HREF="#XXLEI">LEI</a>
+<li><a HREF="instances/le450_25c.col">  le450_25c.col </a> (450,17343), 25, <a HREF="#XXLEI">LEI</a>
+<li><a HREF="instances/le450_25d.col">  le450_25d.col </a> (450,17425), 25, <a HREF="#XXLEI">LEI</a>
+<li><a HREF="instances/le450_5a.col">  le450_5a.col </a> (450,5714), 5, <a HREF="#XXLEI">LEI</a>
+<li><a HREF="instances/le450_5b.col">  le450_5b.col </a> (450,5734), 5, <a HREF="#XXLEI">LEI</a>
+<li><a HREF="instances/le450_5c.col">  le450_5c.col </a> (450,9803), 5, <a HREF="#XXLEI">LEI</a>
+<li><a HREF="instances/le450_5d.col">  le450_5d.col </a> (450,9757), 5, <a HREF="#XXLEI">LEI</a>
+<li><a HREF="instances/mulsol.i.1.col">  mulsol.i.1.col </a> (197,3925), 49, <a HREF="#XXREG">REG</a>
+<li><a HREF="instances/mulsol.i.2.col">  mulsol.i.2.col </a> (188,3885), 31, <a HREF="#XXREG">REG</a>
+<li><a HREF="instances/mulsol.i.3.col">  mulsol.i.3.col </a> (184,3916), 31, <a HREF="#XXREG">REG</a>
+<li><a HREF="instances/mulsol.i.4.col">  mulsol.i.4.col </a> (185,3946), 31, <a HREF="#XXREG">REG</a>
+<li><a HREF="instances/mulsol.i.5.col">  mulsol.i.5.col </a> (186,3973), 31, <a HREF="#XXREG">REG</a>
+<li><a HREF="instances/school1.col">  school1.col </a> (385,19095), ?, <a HREF="#XXSCH">SCH</a>
+<li><a HREF="instances/school1_nsh.col"> school1_nsh.col </a> (352,14612), ?, <a HREF="#XXSCH">SCH</a>
+<li><a HREF="instances/zeroin.i.1.col">  zeroin.i.1.col </a> (211,4100), 49, <a HREF="#XXREG">REG</a>
+<li><a HREF="instances/zeroin.i.2.col">  zeroin.i.2.col </a> (211, 3541), 30, <a HREF="#XXREG">REG</a>
+<li><a HREF="instances/zeroin.i.3.col">  zeroin.i.3.col </a> (206, 3540), 30, <a HREF="#XXREG">REG</a>
+<li><a HREF="instances/anna.col">   anna.col    </a> (138,493), 11, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/david.col"> david.col   </a> (87,406), 11, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/homer.col"> homer.col   </a> (561,1629), 13, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/huck.col"> huck.col    </a> (74,301), 11, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/jean.col"> jean.col    </a> (80,254), 10, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/games120.col"> games120.col   </a> (120,638), 9, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/miles1000.col"> miles1000.col  </a> (128,3216), 42, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/miles1500.col"> miles1500.col  </a> (128,5198), 73, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/miles250.col"> miles250.col   </a> (128,387), 8, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/miles500.col"> miles500.col   </a> (128,1170), 20, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/miles750.col"> miles750.col   </a> (128,2113), 31, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/queen10_10.col"> queen10_10.col  </a> (100,2940), ?, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/queen11_11.col"> queen11_11.col  </a>(121,3960), 11, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/queen12_12.col"> queen12_12.col  </a>(144,5192), ?, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/queen13_13.col"> queen13_13.col  </a>(169,6656), 13, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/queen14_14.col"> queen14_14.col  </a>(196,8372), ?, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/queen15_15.col"> queen15_15.col  </a>(225,10360), ?, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/queen16_16.col"> queen16_16.col  </a>(256,12640), ?, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/queen5_5.col"> queen5_5.col   </a> (25,160), 5, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/queen6_6.col"> queen6_6.col   </a> (36,290), 7, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/queen7_7.col"> queen7_7.col   </a> (49,476), 7, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/queen8_12.col"> queen8_12.col  </a> (96,1368), 12, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/queen8_8.col"> queen8_8.col   </a> (64, 728), 9, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/queen9_9.col"> queen9_9.col   </a> (81, 2112), 10, <a HREF="#XXSGB">SGB</a>
+<li><a HREF="instances/myciel3.col"> myciel3.col   </a> (11,20), 4, <a HREF="#XXMYC">MYC</a>
+<li><a HREF="instances/myciel4.col"> myciel4.col   </a> (23,71), 5, <a HREF="#XXMYC">MYC</a>
+<li><a HREF="instances/myciel5.col"> myciel5.col   </a> (47,236), 6, <a HREF="#XXMYC">MYC</a>
+<li><a HREF="instances/myciel6.col"> myciel6.col   </a> (95,755), 7, <a HREF="#XXMYC">MYC</a>
+<li><a HREF="instances/myciel7.col"> myciel7.col   </a> (191,2360), 8, <a HREF="#XXMYC">MYC</a>
+</ul>
+
+Notes:
+
+<ul>
+  <li> <a NAME="XXDSJ">DSJ</a>: (From David Johnson
+       (dsj@research.att.com)) Random graphs
+       used in his paper with Aragon, McGeoch, and Schevon, ``Optimization by
+       Simulated Annelaing: An Experimental Evaluation; Part II, Graph
+       Coloring and Number Partitioning'', Operations Research, 31, 378--406
+       (1991).  DSJC are standard (n,p) random graphs.  DSJR are geometric
+       graphs, with DSJR..c being complements of geometric graphs.
+  <li> <a NAME="XXCUL">CUL</a>: (From Joe Culberson
+       (joe@cs.ualberta.ca)) Quasi-random  coloring problem.
+  <li> <a NAME="XXREG">REG</a>: (From Gary Lewandowski
+       (gary@cs.wisc.edu)) Problem based on register allocation for variables
+       in real codes.
+  <li> <a NAME="XXLEI">LEI</a>: (From Craig Morgenstern
+(morgenst@riogrande.cs.tcu.edu)) Leighton graphs with guaranteed
+coloring size.  A reference is F.T. Leighton, Journal of Research of
+the National Bureau of Standards, 84: 489--505 (1979).
+  <li> <a NAME="XXSCH">SCH</a>: (From Gary Lewandowski
+       (lewandow@cs.wisc.edu))Class  scheduling graphs, with and
+       without study halls. 
+  <li> <a NAME="XXLAT">LAT</a>: (From Gary Lewandowski (lewandow@cs.wisc.edu))
+       Latin square problem.
+  <li> <a NAME="XXSGB">SGB</a>: (From Michael Trick (trick@cmu.edu)) Graphs from Donald Knuth's Stanford GraphBase.  These can be divided into:
+       <ul>
+	 <li> Book Graphs. Given a work of literature, a graph is created where
+	      each node represents a character.  Two nodes are connected by an edge
+	      if the corresponding characters encounter each other in the book.
+	      Knuth  creates the graphs for five classic works:
+	      Tolstoy's  Anna Karenina (anna), Dicken's  David
+	      Copperfield (david), Homer's  Iliad (homer),
+	      Twain's  Huckleberry Finn (huck), and Hugo's  Les
+	      Mis\'erables (jean).  
+	 <li> Game Graphs. A graph representing the games played in a
+	      college football season can be represented by a graph where the nodes
+	      represent each college team.  Two teams are connected by an edge if
+	      they played each other during the season.  Knuth gives the
+	      graph for the 1990 college football season.
+	      
+	 <li>Miles Graphs.  These graphs are similar to geometric graphs
+	      in that nodes are placed in space with two nodes connected if they are
+	      close enough.  These graphs, however, are not random.  The nodes
+	      represent a set of United States cities and the distance between them
+	      is given by by road mileage from 1947.  These graphs are also due to
+	      Kuth.
+	      
+	 <li>Queen Graphs.  Given an n by n chessboard, a queen
+	      graph is a graph on n^2 nodes, each corresponding to a square of the
+	      board.  Two nodes are connected by an edge if the corresponding
+	      squares are in the same row, column, or diagonal.  Unlike some of the
+	      other graphs, the coloring problem on this graph has a natural
+	      interpretation: Given such a chessboard, is it possible to place n
+	      sets of n queens on the board so that no two queens of the same set
+	      are in the same row, column, or diagonal?  The answer is yes if and
+	      only if the graph has coloring number n.  Martin Gardner states
+	      without proof that this is the case if and only if $n$ is not
+	      divisible by either 2 or 3.  In all cases, the maximum clique in the
+	      graph is no more than n, and the coloring value is no less than n.
+       </ul>
+  <li> <a NAME="XXMYC">MYC</a>: (From Michael Trick (trick@cmu.edu))
+       Graphs based on the Mycielski transformation.  These graphs are
+       difficult to solve because they are triangle free (clique number
+       2) but the coloring number increases in problem size.
+</ul>
+
+</body>
+</html>
