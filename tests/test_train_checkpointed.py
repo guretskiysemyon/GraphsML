@@ -102,6 +102,28 @@ def test_calling_again_after_completion_is_a_noop(tmp_path):
     assert len((out_dir / "trajectory.jsonl").read_text().splitlines()) == len(checkpoints)
 
 
+def test_resume_drops_trajectory_rows_written_after_last_saved_state(tmp_path):
+    """A kill between appending a trajectory row and saving resume_state.pt (or mid-append)
+    must not leave duplicate or torn rows after the resumed run."""
+    adj = _graph_adj()
+    checkpoints = [1, 2, 3, 4]
+    ref_dir, killed_dir = tmp_path / "ref", tmp_path / "killed"
+    train_pignn_checkpointed(adj, _cfg(4, seed=3), checkpoints, ref_dir)
+
+    train_pignn_checkpointed(adj, _cfg(2, seed=3), [1, 2], killed_dir)  # state saved at epoch 2
+    traj_path = killed_dir / "trajectory.jsonl"
+    stray = json.dumps(dict(epoch=3, train_loss=0.0, eval_conflicts=-1))
+    traj_path.write_text(traj_path.read_text() + stray + "\n" + '{"epoch": 4, "tr')
+    assert not (killed_dir / "resume_state.pt.tmp").exists()
+
+    train_pignn_checkpointed(adj, _cfg(4, seed=3), checkpoints, killed_dir, resume=True)
+
+    rows = [json.loads(line) for line in traj_path.read_text().splitlines()]
+    ref_rows = [json.loads(line) for line in (ref_dir / "trajectory.jsonl").read_text().splitlines()]
+    assert [r["epoch"] for r in rows] == checkpoints
+    assert [r["eval_conflicts"] for r in rows] == [r["eval_conflicts"] for r in ref_rows]
+
+
 def test_checkpoints_must_include_t_max(tmp_path):
     adj = _graph_adj()
     with pytest.raises(ValueError):

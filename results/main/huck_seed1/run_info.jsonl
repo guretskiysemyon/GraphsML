@@ -1,0 +1,1 @@
+{"time": "2026-10-08T17:22:38", "host": "s-003", "slurm_job": "1000485", "slurm_task": "7", "gpu": "NVIDIA TITAN Xp", "torch": "2.7.1+cu126", "t_max": 100000}

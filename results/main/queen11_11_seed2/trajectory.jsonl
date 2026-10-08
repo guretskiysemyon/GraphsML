@@ -1,0 +1,16 @@
+{"epoch": 1, "train_loss": 284.076171875, "eval_conflicts": 287, "eval_entropy": 1.3585267066955566, "n_colours_used": 10, "best_conflicts_so_far": 287, "cumulative_seconds": 1.656827600672841}
+{"epoch": 2, "train_loss": 253.2947540283203, "eval_conflicts": 257, "eval_entropy": 1.3104101419448853, "n_colours_used": 9, "best_conflicts_so_far": 257, "cumulative_seconds": 1.9208370838314295}
+{"epoch": 5, "train_loss": 238.0269775390625, "eval_conflicts": 248, "eval_entropy": 1.138880968093872, "n_colours_used": 10, "best_conflicts_so_far": 248, "cumulative_seconds": 2.0092873154208064}
+{"epoch": 10, "train_loss": 249.48861694335938, "eval_conflicts": 201, "eval_entropy": 0.9457695484161377, "n_colours_used": 9, "best_conflicts_so_far": 201, "cumulative_seconds": 2.1094153625890613}
+{"epoch": 20, "train_loss": 199.87860107421875, "eval_conflicts": 174, "eval_entropy": 0.6587355136871338, "n_colours_used": 10, "best_conflicts_so_far": 174, "cumulative_seconds": 2.2449069395661354}
+{"epoch": 50, "train_loss": 154.67013549804688, "eval_conflicts": 110, "eval_entropy": 0.21917997300624847, "n_colours_used": 10, "best_conflicts_so_far": 110, "cumulative_seconds": 2.5253290561959147}
+{"epoch": 100, "train_loss": 114.65000915527344, "eval_conflicts": 92, "eval_entropy": 0.06739278882741928, "n_colours_used": 10, "best_conflicts_so_far": 92, "cumulative_seconds": 2.9838882880285382}
+{"epoch": 200, "train_loss": 91.39730834960938, "eval_conflicts": 77, "eval_entropy": 0.03316068649291992, "n_colours_used": 10, "best_conflicts_so_far": 77, "cumulative_seconds": 3.936079928651452}
+{"epoch": 500, "train_loss": 59.93382263183594, "eval_conflicts": 59, "eval_entropy": 0.0018577055307105184, "n_colours_used": 10, "best_conflicts_so_far": 59, "cumulative_seconds": 6.122425181791186}
+{"epoch": 1000, "train_loss": 52.035797119140625, "eval_conflicts": 54, "eval_entropy": 0.0001723417080938816, "n_colours_used": 10, "best_conflicts_so_far": 54, "cumulative_seconds": 9.344860738143325}
+{"epoch": 2000, "train_loss": 52.89564514160156, "eval_conflicts": 49, "eval_entropy": 6.660846452177793e-07, "n_colours_used": 10, "best_conflicts_so_far": 49, "cumulative_seconds": 15.521536946296692}
+{"epoch": 5000, "train_loss": 52.000083923339844, "eval_conflicts": 47, "eval_entropy": 1.0772328449525002e-17, "n_colours_used": 10, "best_conflicts_so_far": 47, "cumulative_seconds": 33.38386515900493}
+{"epoch": 10000, "train_loss": 52.0, "eval_conflicts": 46, "eval_entropy": 1.3004731453005833e-31, "n_colours_used": 10, "best_conflicts_so_far": 46, "cumulative_seconds": 60.77886902820319}
+{"epoch": 20000, "train_loss": 46.22845458984375, "eval_conflicts": 43, "eval_entropy": 7.038456406200271e-21, "n_colours_used": 10, "best_conflicts_so_far": 43, "cumulative_seconds": 115.33903013821691}
+{"epoch": 50000, "train_loss": 39.000457763671875, "eval_conflicts": 39, "eval_entropy": 4.781838476940447e-18, "n_colours_used": 10, "best_conflicts_so_far": 39, "cumulative_seconds": 250.7718639280647}
+{"epoch": 100000, "train_loss": 41.00154113769531, "eval_conflicts": 37, "eval_entropy": 1.7765249754402804e-15, "n_colours_used": 10, "best_conflicts_so_far": 37, "cumulative_seconds": 478.4383032070473}

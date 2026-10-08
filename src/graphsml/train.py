@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -166,6 +167,19 @@ def train_pignn_checkpointed(adj: torch.Tensor, cfg: TrainConfig, checkpoints: l
         prev_loss = state["prev_loss"]
         cumulative_seconds = state["cumulative_seconds"]
         done_checkpoints = set(state["done_checkpoints"])
+        # A kill between appending a trajectory row and saving resume_state.pt leaves a
+        # row for a checkpoint the resumed run will recompute; drop rows past the saved
+        # epoch (and any torn last line) so each checkpoint appears exactly once.
+        if traj_path.exists():
+            kept = []
+            for line in traj_path.read_text().splitlines():
+                try:
+                    row = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                if row["epoch"] <= state["epoch"]:
+                    kept.append(line)
+            traj_path.write_text("".join(line + "\n" for line in kept))
     else:
         torch.manual_seed(cfg.seed)
         adj = adj.to(device)
@@ -237,6 +251,9 @@ def train_pignn_checkpointed(adj: torch.Tensor, cfg: TrainConfig, checkpoints: l
                 )) + "\n")
             done_checkpoints.add(epoch)
 
+            # Write-then-rename so a kill mid-save (killable partition) can never leave a
+            # half-written resume_state.pt that crashes every requeue.
+            tmp_resume_path = resume_path.with_suffix(".pt.tmp")
             torch.save({
                 "epoch": epoch, "model": model.state_dict(), "optimizer": optimizer.state_dict(),
                 "torch_rng_state": torch.get_rng_state(),
@@ -244,7 +261,8 @@ def train_pignn_checkpointed(adj: torch.Tensor, cfg: TrainConfig, checkpoints: l
                 "best_conflicts": best_conflicts, "paper_stop_epoch": paper_stop_epoch,
                 "patience_counter": patience_counter, "prev_loss": prev_loss,
                 "cumulative_seconds": cumulative_seconds, "done_checkpoints": sorted(done_checkpoints),
-            }, resume_path)
+            }, tmp_resume_path)
+            os.replace(tmp_resume_path, resume_path)
 
     last = json.loads(traj_path.read_text().splitlines()[-1])
     return {
