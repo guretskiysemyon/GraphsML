@@ -1,0 +1,19 @@
+{
+  "lr": 0.019615814221240105,
+  "hidden_dim": 30,
+  "embed_dim": 85,
+  "dropout": 0.4655885719025613,
+  "_provenance": {
+    "selected_from": "results/tuning/stage2_summary.csv",
+    "stage1_id": 28,
+    "stage2_config": 0,
+    "stage1_mean_rank": 4.788461538461538,
+    "stage2_mean_rank": 3.1731,
+    "tuning_set": "data/synthetic/tuning (13 graphs, Erdos-Renyi/Watts-Strogatz/random-regular/planted)",
+    "selection_criterion": "mean rank of seed-averaged final eval-mode conflicts across (graph, regime) cells, regime in {k=chi_hi, k=chi_hi-1}",
+    "stage1_budget_epochs": 10000,
+    "stage2_budget_epochs": 50000,
+    "note": "Stage 1 winner (random search, 2 seeds, 10k epochs) confirmed as stage 2 winner (3 seeds, 50k epochs) among the top-10 stage-1 configs plus 4 extra draws -- consistent ranking at both budgets.",
+    "frozen_on": "2026-10-08"
+  }
+}

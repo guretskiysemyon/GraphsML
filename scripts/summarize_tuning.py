@@ -38,7 +38,7 @@ def main():
     out = out.join(pd.DataFrame(cfgs).rename_axis("config"))
     out["seconds_per_unit"] = df.groupby("config").seconds.mean()
     out = out.sort_values("mean_rank")
-    out.to_csv(args.dir.parent / "stage1_summary.csv")
+    out.to_csv(args.dir.parent / f"{args.dir.name}_summary.csv")
     print(out.head(10).round(4).to_string())
 
 

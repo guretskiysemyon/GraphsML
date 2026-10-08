@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from graphsml.dimacs import load_col_graph  # noqa: E402
-from graphsml.tune import sample_configs, train_lean  # noqa: E402
+from graphsml.tune import TuneConfig, sample_configs, train_lean  # noqa: E402
 
 TUNING_DIR = ROOT / "data" / "synthetic" / "tuning"
 
@@ -42,13 +42,17 @@ def main():
     ap.add_argument("--seeds", type=int, default=2)
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--out", type=Path, default=ROOT / "results" / "tuning" / "stage1")
+    ap.add_argument("--configs", type=Path, default=None, help="JSON list of configs (default: sample stage-1 configs)")
     ap.add_argument("--max-units", type=int, default=None, help="debug: stop after this many units")
     args = ap.parse_args()
 
     if args.device.startswith("cuda") and not torch.cuda.is_available():
         sys.exit("CUDA requested but not available; refusing to fall back to CPU silently (use --device cpu).")
 
-    cfgs = sample_configs(args.n_random, seed=0)
+    if args.configs is not None:
+        cfgs = [TuneConfig(**{k: c[k] for k in ('lr', 'hidden_dim', 'embed_dim', 'dropout')}) for c in json.loads(args.configs.read_text())]
+    else:
+        cfgs = sample_configs(args.n_random, seed=0)
     manifest = pd.read_csv(TUNING_DIR / "manifest.csv")
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "configs.json").write_text(json.dumps([c.__dict__ for c in cfgs], indent=1))
