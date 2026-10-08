@@ -1,0 +1,16 @@
+{"epoch": 1, "conflicts": 85, "single_flip_optimal": false, "n_improvable": 55, "best_gain": 21, "conflicts_after_descent": 2, "descent_moves": 23, "descent_seconds": 0.0034584403038024902}
+{"epoch": 2, "conflicts": 36, "single_flip_optimal": false, "n_improvable": 37, "best_gain": 5, "conflicts_after_descent": 3, "descent_moves": 16, "descent_seconds": 0.002168061211705208}
+{"epoch": 5, "conflicts": 47, "single_flip_optimal": false, "n_improvable": 41, "best_gain": 12, "conflicts_after_descent": 2, "descent_moves": 20, "descent_seconds": 0.0027240756899118423}
+{"epoch": 10, "conflicts": 20, "single_flip_optimal": false, "n_improvable": 24, "best_gain": 4, "conflicts_after_descent": 2, "descent_moves": 11, "descent_seconds": 0.002384989522397518}
+{"epoch": 20, "conflicts": 13, "single_flip_optimal": false, "n_improvable": 17, "best_gain": 2, "conflicts_after_descent": 2, "descent_moves": 7, "descent_seconds": 0.0013704504817724228}
+{"epoch": 50, "conflicts": 6, "single_flip_optimal": false, "n_improvable": 9, "best_gain": 2, "conflicts_after_descent": 2, "descent_moves": 3, "descent_seconds": 0.0006574047729372978}
+{"epoch": 100, "conflicts": 3, "single_flip_optimal": false, "n_improvable": 6, "best_gain": 1, "conflicts_after_descent": 1, "descent_moves": 2, "descent_seconds": 0.0004689563065767288}
+{"epoch": 200, "conflicts": 2, "single_flip_optimal": true, "n_improvable": 0, "best_gain": 0, "conflicts_after_descent": 2, "descent_moves": 0, "descent_seconds": 8.163787424564362e-05}
+{"epoch": 500, "conflicts": 2, "single_flip_optimal": true, "n_improvable": 0, "best_gain": 0, "conflicts_after_descent": 2, "descent_moves": 0, "descent_seconds": 0.00010283011943101883}
+{"epoch": 1000, "conflicts": 1, "single_flip_optimal": true, "n_improvable": 0, "best_gain": 0, "conflicts_after_descent": 1, "descent_moves": 0, "descent_seconds": 7.268227636814117e-05}
+{"epoch": 2000, "conflicts": 1, "single_flip_optimal": true, "n_improvable": 0, "best_gain": 0, "conflicts_after_descent": 1, "descent_moves": 0, "descent_seconds": 7.260031998157501e-05}
+{"epoch": 5000, "conflicts": 1, "single_flip_optimal": true, "n_improvable": 0, "best_gain": 0, "conflicts_after_descent": 1, "descent_moves": 0, "descent_seconds": 7.43623822927475e-05}
+{"epoch": 10000, "conflicts": 1, "single_flip_optimal": true, "n_improvable": 0, "best_gain": 0, "conflicts_after_descent": 1, "descent_moves": 0, "descent_seconds": 7.122009992599487e-05}
+{"epoch": 20000, "conflicts": 1, "single_flip_optimal": true, "n_improvable": 0, "best_gain": 0, "conflicts_after_descent": 1, "descent_moves": 0, "descent_seconds": 5.8759935200214386e-05}
+{"epoch": 50000, "conflicts": 1, "single_flip_optimal": true, "n_improvable": 0, "best_gain": 0, "conflicts_after_descent": 1, "descent_moves": 0, "descent_seconds": 5.693454295396805e-05}
+{"epoch": 100000, "conflicts": 1, "single_flip_optimal": true, "n_improvable": 0, "best_gain": 0, "conflicts_after_descent": 1, "descent_moves": 0, "descent_seconds": 7.650349289178848e-05}
