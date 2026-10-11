@@ -1,0 +1,12 @@
+{
+  "lr": 0.019615814221240105,
+  "hidden_dim": 30,
+  "embed_dim": 85,
+  "dropout": 0.0,
+  "_provenance": {
+    "derived_from": "configs/pignn_frozen.json",
+    "change": "dropout 0.4656 -> 0.0, everything else identical (not retuned)",
+    "purpose": "Experiment 3 noise control (plan: report PI-GNN with and without dropout)",
+    "created_on": "2026-10-11"
+  }
+}

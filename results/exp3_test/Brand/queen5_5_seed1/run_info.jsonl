@@ -1,0 +1,1 @@
+{"time": "2026-10-11T18:57:37", "host": "s-003", "slurm_job": "1011589", "slurm_task": null, "gpu": "NVIDIA TITAN Xp", "torch": "2.7.1+cu126", "n_steps": 5000, "max_steps": 200000, "config": "results/exp3_test/free_smoke_config.json"}

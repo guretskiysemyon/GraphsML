@@ -1,0 +1,62 @@
+[
+ {
+  "lr": 0.042743981616939,
+  "optimizer": "adamw",
+  "weight_decay": 0.0638582880238295,
+  "stage1_id": 6
+ },
+ {
+  "lr": 0.0239958101885905,
+  "optimizer": "adamw",
+  "weight_decay": 0.0187580001901047,
+  "stage1_id": 39
+ },
+ {
+  "lr": 0.0033648589334198,
+  "optimizer": "adamw",
+  "weight_decay": 0.0388630397723802,
+  "stage1_id": 9
+ },
+ {
+  "lr": 0.1597536227064601,
+  "optimizer": "adamw",
+  "weight_decay": 0.0135965471781736,
+  "stage1_id": 42
+ },
+ {
+  "lr": 0.0660552479805031,
+  "optimizer": "adamw",
+  "weight_decay": 0.015434397571179,
+  "stage1_id": 5
+ },
+ {
+  "lr": 0.1139268142826557,
+  "optimizer": "adamw",
+  "weight_decay": 0.008940829824479,
+  "stage1_id": 16
+ },
+ {
+  "lr": 0.024267640434272778,
+  "optimizer": "adamw",
+  "weight_decay": 0.05793236008846459,
+  "stage1_id": null
+ },
+ {
+  "lr": 0.005870135482557458,
+  "optimizer": "adamw",
+  "weight_decay": 0.05772609023880886,
+  "stage1_id": null
+ },
+ {
+  "lr": 0.01121365669634101,
+  "optimizer": "adamw",
+  "weight_decay": 0.020550890631698706,
+  "stage1_id": null
+ },
+ {
+  "lr": 0.08214798136105562,
+  "optimizer": "adamw",
+  "weight_decay": 0.019987947096611846,
+  "stage1_id": null
+ }
+]

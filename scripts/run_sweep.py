@@ -71,7 +71,7 @@ def run_one(row: pd.Series, seed: int, args) -> int:
         log(tag, f"manifest mismatch: file has n={n} m={m}, manifest n={row['n']} m={row['m']}")
         return 3
     k = int(row["k"])
-    frozen = json.loads((ROOT / "configs" / "pignn_frozen.json").read_text())
+    frozen = json.loads(args.config.read_text())
     cfg = TrainConfig(k=k, embed_dim=frozen["embed_dim"], hidden_dim=frozen["hidden_dim"],
                       dropout=frozen["dropout"], lr=frozen["lr"], n_epochs=args.t_max,
                       seed=seed, device=args.device)
@@ -122,6 +122,7 @@ def main():
     ap.add_argument("--seeds", type=int, nargs="*", default=[0, 1, 2, 3, 4])
     ap.add_argument("--t-max", type=int, default=100_000)
     ap.add_argument("--device", default="cuda")
+    ap.add_argument("--config", type=Path, default=ROOT / "configs" / "pignn_frozen.json")
     ap.add_argument("--out", type=Path, default=ROOT / "results" / "main")
     ap.add_argument("--manifest", type=Path, default=ROOT / "configs" / "sweep_manifest.csv")
     ap.add_argument("--worker-seed", type=int, help="internal: run a single seed in this process")
@@ -142,7 +143,7 @@ def main():
                       f"CUDA_VISIBLE_DEVICES={os.environ.get('CUDA_VISIBLE_DEVICES')}")
     env = dict(os.environ, OMP_NUM_THREADS="1", MKL_NUM_THREADS="1")
     base = [sys.executable, "-u", str(Path(__file__).resolve()), "--graph", row["name"],
-            "--t-max", str(args.t_max), "--device", args.device, "--out", str(args.out),
+            "--t-max", str(args.t_max), "--device", args.device, "--config", str(args.config), "--out", str(args.out),
             "--manifest", str(args.manifest)]
     procs = {s: subprocess.Popen(base + ["--worker-seed", str(s)], env=env) for s in args.seeds}
     codes = {s: p.wait() for s, p in procs.items()}

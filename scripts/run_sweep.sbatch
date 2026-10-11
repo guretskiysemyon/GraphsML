@@ -5,6 +5,8 @@
 # Safe to resubmit or requeue: finished runs are skipped, interrupted ones resume.
 # Extension in place (decision 13): resubmit a subset with a larger budget, e.g.
 #   sbatch --array=18,23 --export=ALL,T_MAX=300000 scripts/run_sweep.sbatch
+# Experiment 3 noise control (PI-GNN without dropout, same Z0 and initial weights):
+#   sbatch --export=ALL,CONFIG=configs/pignn_frozen_nodropout.json,OUT=results/exp3/A_nodrop scripts/run_sweep.sbatch
 #SBATCH --job-name=pignn_sweep
 #SBATCH --account=gpu-students
 #SBATCH --partition=studentkillable
@@ -21,6 +23,8 @@
 #SBATCH --error=results/logs/sweep_%A_%a.out
 
 T_MAX=${T_MAX:-100000}
-echo "host=$(hostname) task=$SLURM_ARRAY_TASK_ID job=$SLURM_JOB_ID restarts=${SLURM_RESTART_COUNT:-0} t_max=$T_MAX"
+CONFIG=${CONFIG:-configs/pignn_frozen.json}
+OUT=${OUT:-results/main}
+echo "host=$(hostname) task=$SLURM_ARRAY_TASK_ID job=$SLURM_JOB_ID restarts=${SLURM_RESTART_COUNT:-0} t_max=$T_MAX config=$CONFIG out=$OUT"
 /home/morg/NLP_2526b/semyong/.venvs/graphsml/bin/python -u scripts/run_sweep.py \
-    --task-id $SLURM_ARRAY_TASK_ID --seeds 0 1 2 3 4 --t-max $T_MAX --device cuda --out results/main
+    --task-id $SLURM_ARRAY_TASK_ID --seeds 0 1 2 3 4 --t-max $T_MAX --device cuda --config $CONFIG --out $OUT

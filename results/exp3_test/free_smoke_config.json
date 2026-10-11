@@ -1,0 +1,1 @@
+{"lr": 0.1, "optimizer": "adam", "weight_decay": 0.0, "_provenance": "smoke test only, not tuned"}

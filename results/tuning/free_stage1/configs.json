@@ -1,0 +1,217 @@
+[
+ {
+  "lr": 0.019615814221240105,
+  "optimizer": "adamw",
+  "weight_decay": 0.01
+ },
+ {
+  "lr": 0.01,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.1,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.006447036682716461,
+  "optimizer": "adamw",
+  "weight_decay": 0.0001327151712530881
+ },
+ {
+  "lr": 0.0011209413928285786,
+  "optimizer": "adamw",
+  "weight_decay": 0.027530285650729847
+ },
+ {
+  "lr": 0.06605524798050313,
+  "optimizer": "adamw",
+  "weight_decay": 0.015434397571179087
+ },
+ {
+  "lr": 0.04274398161693902,
+  "optimizer": "adamw",
+  "weight_decay": 0.06385828802382956
+ },
+ {
+  "lr": 0.0010190969469382445,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.37343311708676946,
+  "optimizer": "adamw",
+  "weight_decay": 0.0001261120908119562
+ },
+ {
+  "lr": 0.0033648589334198016,
+  "optimizer": "adamw",
+  "weight_decay": 0.038863039772380245
+ },
+ {
+  "lr": 0.0421098467352885,
+  "optimizer": "adamw",
+  "weight_decay": 0.0007927489429502103
+ },
+ {
+  "lr": 0.001216071228447182,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.002359662167270631,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.08741149231878373,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.07017062333532993,
+  "optimizer": "adamw",
+  "weight_decay": 0.0014159002641739
+ },
+ {
+  "lr": 0.876003852925707,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.11392681428265576,
+  "optimizer": "adamw",
+  "weight_decay": 0.008940829824479026
+ },
+ {
+  "lr": 0.01468129184420337,
+  "optimizer": "adamw",
+  "weight_decay": 0.00025426671667343333
+ },
+ {
+  "lr": 0.14603771214247205,
+  "optimizer": "adamw",
+  "weight_decay": 0.003767584204208897
+ },
+ {
+  "lr": 0.028675174965950793,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.46608325795885885,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.011840923904208541,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.05183098856911574,
+  "optimizer": "adamw",
+  "weight_decay": 0.0009238642740866014
+ },
+ {
+  "lr": 0.010321282770792002,
+  "optimizer": "adamw",
+  "weight_decay": 0.0014957430776342598
+ },
+ {
+  "lr": 0.46862241307877933,
+  "optimizer": "adamw",
+  "weight_decay": 0.0004802559792604232
+ },
+ {
+  "lr": 0.0017866769341908834,
+  "optimizer": "adamw",
+  "weight_decay": 0.03147258701572948
+ },
+ {
+  "lr": 0.22977084556509256,
+  "optimizer": "adamw",
+  "weight_decay": 0.000522526510029089
+ },
+ {
+  "lr": 0.0014986634110894922,
+  "optimizer": "adamw",
+  "weight_decay": 0.0010194153802344135
+ },
+ {
+  "lr": 0.0028238290434184996,
+  "optimizer": "adamw",
+  "weight_decay": 0.00224397544325829
+ },
+ {
+  "lr": 0.004919564137951558,
+  "optimizer": "adamw",
+  "weight_decay": 0.00014323986505438357
+ },
+ {
+  "lr": 0.016355187202997747,
+  "optimizer": "adamw",
+  "weight_decay": 0.00039403893221461104
+ },
+ {
+  "lr": 0.05508040919108848,
+  "optimizer": "adamw",
+  "weight_decay": 0.0007872060052107828
+ },
+ {
+  "lr": 0.10374917068196313,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.6704082213879612,
+  "optimizer": "adamw",
+  "weight_decay": 0.0012454620668688186
+ },
+ {
+  "lr": 0.0020724584806382103,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.604593758166928,
+  "optimizer": "adamw",
+  "weight_decay": 0.002094746455111592
+ },
+ {
+  "lr": 0.730754470791136,
+  "optimizer": "adamw",
+  "weight_decay": 0.00316000260810407
+ },
+ {
+  "lr": 0.07255049101460317,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.9666950965866031,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.02399581018859058,
+  "optimizer": "adamw",
+  "weight_decay": 0.01875800019010478
+ },
+ {
+  "lr": 0.031064765992102943,
+  "optimizer": "adamw",
+  "weight_decay": 0.0038720100920725687
+ },
+ {
+  "lr": 0.01753749450934068,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.15975362270646015,
+  "optimizer": "adamw",
+  "weight_decay": 0.013596547178173657
+ }
+]
