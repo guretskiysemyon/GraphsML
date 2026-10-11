@@ -22,7 +22,7 @@ def random_colouring(n: int, k: int, seed: int) -> np.ndarray:
 
 
 def dsatur_fixed_k(eg: EndpointGraph, k: int, seed: int | None = None,
-                   return_order: bool = False):
+                   return_order: bool = False, random_colour_ties: bool = True):
     """DSATUR restricted to k colours (section 2.4); vertices are coloured one at a time.
 
     Vertex rule: pick an uncoloured vertex with the largest saturation (number of distinct
@@ -33,11 +33,17 @@ def dsatur_fixed_k(eg: EndpointGraph, k: int, seed: int | None = None,
     Colour rule: the colour that has the fewest already-coloured neighbours. A colour with
     count 0 is conflict-free, so this is "lowest available colour" when one exists and
     "least-conflict colour" when all k colours clash. Ties: lowest colour index (seed=None)
-    or uniformly at random (seed given).
+    or uniformly at random (seed given and random_colour_ties=True).
+
+    random_colour_ties=False with a seed is the standard randomised DSATUR (post hoc
+    control 'dsatur_rand_v'): only the vertex ties are random, colour ties go to the lowest
+    index as in the deterministic version. It uses its own RNG stream, default_rng([seed, 3]),
+    so the original 'dsatur_rand' results are unchanged.
 
     Returns the colouring (int64, shape (n,)), plus the colouring order if return_order.
     """
-    rng = None if seed is None else np.random.default_rng([seed, 2])
+    rng = None if seed is None else np.random.default_rng([seed, 2 if random_colour_ties else 3])
+    colour_rng = rng if random_colour_ties else None
     n = eg.n
     colours = np.full(n, -1, dtype=np.int64)
     uncoloured = np.ones(n, dtype=bool)
@@ -51,7 +57,7 @@ def dsatur_fixed_k(eg: EndpointGraph, k: int, seed: int | None = None,
         v = int(cand[0] if rng is None else rng.choice(cand))
         row = M[v]
         best = np.flatnonzero(row == row.min())
-        c = int(best[0] if rng is None else rng.choice(best))
+        c = int(best[0] if colour_rng is None else colour_rng.choice(best))
         colours[v] = c
         uncoloured[v] = False
         order.append(v)

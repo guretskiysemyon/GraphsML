@@ -1,1 +1,2 @@
 {"time": "2026-10-08T18:10:01", "host": "s-005", "slurm_job": "1000868", "slurm_task": "41", "gpu": "NVIDIA GeForce RTX 2080 Ti", "torch": "2.7.1+cu126", "t_max": 100000}
+{"time": "2026-10-09T20:11:26", "host": "s-005", "slurm_job": "1004813", "slurm_task": "41", "gpu": "NVIDIA GeForce RTX 2080 Ti", "torch": "2.7.1+cu126", "t_max": 300000}

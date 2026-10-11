@@ -7,11 +7,18 @@ then run the same strict_vertex_descent as for PI-GNN's argmax, with the same de
 convention (descent RNG = default_rng(seed)). 'dsatur' is deterministic, so its 5 seeds
 differ only in the descent tie-breaks.
 
-Output: <out>/<graph>/controls.jsonl (one row per method x seed) plus a DONE marker.
-Idempotent and requeue-safe: a graph with a DONE marker is skipped.
+Post hoc (added after the step G results, see docs/progress_exp1.md section 10 caveats):
+'dsatur_rand_v' = randomised DSATUR with random vertex ties only and lowest-index colours.
+Post hoc methods are run with --tag, which writes to a separate file so the pre-registered
+rows are never touched.
+
+Output: <out>/<graph>/controls.jsonl (one row per method x seed) plus a DONE marker; with
+--tag T, controls_T.jsonl and DONE_T instead.
+Idempotent and requeue-safe: a graph with the matching DONE marker is skipped.
 
     python scripts/run_controls.py --task-id 0
     python scripts/run_controls.py --graph queen5_5 --seeds 0 1
+    python scripts/run_controls.py --task-id 0 --methods dsatur_rand_v --seeds 0 1 2 3 4 5 6 7 8 9 --tag posthoc
 """
 
 from __future__ import annotations
@@ -41,7 +48,8 @@ from graphsml.endpoint import (  # noqa: E402
 )
 
 COL_DIR = ROOT / "data" / "dimacs" / "col"
-METHODS = ("random", "dsatur", "dsatur_rand")
+METHODS = ("random", "dsatur", "dsatur_rand")  # the pre-registered step G set (default)
+ALL_METHODS = METHODS + ("dsatur_rand_v",)
 
 
 def log(tag: str, msg: str):
@@ -55,6 +63,8 @@ def start_colouring(method: str, eg: EndpointGraph, k: int, seed: int) -> np.nda
         return dsatur_fixed_k(eg, k)
     if method == "dsatur_rand":
         return dsatur_fixed_k(eg, k, seed=seed)
+    if method == "dsatur_rand_v":
+        return dsatur_fixed_k(eg, k, seed=seed, random_colour_ties=False)
     raise ValueError(method)
 
 
@@ -65,7 +75,11 @@ def main():
     ap.add_argument("--seeds", type=int, nargs="*", default=[0, 1, 2, 3, 4])
     ap.add_argument("--out", type=Path, default=ROOT / "results" / "controls")
     ap.add_argument("--manifest", type=Path, default=ROOT / "configs" / "sweep_manifest.csv")
+    ap.add_argument("--methods", nargs="*", default=list(METHODS), choices=ALL_METHODS)
+    ap.add_argument("--tag", default="", help="post hoc runs: write controls_<tag>.jsonl / DONE_<tag>")
     args = ap.parse_args()
+    jsonl_name = f"controls_{args.tag}.jsonl" if args.tag else "controls.jsonl"
+    done_name = f"DONE_{args.tag}" if args.tag else "DONE"
 
     manifest = pd.read_csv(args.manifest, index_col="idx")
     if args.graph is not None:
@@ -77,7 +91,7 @@ def main():
     name, k = row["name"], int(row["k"])
     out_dir = args.out / name
     out_dir.mkdir(parents=True, exist_ok=True)
-    if (out_dir / "DONE").exists():
+    if (out_dir / done_name).exists():
         log(name, "already done, skipping")
         return
 
@@ -86,11 +100,11 @@ def main():
     if (n, m) != (int(row["n"]), int(row["m"])):
         sys.exit(f"{name}: manifest mismatch: file has n={n} m={m}, manifest n={row['n']} m={row['m']}")
     log(name, f"host={socket.gethostname()} job={os.environ.get('SLURM_JOB_ID')} "
-              f"task={os.environ.get('SLURM_ARRAY_TASK_ID')} n={n} m={m} chi={int(row['chi'])} k={k} seeds={args.seeds}")
+              f"task={os.environ.get('SLURM_ARRAY_TASK_ID')} n={n} m={m} chi={int(row['chi'])} k={k} seeds={args.seeds} methods={args.methods}")
 
     eg = EndpointGraph.from_networkx(g)
     rows = []
-    for method in METHODS:
+    for method in args.methods:
         for seed in args.seeds:
             t0 = time.perf_counter()
             colours = start_colouring(method, eg, k, seed)
@@ -107,10 +121,10 @@ def main():
             log(name, f"{method}/seed{seed}: raw={rows[-1]['conflicts']} -> after descent="
                       f"{res.conflicts_after} ({res.n_moves} moves, {res.seconds:.1f}s)")
 
-    tmp = out_dir / "controls.jsonl.tmp"
+    tmp = out_dir / f"{jsonl_name}.tmp"
     tmp.write_text("\n".join(json.dumps(r) for r in rows) + "\n")
-    os.replace(tmp, out_dir / "controls.jsonl")
-    (out_dir / "DONE").write_text(json.dumps(dict(n_rows=len(rows), time=time.strftime("%Y-%m-%dT%H:%M:%S"))))
+    os.replace(tmp, out_dir / jsonl_name)
+    (out_dir / done_name).write_text(json.dumps(dict(n_rows=len(rows), time=time.strftime("%Y-%m-%dT%H:%M:%S"))))
     log(name, "DONE")
 
 

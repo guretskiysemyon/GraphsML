@@ -1,1 +1,1 @@
-{"t_max": 100000, "n_endpoint_rows": 16, "final_conflicts": 3}
+{"t_max": 300000, "n_endpoint_rows": 18, "final_conflicts": 4}

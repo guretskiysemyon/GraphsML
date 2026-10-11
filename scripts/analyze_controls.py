@@ -3,7 +3,13 @@
 Implements exactly the protocol and the interpretation rules written in
 docs/progress_exp1.md section 9 *before* any control result existed. CPU only.
 
+Post hoc additions (docs/progress_exp1.md section 11, rules written before the results): the
+'dsatur_rand_v' control from controls_posthoc.jsonl is reported next to the pre-registered rows
+with role "post hoc", and the order-sensitivity check (deterministic DSATUR vs dsatur_rand_v)
+is written to controls_posthoc_order.csv. Both are skipped if the post hoc file is absent.
+
 Inputs : results/controls/<graph>/controls.jsonl   (scripts/run_controls.py)
+         results/controls/<graph>/controls_posthoc.jsonl (optional, post hoc)
          results/analysis/per_graph_epoch.csv       (scripts/analyze_exp1.py; PI-GNN seed means)
          configs/sweep_manifest.csv
 Outputs: results/analysis/controls_per_graph.csv, controls_summary.csv, controls_by_family.csv,
@@ -29,7 +35,8 @@ ALPHA = 0.025  # two primary controls, Bonferroni
 PIGNN_EPOCH = 100_000
 PRIMARY = ["random", "dsatur"]
 SECONDARY = ["dsatur_rand", "pignn_epoch1"]
-LABEL = {"random": "random start", "dsatur": "DSATUR (deterministic)",
+POSTHOC = ["dsatur_rand_v"]  # added after the step G results (section 11)
+LABEL = {"dsatur_rand_v": "DSATUR (random vertex ties)", "random": "random start", "dsatur": "DSATUR (deterministic)",
          "dsatur_rand": "DSATUR (randomised)", "pignn_epoch1": "PI-GNN at epoch 1"}
 
 # palette.md: diverging blue <-> red with a gray midpoint, light surface
@@ -39,9 +46,13 @@ WIN, TIE, LOSS = "#2a78d6", "#898781", "#e34948"
 
 def load_controls(path):
     rows = []
-    for f in sorted(glob.glob(os.path.join(path, "*", "controls.jsonl"))):
+    for f in sorted(glob.glob(os.path.join(path, "*", "controls*.jsonl"))):
         rows += [json.loads(l) for l in open(f)]
     return pd.DataFrame(rows)
+
+
+def role(c):
+    return "primary" if c in PRIMARY else "post hoc" if c in POSTHOC else "exploratory"
 
 
 def verdict(p, c):
@@ -84,9 +95,12 @@ def main():
     tab["raw_pignn_100k"] = p100.conflicts
     tab = tab.dropna(subset=["pignn_100k"] + list(PRIMARY)).sort_values("n")
     print(f"graphs compared: {len(tab)}")
+    posthoc = [c for c in POSTHOC if c in tab.columns and tab[c].notna().all()]
+    if POSTHOC and not posthoc:
+        print("post hoc controls absent or incomplete, skipped:", POSTHOC)
 
     summary = []
-    for c in PRIMARY + SECONDARY:
+    for c in PRIMARY + SECONDARY + posthoc:
         d, v = verdict(tab.pignn_100k.to_numpy(float), tab[c].to_numpy(float))
         tab[f"d_{c}"], tab[f"verdict_{c}"] = d, v
         nz = d[d != 0]
@@ -98,23 +112,39 @@ def main():
         med = float(np.median(d))
         absdiff = np.abs(tab.pignn_100k.to_numpy(float) - tab[c].to_numpy(float))
         summary.append(dict(
-            control=c, role="primary" if c in PRIMARY else "exploratory", graphs=len(tab),
+            control=c, role=role(c), graphs=len(tab),
             wins=wins, ties=ties, losses=losses, median_d=med,
             # descriptive only: how many of the wins / losses are by at most 5 conflicts in absolute terms
             wins_abs_le5=int(((v == "win") & (absdiff <= 5)).sum()), losses_abs_le5=int(((v == "loss") & (absdiff <= 5)).sum()),
             mean_ctrl_after=float(tab[c].mean()),
             mean_pignn_after=float(tab.pignn_100k.mean()), wilcoxon_p=pval,
-            reading=reading(med, pval, wins, losses) if c in PRIMARY else "exploratory, no claim"))
+            reading=reading(med, pval, wins, losses) if c in PRIMARY else f"{role(c)}, no claim"))
     summ = pd.DataFrame(summary)
 
     fam = []
-    for c in PRIMARY + SECONDARY:
+    for c in PRIMARY + SECONDARY + posthoc:
         for f, g in tab.groupby("family"):
             v = g[f"verdict_{c}"]
             fam.append(dict(control=c, family=f, graphs=len(g), wins=int((v == "win").sum()),
                             ties=int((v == "tie").sum()), losses=int((v == "loss").sum()),
                             median_d=float(g[f"d_{c}"].median())))
     fam = pd.DataFrame(fam)
+
+    # post hoc order-sensitivity check (section 11 A): deterministic DSATUR vs dsatur_rand_v
+    if "dsatur_rand_v" in posthoc:
+        rv = ctl[ctl.method == "dsatur_rand_v"].groupby("graph").conflicts_after_descent
+        order_tab = tab[["family", "n", "dsatur", "dsatur_rand_v", "pignn_100k", "verdict_dsatur"]].copy()
+        order_tab["rand_v_min"], order_tab["rand_v_max"] = rv.min(), rv.max()
+        order_tab["d_det_vs_rand_v"], order_tab["det_vs_rand_v"] = verdict(
+            order_tab.dsatur.to_numpy(float), order_tab.dsatur_rand_v.to_numpy(float))
+        order_tab = order_tab.rename(columns={"verdict_dsatur": "pignn_vs_dsatur_stepG"})
+        order_tab.to_csv(f"{a.out}/controls_posthoc_order.csv")
+        cnt = lambda v: {k: int((v == k).sum()) for k in ("win", "tie", "loss")}
+        print("\n[post hoc] deterministic DSATUR vs dsatur_rand_v ('win' = deterministic has fewer conflicts):",
+              cnt(order_tab.det_vs_rand_v))
+        sub = order_tab[order_tab.pignn_vs_dsatur_stepG == "loss"]
+        print(f"  on the {len(sub)} graphs where DSATUR beat PI-GNN in step G:", cnt(sub.det_vs_rand_v))
+        print(order_tab.groupby("family").det_vs_rand_v.value_counts().unstack(fill_value=0).to_string())
 
     os.makedirs(a.out, exist_ok=True)
     tab.to_csv(f"{a.out}/controls_per_graph.csv")
@@ -125,7 +155,7 @@ def main():
     plt.rcParams.update({"font.family": "sans-serif", "axes.edgecolor": MUTED, "axes.labelcolor": INK2,
                          "xtick.color": MUTED, "ytick.color": MUTED, "text.color": INK,
                          "axes.facecolor": SURFACE, "figure.facecolor": SURFACE, "font.size": 10})
-    fig = plt.figure(figsize=(15.5, 5.2))
+    fig = plt.figure(figsize=(15.5, 5.2 + 0.5 * len(posthoc)))
     gs = fig.add_gridspec(1, 3, width_ratios=[1, 1, 1.15], wspace=0.28)
     allv = np.concatenate([tab[["pignn_100k"] + PRIMARY].to_numpy(float).ravel()])
     lo, hi = max(allv.min() * 0.7, 0.5), allv.max() * 1.4
@@ -154,7 +184,7 @@ def main():
             ax.spines[s].set_visible(False)
         ax.legend(loc="upper left", fontsize=7.5, frameon=False)
     ax = fig.add_subplot(gs[0, 2])
-    order = PRIMARY + SECONDARY
+    order = PRIMARY + SECONDARY + posthoc
     for j, c in enumerate(order[::-1]):
         r = summ[summ.control == c].iloc[0]
         left = 0
@@ -168,7 +198,7 @@ def main():
                         ha="left" if last else "center", va="center" if last else "bottom", color=INK2, fontsize=8)
             left += cnt
     ax.set_yticks(range(len(order)))
-    ax.set_yticklabels([f"{LABEL[c]}\n({'primary' if c in PRIMARY else 'exploratory'})" for c in order[::-1]], fontsize=9, color=INK2)
+    ax.set_yticklabels([f"{LABEL[c]}\n({role(c)})" for c in order[::-1]], fontsize=9, color=INK2)
     ax.set_xlim(0, len(tab) + 3); ax.set_xticks(range(0, len(tab) + 1, 10)); ax.set_xlabel("graphs")
     ax.set_title("PI-GNN vs control, per graph", loc="left", fontsize=11, color=INK)
     for s in ("top", "right", "left"):

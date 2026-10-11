@@ -55,3 +55,17 @@ pignn_epoch1,other,1,1,0,0,-0.3333333333333333
 pignn_epoch1,queen,12,12,0,0,-0.2806102362204725
 pignn_epoch1,school,2,2,0,0,-0.1558066394538997
 pignn_epoch1,zeroin,3,3,0,0,-0.7297297297297297
+dsatur_rand_v,DSJC,4,3,0,1,-0.11579161579161576
+dsatur_rand_v,DSJR,3,0,0,3,1.853146853146853
+dsatur_rand_v,SocialNet,5,0,4,1,0.0
+dsatur_rand_v,flat,5,2,3,0,-0.019045799095483845
+dsatur_rand_v,fpsol,3,0,0,3,2.8
+dsatur_rand_v,inithx,3,0,0,3,3.5999999999999996
+dsatur_rand_v,le,12,4,3,5,-0.016612351406204668
+dsatur_rand_v,miles,5,0,1,4,1.7999999999999998
+dsatur_rand_v,mulsol,5,0,5,0,0.0
+dsatur_rand_v,myciel,5,0,5,0,0.0
+dsatur_rand_v,other,1,0,1,0,-0.04761904761904766
+dsatur_rand_v,queen,12,9,3,0,-0.1463963963963964
+dsatur_rand_v,school,2,1,0,1,0.5659571410364497
+dsatur_rand_v,zeroin,3,0,1,2,1.0

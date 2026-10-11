@@ -19,3 +19,5 @@
 {"epoch": 30000, "train_loss": 1384.6116943359375, "eval_conflicts": 112651, "eval_entropy": 4.279098987579346, "n_colours_used": 4, "best_conflicts_so_far": 2572, "cumulative_seconds": 105.30212482251227}
 {"epoch": 50000, "train_loss": 1314.787353515625, "eval_conflicts": 93116, "eval_entropy": 3.9377853870391846, "n_colours_used": 8, "best_conflicts_so_far": 2572, "cumulative_seconds": 161.1165176378563}
 {"epoch": 100000, "train_loss": 1261.817626953125, "eval_conflicts": 54822, "eval_entropy": 3.2802276611328125, "n_colours_used": 15, "best_conflicts_so_far": 2572, "cumulative_seconds": 352.49818216543645}
+{"epoch": 200000, "train_loss": 1244.25537109375, "eval_conflicts": 1456, "eval_entropy": 0.02495676837861538, "n_colours_used": 52, "best_conflicts_so_far": 1456, "cumulative_seconds": 755.744980905205}
+{"epoch": 300000, "train_loss": 440.66680908203125, "eval_conflicts": 460, "eval_entropy": 0.0077497102320194244, "n_colours_used": 65, "best_conflicts_so_far": 460, "cumulative_seconds": 1143.47086921148}

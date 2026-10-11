@@ -1,0 +1,5 @@
+control,role,graphs,wins,ties,losses,median_d,wins_abs_le5,losses_abs_le5,mean_ctrl_after,mean_pignn_after,wilcoxon_p,reading
+random,primary,68,62,5,1,-0.38684640522875824,14,0,134.49117647058824,114.86470588235295,5.114036018810898e-12,PI-GNN is a better start for strict descent than this control
+dsatur,primary,68,16,28,24,0.0,4,15,121.87352941176471,114.86470588235295,0.002574539746626744,not distinguishable from this control as a start for strict descent
+dsatur_rand,exploratory,68,29,24,15,-0.05248359678122527,11,8,120.7470588235294,114.86470588235295,0.6166496605191036,"exploratory, no claim"
+pignn_epoch1,exploratory,68,59,8,1,-0.3248931623931624,14,1,132.08823529411765,114.86470588235295,2.0638357810755348e-12,"exploratory, no claim"

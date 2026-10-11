@@ -77,3 +77,34 @@ def test_controls_feed_descent_to_a_single_flip_optimal_colouring():
         res = strict_vertex_descent(eg, start, k, seed=0)
         assert res.conflicts_after <= res.conflicts_before
         assert single_flip_report(res.colours, neighbour_colour_counts(eg, res.colours, k)).is_optimal
+
+
+def test_dsatur_rand_v_random_vertex_ties_lowest_colour_rule():
+    g = nx.gnp_random_graph(60, 0.15, seed=5)
+    eg = EndpointGraph.from_networkx(g)
+    k = 4
+    colours, order = dsatur_fixed_k(eg, k, seed=3, return_order=True, random_colour_ties=False)
+    assert np.array_equal(colours, dsatur_fixed_k(eg, k, seed=3, random_colour_ties=False))
+    assert colours.min() >= 0 and colours.max() < k
+    # replay the order: every vertex got the lowest-index colour among the least-conflict ones
+    partial = np.full(eg.n, -1)
+    for v in order:
+        nb = eg.neighbours[v]
+        counts = np.bincount(partial[nb][partial[nb] >= 0], minlength=k)
+        assert colours[v] == int(np.flatnonzero(counts == counts.min())[0])
+        partial[v] = colours[v]
+    # vertex ties are random: different seeds give different orders on this graph
+    orders = {tuple(dsatur_fixed_k(eg, k, seed=s, return_order=True, random_colour_ties=False)[1])
+              for s in range(5)}
+    assert len(orders) > 1
+
+
+def test_dsatur_rand_v_is_exact_on_bipartite_graphs_and_differs_from_dsatur_rand():
+    for g in (nx.cycle_graph(6), nx.path_graph(9), nx.balanced_tree(2, 4)):
+        eg = EndpointGraph.from_networkx(g)
+        for s in range(3):
+            assert conflict_count(eg, dsatur_fixed_k(eg, 2, seed=s, random_colour_ties=False)) == 0
+    eg = EndpointGraph.from_networkx(nx.gnp_random_graph(40, 0.2, seed=0))
+    differs = [not np.array_equal(dsatur_fixed_k(eg, 3, seed=s), dsatur_fixed_k(eg, 3, seed=s, random_colour_ties=False))
+               for s in range(5)]
+    assert any(differs)
