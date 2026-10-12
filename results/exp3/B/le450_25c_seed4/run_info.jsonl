@@ -1,0 +1,1 @@
+{"time": "2026-10-12T01:49:19", "host": "s-003", "slurm_job": "1012968", "slurm_task": "55", "gpu": "NVIDIA TITAN Xp", "torch": "2.7.1+cu126", "n_steps": 300000, "max_steps": 3000000, "config": "/home/morg/NLP_2526b/semyong/GraphsML/configs/free_logits_frozen.json"}

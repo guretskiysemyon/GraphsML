@@ -1,0 +1,1 @@
+{"t_max": 800566, "n_steps": 300000, "a_t_max": 300000, "time_match": true, "stop_reason": "complete", "missed_targets": [], "n_endpoint_rows": 67, "final_conflicts": 907}

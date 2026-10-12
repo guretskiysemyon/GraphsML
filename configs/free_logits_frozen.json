@@ -1,0 +1,18 @@
+{
+  "lr": 0.042743981616939,
+  "optimizer": "adamw",
+  "weight_decay": 0.0638582880238295,
+  "_provenance": {
+    "selected_from": "results/tuning/free_stage2_summary.csv",
+    "stage2_config": 0,
+    "stage1_id": 6,
+    "stage1_mean_rank": 1.6923076923076923,
+    "stage2_mean_rank": 2.3846153846153846,
+    "runner_up_stage2_mean_rank": 2.5961538461538463,
+    "tuning_set": "data/synthetic/tuning (13 graphs), start = PI-GNN's Z0 (frozen PI-GNN config) per graph/k/seed",
+    "selection_criterion": "mean rank of seed-averaged final eval-mode conflicts across (graph, regime) cells, regime in {k=chi_hi, k=chi_hi-1} (same as PI-GNN)",
+    "stage1_budget_steps": 10000,
+    "stage2_budget_steps": 50000,
+    "frozen_on": "2026-10-12"
+  }
+}
