@@ -1,0 +1,56 @@
+[
+ {
+  "lr": 0.0014584585665958,
+  "optimizer": "sgd",
+  "weight_decay": 0.0,
+  "stage1_id": 4
+ },
+ {
+  "lr": 0.0196158142212401,
+  "optimizer": "adam",
+  "weight_decay": 0.0,
+  "stage1_id": 0
+ },
+ {
+  "lr": 0.0119990497793935,
+  "optimizer": "sgd",
+  "weight_decay": 0.0,
+  "stage1_id": 3
+ },
+ {
+  "lr": 0.01,
+  "optimizer": "sgd",
+  "weight_decay": 0.0,
+  "stage1_id": 1
+ },
+ {
+  "lr": 0.1,
+  "optimizer": "sgd",
+  "weight_decay": 0.0,
+  "stage1_id": 2
+ },
+ {
+  "lr": 0.019615814221240098,
+  "optimizer": "adam",
+  "weight_decay": 0.0,
+  "stage1_id": null
+ },
+ {
+  "lr": 0.0026827883503962144,
+  "optimizer": "sgd",
+  "weight_decay": 0.0,
+  "stage1_id": null
+ },
+ {
+  "lr": 0.00545066719603614,
+  "optimizer": "sgd",
+  "weight_decay": 0.0,
+  "stage1_id": null
+ },
+ {
+  "lr": 0.008733056866395849,
+  "optimizer": "sgd",
+  "weight_decay": 0.0,
+  "stage1_id": null
+ }
+]

@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from graphsml.dimacs import load_col_graph  # noqa: E402
-from graphsml.tune import TuneConfig, sample_configs, train_lean  # noqa: E402
+from graphsml.tune import TuneConfig, pignn_stage2_configs, sample_configs, train_lean  # noqa: E402
 
 TUNING_DIR = ROOT / "data" / "synthetic" / "tuning"
 
@@ -44,7 +44,19 @@ def main():
     ap.add_argument("--out", type=Path, default=ROOT / "results" / "tuning" / "stage1")
     ap.add_argument("--configs", type=Path, default=None, help="JSON list of configs (default: sample stage-1 configs)")
     ap.add_argument("--max-units", type=int, default=None, help="debug: stop after this many units")
+    ap.add_argument("--arch", default="sage", choices=["sage", "mlp"],
+                    help="sage = PI-GNN; mlp = Experiment 3 rung C (no message passing)")
+    ap.add_argument("--write-stage2", type=Path, metavar="STAGE1_DIR",
+                    help="write <parent>/<name>_stage2_input_configs.json from STAGE1_DIR's summary and exit")
     args = ap.parse_args()
+
+    if args.write_stage2 is not None:
+        d = args.write_stage2
+        ranked = pd.read_csv(d.parent / f"{d.name}_summary.csv").to_dict("records")  # sorted by mean_rank
+        out = d.parent / f"{d.name.replace('stage1', 'stage2')}_input_configs.json"
+        out.write_text(json.dumps(pignn_stage2_configs(ranked), indent=1))
+        print(f"wrote {out}")
+        return
 
     if args.device.startswith("cuda") and not torch.cuda.is_available():
         sys.exit("CUDA requested but not available; refusing to fall back to CPU silently (use --device cpu).")
@@ -68,7 +80,8 @@ def main():
         for line in out_file.read_text().splitlines():
             r = json.loads(line)
             done.add((r["config"], r["graph_idx"], r["regime"], r["seed"]))
-    print(f"task {args.task}/{args.n_tasks}: {len(mine)} units, {len(done)} already done, device={args.device}", flush=True)
+    print(f"task {args.task}/{args.n_tasks}: {len(mine)} units, {len(done)} already done, device={args.device} "
+          f"arch={args.arch}", flush=True)
 
     adj_cache = {}
     n_run = 0
@@ -80,7 +93,7 @@ def main():
             if gi not in adj_cache:
                 adj_cache[gi] = graph_to_adj(load_col_graph(TUNING_DIR / f"{row['name']}.col"))
             k = int(row["k_hi"]) - (1 if regime == "lo" else 0)
-            res = train_lean(adj_cache[gi], k, cfgs[ci], args.n_epochs, seed, args.device, args.eval_every)
+            res = train_lean(adj_cache[gi], k, cfgs[ci], args.n_epochs, seed, args.device, args.eval_every, args.arch)
             f.write(json.dumps(dict(config=ci, graph_idx=gi, graph=row["name"], regime=regime, seed=seed,
                                     k=k, m=int(row["m"]), n=int(row["n"]), **res)) + "\n")
             f.flush()

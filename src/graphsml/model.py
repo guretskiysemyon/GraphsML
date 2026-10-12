@@ -85,3 +85,52 @@ class PIGNN(nn.Module):
         h1 = self.dropout(h1)
         z = self.conv2(mean_adj, h1)
         return z
+
+
+class SelfLinear(nn.Module):
+    """SAGEConvMean with the neighbour term removed: out[v] = W_self @ h[v] + b, same
+    initialisation as SAGEConvMean's self weight."""
+
+    def __init__(self, in_feats: int, out_feats: int):
+        super().__init__()
+        self.fc_self = nn.Linear(in_feats, out_feats, bias=False)
+        self.bias = nn.Parameter(torch.zeros(out_feats))
+        nn.init.xavier_uniform_(self.fc_self.weight, gain=nn.init.calculate_gain("relu"))
+
+    def forward(self, h: torch.Tensor) -> torch.Tensor:
+        return self.fc_self(h) + self.bias
+
+
+class NodeMLP(nn.Module):
+    """Experiment 3 rung C, the no-message-passing control: PIGNN with both SAGE layers'
+    neighbour terms deleted. Trainable embedding -> linear -> ReLU -> dropout -> linear -> logits,
+    same widths, dropout and initialisation as PIGNN; each vertex's logits depend on its own
+    embedding only, so the graph enters only through the loss."""
+
+    def __init__(self, n_nodes: int, embed_dim: int, hidden_dim: int, k: int, dropout: float,
+                 embed_init: str = "normal"):
+        super().__init__()
+        self.embedding = nn.Embedding(n_nodes, embed_dim)
+        if embed_init == "xavier":
+            nn.init.xavier_uniform_(self.embedding.weight)
+        elif embed_init != "normal":
+            raise ValueError(f"unknown embed_init {embed_init!r}")
+        self.lin1 = SelfLinear(embed_dim, hidden_dim)
+        self.lin2 = SelfLinear(hidden_dim, k)
+        self.dropout = nn.Dropout(dropout)
+        self.relu = nn.ReLU()
+
+    def forward(self, mean_adj: torch.Tensor | None = None) -> torch.Tensor:
+        """mean_adj is accepted (and ignored) so the training loops can call every arch alike."""
+        h1 = self.dropout(self.relu(self.lin1(self.embedding.weight)))
+        return self.lin2(h1)
+
+
+ARCHS = {"sage": PIGNN, "mlp": NodeMLP}
+
+
+def build_model(arch: str, n_nodes: int, embed_dim: int, hidden_dim: int, k: int, dropout: float,
+                embed_init: str = "normal") -> nn.Module:
+    if arch not in ARCHS:
+        raise ValueError(f"unknown arch {arch!r}")
+    return ARCHS[arch](n_nodes, embed_dim, hidden_dim, k, dropout, embed_init)

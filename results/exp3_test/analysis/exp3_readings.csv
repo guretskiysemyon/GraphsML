@@ -1,0 +1,3 @@
+metric,B_vs_A_steps,B_vs_A_time,B_vs_Brand_steps,views_disagree,gate_open_per_step_rule,gate_open_per_time_rule,gate_open_either_view
+conflicts,not distinguishable,no data,not distinguishable,True,False,False,False
+conflicts_after_descent,not distinguishable,no data,not distinguishable,True,False,False,False

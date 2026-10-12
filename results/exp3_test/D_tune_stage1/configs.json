@@ -1,0 +1,27 @@
+[
+ {
+  "lr": 0.019615814221240105,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.01,
+  "optimizer": "sgd",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.1,
+  "optimizer": "sgd",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.01199904977939351,
+  "optimizer": "sgd",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.001458458566595887,
+  "optimizer": "sgd",
+  "weight_decay": 0.0
+ }
+]

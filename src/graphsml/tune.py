@@ -13,7 +13,7 @@ import numpy as np
 import torch
 
 from .losses import argmax_colouring, conflict_count, potts_loss
-from .model import PIGNN, build_mean_adjacency
+from .model import build_mean_adjacency, build_model
 
 
 @dataclass
@@ -47,12 +47,12 @@ def sample_configs(n_random: int, seed: int = 0) -> list[TuneConfig]:
 
 
 def train_lean(adj: torch.Tensor, k: int, cfg: TuneConfig, n_epochs: int, seed: int,
-               device: str, eval_every: int = 500) -> dict:
+               device: str, eval_every: int = 500, arch: str = "sage") -> dict:
     torch.manual_seed(seed)
     dev = torch.device(device)
     adj = adj.to(dev)
     mean_adj = build_mean_adjacency(adj)
-    model = PIGNN(adj.shape[0], cfg.embed_dim, cfg.hidden_dim, k, cfg.dropout, "normal").to(dev)
+    model = build_model(arch, adj.shape[0], cfg.embed_dim, cfg.hidden_dim, k, cfg.dropout, "normal").to(dev)
     opt = torch.optim.AdamW(model.parameters(), lr=cfg.lr)
 
     eval_epochs, eval_conflicts, eval_entropy, n_colours = [], [], [], []
@@ -128,4 +128,70 @@ def free_logit_stage2_configs(ranked: list[dict], n_top: int = 6, n_extra: int =
     for _ in range(n_extra):
         d = _draw_free(rng, (min(lrs), max(lrs)), (min(wds), max(wds)), optimizers=opts)
         out.append(dict(d.__dict__, stage1_id=None))
+    return out
+
+
+def pignn_stage2_configs(ranked: list[dict], n_top: int = 6, n_extra: int = 4, seed: int = 1) -> list[dict]:
+    """Stage-2 input for a PI-GNN-shaped model (used for Experiment 3 rung C; PI-GNN's own stage-2
+    input was assembled by hand the same way): the n_top best stage-1 configs (`ranked`, best
+    first, each with lr/hidden_dim/embed_dim/dropout and its stage-1 id under "config"), plus
+    n_extra draws from their bounding box (log-space for lr and the widths, linear for dropout)."""
+    top = ranked[:n_top]
+    rng = np.random.default_rng(seed)
+
+    def box(key):
+        vals = [float(c[key]) for c in top]
+        return min(vals), max(vals)
+
+    out = [dict(lr=float(c["lr"]), hidden_dim=int(c["hidden_dim"]), embed_dim=int(c["embed_dim"]),
+                dropout=float(c["dropout"]), stage1_id=int(c["config"])) for c in top]
+    for _ in range(n_extra):
+        (l0, l1), (h0, h1), (e0, e1), (d0, d1) = box("lr"), box("hidden_dim"), box("embed_dim"), box("dropout")
+        out.append(dict(lr=float(np.exp(rng.uniform(np.log(l0), np.log(l1)))),
+                        hidden_dim=int(round(np.exp(rng.uniform(np.log(h0), np.log(h1))))),
+                        embed_dim=int(round(np.exp(rng.uniform(np.log(e0), np.log(e1))))),
+                        dropout=float(rng.uniform(d0, d1)), stage1_id=None))
+    return out
+
+
+# ---------------------------------------------------------------------------------------------
+# Experiment 3, rung D (PI-GNN linearised at init, graphsml.linearised): same protocol and effort.
+# The trained variable is delta = theta - theta0 (PI-GNN's parameter space), so the learning-rate
+# ranges are PI-GNN-like; plain gradient descent is the plan's literal "Z <- Z - eta M_G grad L",
+# Adam the "J D_t J^T" variant. No weight decay.
+
+LIN_REFERENCE_CONFIGS = [
+    FreeTuneConfig(lr=0.019615814221240105, optimizer="adam", weight_decay=0.0),  # PI-GNN's frozen lr
+    FreeTuneConfig(lr=0.01, optimizer="sgd", weight_decay=0.0),
+    FreeTuneConfig(lr=0.1, optimizer="sgd", weight_decay=0.0),
+]
+LIN_LR_RANGES = {"adam": (1e-4, 0.3), "sgd": (1e-3, 10.0)}
+
+
+def sample_linearised_configs(n_random: int, seed: int = 0) -> list[FreeTuneConfig]:
+    """Reference configs first, then n_random draws: optimiser uniform in {adam, sgd}, lr
+    log-uniform in that optimiser's LIN_LR_RANGES."""
+    rng = np.random.default_rng(seed)
+    out = list(LIN_REFERENCE_CONFIGS)
+    for _ in range(n_random):
+        opt = str(rng.choice(["adam", "sgd"]))
+        lo, hi = LIN_LR_RANGES[opt]
+        out.append(FreeTuneConfig(lr=float(np.exp(rng.uniform(np.log(lo), np.log(hi)))), optimizer=opt,
+                                  weight_decay=0.0))
+    return out
+
+
+def linearised_stage2_configs(ranked: list[dict], n_top: int = 6, n_extra: int = 4, seed: int = 1) -> list[dict]:
+    """Top n_top stage-1 configs + n_extra draws; each extra picks an optimiser among the top
+    configs' and draws lr log-uniformly within the top configs' range for that optimiser."""
+    top = ranked[:n_top]
+    rng = np.random.default_rng(seed)
+    out = [dict(lr=float(c["lr"]), optimizer=str(c["optimizer"]), weight_decay=0.0, stage1_id=int(c["config"]))
+           for c in top]
+    opts = sorted({c["optimizer"] for c in top})
+    for _ in range(n_extra):
+        opt = str(rng.choice(opts))
+        lrs = [float(c["lr"]) for c in top if c["optimizer"] == opt]
+        out.append(dict(lr=float(np.exp(rng.uniform(np.log(min(lrs)), np.log(max(lrs))))), optimizer=opt,
+                        weight_decay=0.0, stage1_id=None))
     return out

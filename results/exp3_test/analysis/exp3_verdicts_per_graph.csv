@@ -1,0 +1,25 @@
+graph,X,Y,d,verdict,X_arm,Y_arm,view,budget,metric,family,n,m
+queen5_5,14.8,13.0,0.13846153846153852,Y better,B,A,steps,100000,conflicts,queen,25,160
+queen5_5,14.8,13.0,0.13846153846153852,Y better,B,A,steps,100000,conflicts_after_descent,queen,25,160
+queen5_5,1.0,1.0,0.0,tie,B,A,steps,100000,single_flip_optimal,queen,25,160
+queen5_5,14.80000002997797,13.0,0.13846154076753608,Y better,B,A,steps,100000,eval_loss,queen,25,160
+queen5_5,14.8,13.0,0.13846153846153852,Y better,B,A,steps,final,conflicts,queen,25,160
+queen5_5,14.8,13.0,0.13846153846153852,Y better,B,A,steps,final,conflicts_after_descent,queen,25,160
+queen5_5,1.0,1.0,0.0,tie,B,A,steps,final,single_flip_optimal,queen,25,160
+queen5_5,14.80000002997797,13.0,0.13846154076753608,Y better,B,A,steps,final,eval_loss,queen,25,160
+queen5_5,14.8,16.4,-0.09756097560975598,X better,B,Brand,steps,100000,conflicts,queen,25,160
+queen5_5,14.8,16.4,-0.09756097560975598,X better,B,Brand,steps,100000,conflicts_after_descent,queen,25,160
+queen5_5,1.0,1.0,0.0,tie,B,Brand,steps,100000,single_flip_optimal,queen,25,160
+queen5_5,14.80000002997797,16.400000004230627,-0.09756097401462888,X better,B,Brand,steps,100000,eval_loss,queen,25,160
+queen5_5,14.8,16.4,-0.09756097560975598,X better,B,Brand,steps,final,conflicts,queen,25,160
+queen5_5,14.8,16.4,-0.09756097560975598,X better,B,Brand,steps,final,conflicts_after_descent,queen,25,160
+queen5_5,1.0,1.0,0.0,tie,B,Brand,steps,final,single_flip_optimal,queen,25,160
+queen5_5,14.80000002997797,16.400000004230627,-0.09756097401462888,X better,B,Brand,steps,final,eval_loss,queen,25,160
+queen5_5,16.4,13.0,0.26153846153846144,Y better,Brand,A,steps,100000,conflicts,queen,25,160
+queen5_5,16.4,13.0,0.26153846153846144,Y better,Brand,A,steps,100000,conflicts_after_descent,queen,25,160
+queen5_5,1.0,1.0,0.0,tie,Brand,A,steps,100000,single_flip_optimal,queen,25,160
+queen5_5,16.400000004230627,13.0,0.2615384618638944,Y better,Brand,A,steps,100000,eval_loss,queen,25,160
+queen5_5,16.4,13.0,0.26153846153846144,Y better,Brand,A,steps,final,conflicts,queen,25,160
+queen5_5,16.4,13.0,0.26153846153846144,Y better,Brand,A,steps,final,conflicts_after_descent,queen,25,160
+queen5_5,1.0,1.0,0.0,tie,Brand,A,steps,final,single_flip_optimal,queen,25,160
+queen5_5,16.400000004230627,13.0,0.2615384618638944,Y better,Brand,A,steps,final,eval_loss,queen,25,160

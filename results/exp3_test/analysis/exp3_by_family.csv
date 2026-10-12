@@ -1,0 +1,13 @@
+X_arm,Y_arm,view,budget,metric,family,graphs,X_better,ties,Y_better,median_d
+B,A,steps,100000,conflicts,queen,1,0,0,1,0.13846153846153852
+B,A,steps,100000,conflicts_after_descent,queen,1,0,0,1,0.13846153846153852
+B,A,steps,final,conflicts,queen,1,0,0,1,0.13846153846153852
+B,A,steps,final,conflicts_after_descent,queen,1,0,0,1,0.13846153846153852
+B,Brand,steps,100000,conflicts,queen,1,1,0,0,-0.09756097560975598
+B,Brand,steps,100000,conflicts_after_descent,queen,1,1,0,0,-0.09756097560975598
+B,Brand,steps,final,conflicts,queen,1,1,0,0,-0.09756097560975598
+B,Brand,steps,final,conflicts_after_descent,queen,1,1,0,0,-0.09756097560975598
+Brand,A,steps,100000,conflicts,queen,1,0,0,1,0.26153846153846144
+Brand,A,steps,100000,conflicts_after_descent,queen,1,0,0,1,0.26153846153846144
+Brand,A,steps,final,conflicts,queen,1,0,0,1,0.26153846153846144
+Brand,A,steps,final,conflicts_after_descent,queen,1,0,0,1,0.26153846153846144

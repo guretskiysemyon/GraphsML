@@ -74,6 +74,7 @@ def run_one(row: pd.Series, seed: int, args) -> int:
     frozen = json.loads(args.config.read_text())
     cfg = TrainConfig(k=k, embed_dim=frozen["embed_dim"], hidden_dim=frozen["hidden_dim"],
                       dropout=frozen["dropout"], lr=frozen["lr"], n_epochs=args.t_max,
+                      arch=frozen.get("arch", "sage"),
                       seed=seed, device=args.device)
     checkpoints = log_checkpoint_grid(args.t_max, n)
 

@@ -89,18 +89,22 @@ Every step goes through `sbatch`; add a run-log row in `progress_exp3.md` first.
 
 ---
 
-## 6. Interpretation rules — DRAFT, confirm before the main runs
+## 6. Interpretation rules — CONFIRMED by the user 2026-10-12, before any comparison was computed
 
-Fixed in advance, as in progress_exp1.md §9.
+Fixed in advance, as in progress_exp1.md §9. The runs had finished, but no A-vs-B number had been computed or looked at (only completeness checks: DONE counts, stop reasons, missed time targets).
 
-**Per graph.** Mean over the 5 seeds of raw **argmax conflicts** (primary; the plan says "report argmax first as the measure of raw optimiser quality"). `d = (X − Y) / max(Y, 1)`; **tie** if |X − Y| < 1 or |d| ≤ 0.05; otherwise X better / Y better.
+**User decisions (2026-10-12):** keep the draft wherever it was recommended (three primary comparisons, the Experiment 1 tie rule, 100k as the main budget), with two changes, "since we are experimenting, see as much information as possible":
+- **Metric:** argmax conflicts **and** conflicts after strict vertex descent are **co-primary**. Each gets its own readings; the three primary comparisons use α = 0.05 / 3 within each metric (raw p-values are reported, so a stricter correction over both metrics can be applied when reading).
+- **Gate when the views disagree:** both rules are computed and reported, the per-step rule below (which decides) and the alternative per-time rule ("the gate opens if A is better at matched time"). `results/analysis/exp3_readings.csv` has one column per rule.
 
-**Primary comparisons** (68 graphs; two-sided Wilcoxon signed-rank on d; α = 0.05 / 3 ≈ 0.017, Bonferroni over the three):
+**Per graph.** Mean over the 5 seeds of raw **argmax conflicts** (co-primary; the plan says "report argmax first as the measure of raw optimiser quality") and of **conflicts after strict vertex descent** (co-primary). `d = (X − Y) / max(Y, 1)`; **tie** if |X − Y| < 1 or |d| ≤ 0.05; otherwise X better / Y better.
+
+**Primary comparisons**, for each co-primary metric (68 graphs; two-sided Wilcoxon signed-rank on d; α = 0.05 / 3 ≈ 0.017, Bonferroni over the three):
 1. B vs A, matched steps, at 100k (the budget all 68 graphs share);
 2. B vs A, matched time, B at the checkpoint labelled `A@100000`;
 3. B vs B-rand, matched steps, at 100k.
 
-**Secondary (descriptive, no tests):** the same comparisons at each graph's final A budget (300k for the 13 extended graphs); conflicts after strict descent; single-flip-optimal fraction; Potts loss; the whole trajectory (Figure 3); per family; A_nodrop vs A and vs B; Dirichlet energy and movement traces.
+**Secondary (descriptive, no claims):** the same comparisons at each graph's final A budget (300k for the 13 extended graphs); single-flip-optimal fraction; Potts loss; the whole trajectory (Figure 3); per family; A_nodrop vs A and vs B; Dirichlet energy and movement traces.
 
 **Readings** (the plan's table, made operational; "A better" means median d(B vs A) > +0.05, p < α and A better on more graphs than B; "B better" is the mirror image; otherwise "not distinguishable"):
 
@@ -117,9 +121,9 @@ Fixed in advance, as in progress_exp1.md §9.
 
 ## 7. Decisions for the user (before step 2 / step 6)
 
-1. Noise control: **A without dropout** (recommended) or B + logit noise (which σ?).
-2. Free-logit search space as in §4.7 (Adam/AdamW, lr in [1e-3, 1], wd in [1e-4, 0.1]). Should plain SGD be included? The plan's 4B wants plain gradient descent later anyway, but in the tuning space it would split the budget across very different lr scales.
-3. The draft rules in §6, in particular argmax as the primary metric, the three primary comparisons with Bonferroni, and the gate rule for disagreeing views.
+1. ~~Noise control~~ **Done:** A without dropout (run 2026-10-11).
+2. ~~Search space~~ **Done** without SGD (tuned 2026-10-11/12). Was: free-logit search space as in §4.7 (Adam/AdamW, lr in [1e-3, 1], wd in [1e-4, 0.1]). Should plain SGD be included? The plan's 4B wants plain gradient descent later anyway, but in the tuning space it would split the budget across very different lr scales.
+3. ~~The draft rules in §6~~ **Decided 2026-10-12** (see §6): argmax and after-descent co-primary; both gate rules reported, per-step decides.
 4. Whether rung C (embedding → MLP, no message passing) should be run regardless of the gate. The plan lists it as secondary and gated. Our PI-GNN's input embeddings are trainable, which the plan says is exactly the case where C isolates over-parameterisation.
 
 ## 8. Gated work (only if A differs from B)

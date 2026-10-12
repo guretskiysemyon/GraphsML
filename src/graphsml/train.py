@@ -11,7 +11,7 @@ from pathlib import Path
 import torch
 
 from .losses import argmax_colouring, conflict_count, potts_loss
-from .model import PIGNN, build_mean_adjacency
+from .model import build_mean_adjacency, build_model
 
 
 @dataclass
@@ -27,6 +27,7 @@ class TrainConfig:
     patience: int = 500
     tolerance: float = 1e-4
     device: str = "cpu"
+    arch: str = "sage"  # "sage" = PI-GNN; "mlp" = Experiment 3 rung C (no message passing)
 
 
 def train_pignn(adj: torch.Tensor, cfg: TrainConfig):
@@ -43,7 +44,7 @@ def train_pignn(adj: torch.Tensor, cfg: TrainConfig):
     mean_adj = build_mean_adjacency(adj)
     n = adj.shape[0]
 
-    model = PIGNN(n, cfg.embed_dim, cfg.hidden_dim, cfg.k, cfg.dropout, cfg.embed_init).to(device)
+    model = build_model(cfg.arch, n, cfg.embed_dim, cfg.hidden_dim, cfg.k, cfg.dropout, cfg.embed_init).to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=cfg.lr)
 
     loss_history = []
@@ -153,7 +154,7 @@ def train_pignn_checkpointed(adj: torch.Tensor, cfg: TrainConfig, checkpoints: l
         adj = adj.to(device)
         mean_adj = build_mean_adjacency(adj)
         n = adj.shape[0]
-        model = PIGNN(n, cfg.embed_dim, cfg.hidden_dim, cfg.k, cfg.dropout, cfg.embed_init).to(device)
+        model = build_model(cfg.arch, n, cfg.embed_dim, cfg.hidden_dim, cfg.k, cfg.dropout, cfg.embed_init).to(device)
         model.load_state_dict(state["model"])
         optimizer = torch.optim.AdamW(model.parameters(), lr=cfg.lr)
         optimizer.load_state_dict(state["optimizer"])
@@ -185,7 +186,7 @@ def train_pignn_checkpointed(adj: torch.Tensor, cfg: TrainConfig, checkpoints: l
         adj = adj.to(device)
         mean_adj = build_mean_adjacency(adj)
         n = adj.shape[0]
-        model = PIGNN(n, cfg.embed_dim, cfg.hidden_dim, cfg.k, cfg.dropout, cfg.embed_init).to(device)
+        model = build_model(cfg.arch, n, cfg.embed_dim, cfg.hidden_dim, cfg.k, cfg.dropout, cfg.embed_init).to(device)
         optimizer = torch.optim.AdamW(model.parameters(), lr=cfg.lr)
         start_epoch = 1
         best_conflicts = None
@@ -202,7 +203,7 @@ def train_pignn_checkpointed(adj: torch.Tensor, cfg: TrainConfig, checkpoints: l
         torch.save(model.state_dict(), out_dir / "init_weights.pt")
         meta = dict(graph_meta or {}, k=cfg.k, embed_dim=cfg.embed_dim, hidden_dim=cfg.hidden_dim,
                     dropout=cfg.dropout, lr=cfg.lr, n_epochs=cfg.n_epochs, seed=cfg.seed,
-                    embed_init=cfg.embed_init, patience=cfg.patience, tolerance=cfg.tolerance,
+                    embed_init=cfg.embed_init, arch=cfg.arch, patience=cfg.patience, tolerance=cfg.tolerance,
                     device=cfg.device, checkpoints=checkpoints, torch_version=torch.__version__)
         (out_dir / "meta.json").write_text(json.dumps(meta, indent=1))
 
