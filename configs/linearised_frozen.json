@@ -1,0 +1,20 @@
+{
+  "lr": 0.0021582084017511,
+  "optimizer": "adam",
+  "weight_decay": 0.0,
+  "rung": "D (PI-GNN linearised at init)",
+  "_provenance": {
+    "selected_from": "results/tuning/D_stage2_summary.csv",
+    "stage2_config": 2,
+    "stage1_id": 19,
+    "stage1_mean_rank": 4.6923076923076925,
+    "stage2_mean_rank": 4.038461538461538,
+    "runner_up_stage2_mean_rank": 4.076923076923077,
+    "tuning_set": "data/synthetic/tuning (13 graphs), start = PI-GNN's frozen-config network at its seeded initialisation, linearised (Z0 = A's)",
+    "selection_criterion": "mean rank of seed-averaged final eval-mode conflicts across (graph, regime) cells, regime in {k=chi_hi, k=chi_hi-1} (same as PI-GNN)",
+    "stage1_budget_steps": 10000,
+    "stage2_budget_steps": 50000,
+    "selected_from_stage1": "results/tuning/D_stage1_summary.csv",
+    "frozen_on": "2026-10-13"
+  }
+}
