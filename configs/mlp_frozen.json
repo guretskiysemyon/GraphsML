@@ -1,0 +1,21 @@
+{
+  "lr": 0.0280629481411871,
+  "hidden_dim": 39,
+  "embed_dim": 55,
+  "dropout": 0.20206005147821,
+  "arch": "mlp",
+  "_provenance": {
+    "selected_from": "results/tuning/C_stage2_summary.csv",
+    "stage2_config": 1,
+    "stage1_id": 13,
+    "stage1_mean_rank": 8.76923076923077,
+    "stage2_mean_rank": 2.173076923076923,
+    "runner_up_stage2_mean_rank": 2.5,
+    "tuning_set": "data/synthetic/tuning (13 graphs), start = the model's own random initialisation (seeded as PI-GNN)",
+    "selection_criterion": "mean rank of seed-averaged final eval-mode conflicts across (graph, regime) cells, regime in {k=chi_hi, k=chi_hi-1} (same as PI-GNN)",
+    "stage1_budget_steps": 10000,
+    "stage2_budget_steps": 50000,
+    "selected_from_stage1": "results/tuning/C_stage1_summary.csv",
+    "frozen_on": "2026-10-13"
+  }
+}

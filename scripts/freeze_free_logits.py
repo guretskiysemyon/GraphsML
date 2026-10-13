@@ -48,14 +48,14 @@ def main():
     frozen = dict(
         **{key: cast[key](best[key]) for key in args.keys}, **json.loads(args.set),
         _provenance=dict(
-            selected_from=str(args.stage2.relative_to(ROOT)), stage2_config=int(best["config"]),
+            selected_from=str(args.stage2.resolve().relative_to(ROOT)), stage2_config=int(best["config"]),
             stage1_id=stage1_id, stage1_mean_rank=s1_rank, stage2_mean_rank=float(best["mean_rank"]),
             runner_up_stage2_mean_rank=float(s2.iloc[1]["mean_rank"]) if len(s2) > 1 else None,
             tuning_set=f"data/synthetic/tuning (13 graphs), start = {args.tuning_start}",
             selection_criterion="mean rank of seed-averaged final eval-mode conflicts across (graph, regime) cells, "
                                 "regime in {k=chi_hi, k=chi_hi-1} (same as PI-GNN)",
             stage1_budget_steps=10000, stage2_budget_steps=50000,
-            selected_from_stage1=str(args.stage1.relative_to(ROOT)),
+            selected_from_stage1=str(args.stage1.resolve().relative_to(ROOT)),
             frozen_on=time.strftime("%Y-%m-%d")))
     args.out.write_text(json.dumps(frozen, indent=2) + "\n")
     print(json.dumps(frozen, indent=2))

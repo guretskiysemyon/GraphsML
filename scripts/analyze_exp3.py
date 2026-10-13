@@ -123,6 +123,7 @@ def main():
     ap.add_argument("--exp3", default="results/exp3")
     ap.add_argument("--manifest", default="configs/sweep_manifest.csv")
     ap.add_argument("--out", default="results/analysis")
+    ap.add_argument("--exclude", nargs="*", default=[], help="arm directories to skip (e.g. unfinished ones)")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
     man = pd.read_csv(a.manifest).rename(columns={"name": "graph"})
@@ -132,19 +133,24 @@ def main():
         if not glob.glob(os.path.join(d, "*_seed*", "DONE")):
             continue  # not an arm directory (tuning output, analysis, files)
         arm = os.path.basename(d)
+        if arm in a.exclude:
+            continue
         arms[arm] = load_arm(d, arm)
         print(f"arm {arm}: {arms[arm].graph.nunique() if len(arms[arm]) else 0} graphs, "
               f"{arms[arm].groupby(['graph', 'seed']).ngroups if len(arms[arm]) else 0} runs")
     df = pd.concat([v for v in arms.values() if len(v)], ignore_index=True)
     df.drop(columns=["time_matched"]).assign(time_matched=df.time_matched.map(json.dumps)).to_csv(
         f"{a.out}/exp3_tidy.csv", index=False)
-    # restrict to graphs that every free-logit arm has, so all comparisons use one graph set
+    # the graph set is A's (68); an arm missing graphs (e.g. still running) does not shrink it: every
+    # comparison is paired on the graphs both sides have, and its "graphs" column says how many
     free = [k for k in arms if k != "A" and len(arms[k])]
     graphs = set(arms["A"].graph)
     for k in free:
-        graphs &= set(arms[k].graph)
+        missing = graphs - set(arms[k].graph)
+        if missing:
+            print(f"WARNING arm {k} is missing {len(missing)} of {len(graphs)} graphs; its comparisons use fewer graphs")
     df = df[df.graph.isin(graphs)]
-    print(f"{len(graphs)} graphs common to A and {free}")
+    print(f"{len(graphs)} graphs (A's set); arms {free}")
 
     per_graph, summary = [], []
     for t in (T_MATCHED, "final"):

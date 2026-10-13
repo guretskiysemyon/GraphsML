@@ -113,3 +113,29 @@ Readings fixed in advance (descriptive, secondary arms, no tests beyond the repo
 | 31 | `analyze_exp3.py && analyze_movement.py` | final analysis with every arm (A, A_nodrop, B, Brand, B_noise*, C, D) | 1014784 (afterany 1014783 and the earlier final 1014673) | submitted |
 
 Readings fixed in advance (plan's table; descriptive): **D ≈ A while B differs** → graph-structured coupling (fixed) explains much of the GNN effect; **A better than both B and D** → the full, evolving nonlinear GNN dynamics contribute; **D ≈ B** → a fixed graph preconditioner adds nothing over free logits. Because D has no dropout, D vs A_nodrop is reported as well (`analyze_exp3.py` now compares every follow-up arm with A, B and A_nodrop).
+
+**2026-10-13, C freeze failure and fix.** `C_freeze` (1014667) failed: `freeze_free_logits.py` called `Path.relative_to(ROOT)` on the relative paths passed on the command line (ValueError); the C sweep 1014668 was left `DependencyNeverSatisfied`. Fixed (`.resolve().relative_to(ROOT)`, before `D_freeze` 1014781 runs, so D is not affected). Cancelled 1014668, 1014669 and the intermediate analysis 1014673; resubmitted C freeze 1018985 (done: `configs/mlp_frozen.json` = lr 0.0281, hidden 39, embed 55, dropout 0.202; stage-2 mean rank 2.17 vs runner-up 2.50) → C sweep 1018986 → C movement 1018987; the final analysis 1014784 now waits for 1014783 (D movement) and 1018987 (C movement). Noise arms: 340/340 runs each for σ = 0.5, 1, 2, movement done.
+
+### 2026-10-13 status and fix
+- Noise check done: B_noise0.5/1/2, 340/340 runs each, movement done (jobs 1014610–1014612, 1014670–1014672).
+- C tuning stages 1 and 2 done (1014664, 1014666). **C freeze 1014667 FAILED**: `freeze_free_logits.py` called `Path.relative_to(ROOT)` on the relative paths it was given. Fixed (`.resolve()` first; this also covers D's freeze, which had not run yet). The dead C chain (sweep 1014668, movement 1014669, intermediate analysis 1014673) was cancelled and resubmitted: freeze 1018985 (done → `configs/mlp_frozen.json`: lr 0.0281, hidden 39, embed 55, dropout 0.202, stage-2 mean rank 2.17 vs 2.50), sweep 1018986, movement 1018987. Final analysis 1014784 re-pointed to `afterany:1014783 (D movement), 1018987 (C movement)`.
+- D tuning stage 1 done (1014778), stage 2 running (1014780).
+- Interim analysis with the noise arms: 1018991.
+
+**2026-10-13, analysis fix.** An analysis run at 12:01 (1018991, not from this log) picked up the 5 C graphs finished so far, and `analyze_exp3.py` restricted every comparison to the graphs all arms share, so all `exp3_*` outputs were overwritten with a 5-graph version. Fixed: the graph set is now A's 68, an incomplete arm only lowers the `graphs` count of its own comparisons (with a warning), and `--exclude <arm>` skips arms. Rerun without C and D: job 1019054; the A/B/B-rand/A_nodrop numbers are identical to §3.
+
+### Noise check result (job 1019054, 68 graphs, 100k steps; descriptive, rules of §4)
+
+Free logits with Gaussian logit noise in the training forward pass (eval on clean Z). Every noisy run still ends single-flip optimal (fraction 1.00), so argmax = after descent for all B arms.
+
+| arm | vs PI-GNN (A), after descent: better / tie / worse, median d, p | vs plain free logits (B) | median conflicts (A: 11.8) |
+| --- | --- | --- | --- |
+| σ = 0.5 | 20 / 19 / 29, +0.058, p = 0.002 (A better) | 10 / 55 / 3, not distinguishable | 13.2 |
+| σ = 1 | **35 / 30 / 3, −0.159, p < 1e-4 (noisy B better)** | 49 / 19 / 0 better | 7.7 |
+| σ = 2 | **44 / 21 / 3, −0.275, p < 1e-4 (noisy B better)** | 53 / 15 / 0 better | 6.7 |
+
+Same picture at matched time (σ = 2: 44 / 21 / 3) and against PI-GNN without dropout (σ = 2: 45 / 21 / 2).
+
+**Reading (§4 rule):** noise does not just close the after-descent gap, it reverses it. With σ ≥ 1, free logits beat PI-GNN on most graphs and lose on 3; σ = 0.5 is too weak to matter. So PI-GNN's small after-descent advantage over plain free logits is consistent with being a noise-injection effect, and noise injected directly into free logits is more effective than PI-GNN's dropout. Diagnostics: noise keeps free logits softer (median margin 18 → 13 → 8 for σ = 0 / 1 / 2; p_max ≥ 0.99 on 93 % of vertices at σ = 2), unlike dropout, which drives PI-GNN to margins ~200.
+
+**Caveats:** σ was not tuned on the synthetic set; three values were fixed in advance and all are reported, but σ = 2 being the best of three on DIMACS is a test-set observation, and the trend has not levelled off (larger σ untested). A fair "tuned noisy free logits" arm would tune σ on the tuning set. PI-GNN's dropout rate was tuned.
