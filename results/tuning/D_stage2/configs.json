@@ -1,0 +1,52 @@
+[
+ {
+  "lr": 0.0013157667305043,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.0006163884562633,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.0021582084017511,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.0036803115413862,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.0029494070969385,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.0001598262680087,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.0007959214680679436,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.0031506809449980753,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.0002512046267714241,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ },
+ {
+  "lr": 0.003132802307896508,
+  "optimizer": "adam",
+  "weight_decay": 0.0
+ }
+]
