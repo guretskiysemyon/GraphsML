@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.pyc
+
+# Run artifacts (kept on disk, not in git)
+*.pt
+*.npy
+*.npz
+*.pid
+results/logs/
+results/**/checkpoints/
