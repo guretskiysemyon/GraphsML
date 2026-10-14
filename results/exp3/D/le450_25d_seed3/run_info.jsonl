@@ -1,0 +1,1 @@
+{"time": "2026-10-13T18:48:43", "host": "s-004", "slurm_job": "1022503", "slurm_task": "56", "gpu": "NVIDIA GeForce RTX 2080 Ti", "torch": "2.7.1+cu126", "n_steps": 100000, "max_steps": 1000000, "config": "/home/morg/NLP_2526b/semyong/GraphsML/configs/linearised_frozen.json", "z0_max_abs_diff_vs_A": 1.9073486328125e-06}
