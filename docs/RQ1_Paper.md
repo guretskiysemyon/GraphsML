@@ -326,23 +326,25 @@ Finally, the quality references show that merely reaching a one-flip endpoint is
 
 The general plan contains three core experiments. Their numbering differs from the question numbering: Experiment 1 addresses RQ1, Experiment 2 addresses decoding RQ3, and Experiment 3 addresses parameterization RQ2.
 
+*Status update, 14 October 2026:* the Experiment 2 / RQ3 rows below were updated after that experiment was run ([Experiment2_Steps.md](Experiment2_Steps.md)). The rest of this paper still reports results as of 11 October.
+
 | Planned component | Achievement supported by this repository | Status and remaining scope |
 | --- | --- | --- |
-| Shared experiment harness | Independent PI-SAGE implementation; saved initial states and logits; checkpointed, resumable trajectories; conflict accounting; exact single-flip checks; strict descent; graph-level aggregation | Substantial shared foundation completed. D-CE and the free-logit comparison still require their own implementation and validation. |
+| Shared experiment harness | Independent PI-SAGE implementation; saved initial states and logits; checkpointed, resumable trajectories; conflict accounting; exact single-flip checks; strict descent; graph-level aggregation | Substantial shared foundation completed. D-CE, sampling and the null-P controls were added and unit-tested for Experiment 2 (14 Oct). |
 | Experiment 1 and RQ1 primary endpoint curves | 68 graphs × 5 seeds to 100k; raw conflicts and repaired conflicts across budgets; exact local-optimality test; family analysis | Primary empirical question answered for this regime and implementation. |
 | RQ1 soft-space diagnostics | Joint normalized gap–entropy analysis; saved per-vertex diagnostics; post hoc confidence and logit-gradient analysis | Completed, with the explicit distinction between approximate stationarity and exact hard optimality. |
 | RQ1 starting-point controls | Random and fixed-$k$ DSATUR plus identical descent; randomized DSATUR sensitivity checks | Completed. Training helps over random starts; a broad advantage over DSATUR is unsupported. |
 | RQ1 solution-quality reference | 680 random-start TabuCol runs at the 100k training-time budget | Completed as a reference, with implementation and family limitations. No 300k time-matched reference. |
 | Longer-budget robustness | 13 selected graphs × 5 seeds to 300k; matched-subset endpoint and soft analyses | Completed for the selected follow-up. No all-graph 300k conclusion. |
 | Secondary $k=\chi$ endpoint study | Validation and tuning include feasible-palette runs | A systematic 68-graph, five-seed endpoint study of successful and failed $k=\chi$ runs is not established here. |
-| Experiment 2 and RQ3 decoder information | Frozen logits and the argmax-plus-descent baseline are available | D-CE, sampling, and uniform, untrained, row-permuted, and within-row color-permuted controls remain to be tested. |
+| Experiment 2 and RQ3 decoder information | D-CE (saturation and random order), sampling, and uniform, untrained, row-permuted and within-row color-permuted controls on the frozen 100k outputs (68 × 5), plus all Experiment 3 arms through the same decoders | Completed 14 Oct. D-CE adds little over argmax plus strict descent; trained P beats permuted and untrained P but is not distinguishable overall from uninformative P under D-CE, which is DSATUR, with a family split; decoding does not erase the differences between optimisers. |
 | Experiment 3 and RQ2 GNN contribution | Initial logits and trained PI-GNN trajectories provide the paired reference | Separately tuned free logits from the exact PI-GNN initial state, random-start free logits, noise controls, and matched-step/time comparisons remain. |
 | Gated mechanistic extensions | Endpoint diagnostics identify possible saturation and symmetric-state behavior | Fixed preconditioners, update alignment, and architecture interventions remain conditional on a meaningful PI-GNN/free-logit difference. |
 | Secondary warm-start and mean-field studies | Saved TabuCol colorings and endpoint tools can support later work | No new complete case-study result is claimed here. |
 
 The achieved contribution is therefore a resolved first component of the planned decomposition: we now know how the implemented PI-GNN's hard and soft endpoints evolve, how much simple repair remains, and how the resulting local minima compare with basic starts and a stronger search reference. This is a substantive RQ1 result, including informative negative findings. It does not yet settle the broader project's causal question about the contribution of message passing or the information used by sophisticated decoding.
 
-The immediate continuation is to reuse the frozen outputs for Experiment 2 and implement the exact-same-start free-logit comparison for Experiment 3. The RQ1 findings make dropout controls and separate reporting of argmax and repaired outcomes especially important. Heavy kernel or spectral analyses should retain the original plan's gate rather than being justified solely by the confidence observations.
+The immediate continuation is to reuse the frozen outputs for Experiment 2 and implement the exact-same-start free-logit comparison for Experiment 3. (Experiment 2 has since been run, 14 Oct; its D-CE-on-uniform control is fixed-$k$ DSATUR, and the resulting tie with trained P is consistent with the DSATUR comparison above.) The RQ1 findings make dropout controls and separate reporting of argmax and repaired outcomes especially important. Heavy kernel or spectral analyses should retain the original plan's gate rather than being justified solely by the confidence observations.
 
 ## 7 Limitations
 
@@ -352,7 +354,7 @@ The experiment is finite-budget. The selected extension gives evidence that addi
 
 Soft categories depend on thresholds and degree normalization. Confidence and gradients are measured at evaluation states. Saturation is a supported interpretation, not an experimentally isolated cause. The stored comparisons provide descriptive p-values but no uncertainty intervals; no uncomputed confidence intervals are implied by the reported percentages.
 
-The TabuCol reference compares a within-run best against a fixed neural endpoint, uses more seeds, and matches elapsed time across different hardware. Its random initialization is weak on register-allocation graphs. Finally, the broader project remains incomplete until the decoder-information and independently tuned free-logit experiments are performed.
+The TabuCol reference compares a within-run best against a fixed neural endpoint, uses more seeds, and matches elapsed time across different hardware. Its random initialization is weak on register-allocation graphs. Finally, the broader project remained incomplete, as of this paper, until the decoder-information and independently tuned free-logit experiments were performed; the decoder-information experiment has since been run (14 Oct, [Experiment2_Steps.md](Experiment2_Steps.md)).
 
 ## 8 Conclusion
 

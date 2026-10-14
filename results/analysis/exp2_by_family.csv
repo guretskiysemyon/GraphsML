@@ -1,0 +1,43 @@
+comparison,family,graphs,better,ties,worse,median_d,mean_x,mean_y,wilcoxon_p
+"D-CE vs argmax, both on trained P",DSJC,4,2,2,0,-0.03481012658227853,32.7,34.55,0.5
+"D-CE vs argmax, both on trained P",DSJR,3,2,1,0,-0.3186274509803921,17.933333333333334,35.93333333333333,0.25
+"D-CE vs argmax, both on trained P",SocialNet,5,0,5,0,0.0,1.1199999999999999,1.2,1.0
+"D-CE vs argmax, both on trained P",flat,5,1,4,0,-0.027103331451157443,644.32,645.5199999999999,0.1875
+"D-CE vs argmax, both on trained P",fpsol,3,3,0,0,-0.4230769230769231,2.1333333333333333,3.7999999999999994,0.25
+"D-CE vs argmax, both on trained P",inithx,3,3,0,0,-0.41935483870967744,2.6,4.6,0.25
+"D-CE vs argmax, both on trained P",le,12,5,7,0,-0.045014488303813,255.04999999999998,260.26666666666665,0.0009765625
+"D-CE vs argmax, both on trained P",miles,5,2,3,0,-0.09999999999999998,2.3200000000000003,2.84,0.375
+"D-CE vs argmax, both on trained P",mulsol,5,0,5,0,0.0,1.6800000000000002,1.6800000000000002,1.0
+"D-CE vs argmax, both on trained P",myciel,5,0,5,0,0.0,1.04,1.0,1.0
+"D-CE vs argmax, both on trained P",other,1,0,1,0,0.0,2.0,2.0,1.0
+"D-CE vs argmax, both on trained P",queen,12,1,11,0,-0.013371290545203494,29.53333333333333,30.316666666666663,0.0078125
+"D-CE vs argmax, both on trained P",school,2,2,0,0,-0.09946238375088937,350.5,391.8,0.5
+"D-CE vs argmax, both on trained P",zeroin,3,1,2,0,-0.37500000000000006,1.2,1.9333333333333336,0.25
+trained P vs no information (D-CE; uniform = DSATUR),DSJC,4,3,1,0,-0.1607628622117091,32.7,39.050000000000004,0.25
+trained P vs no information (D-CE; uniform = DSATUR),DSJR,3,0,1,2,0.44000000000000006,17.933333333333334,12.333333333333334,0.25
+trained P vs no information (D-CE; uniform = DSATUR),SocialNet,5,0,5,0,0.0,1.1199999999999999,1.08,1.0
+trained P vs no information (D-CE; uniform = DSATUR),flat,5,3,2,0,-0.05068870523415972,644.32,668.9599999999999,0.0625
+trained P vs no information (D-CE; uniform = DSATUR),fpsol,3,0,2,1,0.5714285714285716,2.1333333333333333,1.1333333333333333,0.25
+trained P vs no information (D-CE; uniform = DSATUR),inithx,3,0,1,2,1.4,2.6,1.0,0.25
+trained P vs no information (D-CE; uniform = DSATUR),le,12,7,0,5,-0.07071037195343757,255.04999999999998,286.1333333333334,0.67724609375
+trained P vs no information (D-CE; uniform = DSATUR),miles,5,0,2,3,1.0,2.3200000000000003,1.08,0.0625
+trained P vs no information (D-CE; uniform = DSATUR),mulsol,5,0,5,0,0.0,1.6800000000000002,1.6,0.5
+trained P vs no information (D-CE; uniform = DSATUR),myciel,5,0,5,0,0.0,1.04,1.08,1.0
+trained P vs no information (D-CE; uniform = DSATUR),other,1,0,1,0,0.0,2.0,2.0,1.0
+trained P vs no information (D-CE; uniform = DSATUR),queen,12,12,0,0,-0.18483772819472616,29.53333333333333,35.65,0.00048828125
+trained P vs no information (D-CE; uniform = DSATUR),school,2,2,0,0,-0.1298361419096641,350.5,400.5,0.5
+trained P vs no information (D-CE; uniform = DSATUR),zeroin,3,0,3,0,0.19999999999999996,1.2,1.0,0.5
+trained P vs colours scrambled within rows (D-CE),DSJC,4,4,0,0,-0.2690461234745154,32.7,42.449999999999996,0.125
+trained P vs colours scrambled within rows (D-CE),DSJR,3,3,0,0,-0.3084577114427861,17.933333333333334,27.733333333333334,0.25
+trained P vs colours scrambled within rows (D-CE),SocialNet,5,1,4,0,-0.4444444444444445,1.1199999999999999,1.8400000000000003,0.125
+trained P vs colours scrambled within rows (D-CE),flat,5,3,2,0,-0.09076517150395773,644.32,685.6800000000001,0.0625
+trained P vs colours scrambled within rows (D-CE),fpsol,3,3,0,0,-0.5599999999999999,2.1333333333333333,4.8,0.25
+trained P vs colours scrambled within rows (D-CE),inithx,3,2,1,0,-0.39999999999999997,2.6,3.8000000000000003,0.25
+trained P vs colours scrambled within rows (D-CE),le,12,12,0,0,-0.1989218744922167,255.04999999999998,296.6166666666666,0.00048828125
+trained P vs colours scrambled within rows (D-CE),miles,5,2,3,0,-0.19047619047619052,2.3200000000000003,3.56,0.0625
+trained P vs colours scrambled within rows (D-CE),mulsol,5,0,5,0,-0.09090909090909098,1.6800000000000002,2.04,0.0625
+trained P vs colours scrambled within rows (D-CE),myciel,5,2,3,0,-0.37500000000000006,1.04,1.8,0.25
+trained P vs colours scrambled within rows (D-CE),other,1,0,1,0,-0.16666666666666663,2.0,2.4,1.0
+trained P vs colours scrambled within rows (D-CE),queen,12,12,0,0,-0.265065110013471,29.53333333333333,39.8,0.00048828125
+trained P vs colours scrambled within rows (D-CE),school,2,2,0,0,-0.1549748638458316,350.5,416.9,0.5
+trained P vs colours scrambled within rows (D-CE),zeroin,3,2,1,0,-0.5,1.2,2.4,0.25

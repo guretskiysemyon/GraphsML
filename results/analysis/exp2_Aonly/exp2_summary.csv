@@ -1,0 +1,21 @@
+role,comparison,metric,graphs,better,ties,worse,median_d,mean_x,mean_y,wilcoxon_p,reading
+primary,"D-CE vs argmax, both on trained P",after descent,68,22,46,0,-0.028021119101784543,111.36470588235294,114.86470588235295,1.1198227148803187e-06,not distinguishable
+primary,"D-CE vs argmax, both on trained P",raw,68,33,35,0,-0.11425687648252145,125.13823529411764,1517.34705882353,1.6256984569330967e-10,first is better
+primary,trained P vs no information (D-CE; uniform = DSATUR),after descent,68,27,28,13,0.0,111.36470588235294,121.11764705882354,0.22729779872958822,not distinguishable
+primary,trained P vs no information (D-CE; uniform = DSATUR),raw,68,26,26,16,-0.07307692307692305,125.13823529411764,161.17647058823528,0.3035074078192831,not distinguishable
+primary,trained P vs colours scrambled within rows (D-CE),after descent,68,48,20,0,-0.25477099236641226,111.36470588235294,126.96764705882352,2.4012496671173306e-12,first is better
+primary,trained P vs colours scrambled within rows (D-CE),raw,68,65,3,0,-0.6178887484197219,125.13823529411764,209.1323529411765,9.977576703211555e-13,first is better
+secondary,trained P vs rows shuffled across vertices (D-CE),after descent,68,56,12,0,-0.2990842664642247,111.36470588235294,128.52058823529413,1.6383972148249635e-12,first is better
+secondary,trained P vs rows shuffled across vertices (D-CE),raw,68,66,2,0,-0.598270893371758,125.13823529411764,205.45882352941177,7.988580952633948e-13,first is better
+secondary,trained P vs untrained GNN (D-CE),after descent,68,51,14,3,-0.22191236287439914,111.36470588235294,127.62647058823528,1.3646135445628712e-08,first is better
+secondary,trained P vs untrained GNN (D-CE),raw,68,61,6,1,-0.5454545454545455,125.13823529411764,202.64117647058825,3.882678689623453e-11,first is better
+secondary,"saturation vs random order (D-CE, trained P)",after descent,68,4,64,0,0.0,111.36470588235294,112.83529411764704,0.16213040184101513,not distinguishable
+secondary,"saturation vs random order (D-CE, trained P)",raw,68,3,63,2,0.0,125.13823529411764,125.2470588235294,0.11565462539743868,not distinguishable
+secondary,best of 32 samples vs argmax (trained P),after descent,68,2,65,1,0.0,113.34117647058825,114.86470588235295,0.008056640625,not distinguishable
+secondary,best of 32 samples vs argmax (trained P),raw,68,4,64,0,0.0,193.51470588235293,1517.34705882353,3.0517578125e-05,not distinguishable
+secondary,trained P vs no information (argmax),after descent,68,60,7,1,-0.40571022149969516,114.86470588235295,135.3735294117647,1.5353897499051602e-12,first is better
+secondary,trained P vs no information (argmax),raw,68,64,0,4,-0.8689518292028753,1517.34705882353,550.1941176470588,2.988594748728059e-08,first is better
+secondary,trained P vs colours scrambled (argmax),after descent,68,60,7,1,-0.4012820512820513,114.86470588235295,134.45882352941175,1.7571287888865265e-12,first is better
+secondary,trained P vs colours scrambled (argmax),raw,68,64,0,4,-0.8727500865351332,1517.34705882353,552.2558823529412,2.988815541631219e-08,first is better
+secondary,no information vs scrambled colours (D-CE),after descent,68,41,24,3,-0.1750883087791849,121.11764705882354,126.96764705882352,4.779700795299356e-11,first is better
+secondary,no information vs scrambled colours (D-CE),raw,68,66,2,0,-0.5539772727272727,161.17647058823528,209.1323529411765,7.639188389007222e-13,first is better

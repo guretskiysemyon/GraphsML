@@ -1,6 +1,6 @@
 # Experiment 3 (RQ2) — progress log
 
-Last updated: 2026-10-11.
+Last updated: 2026-10-14 (§6: end-to-end D-CE view from Experiment 2).
 
 Plan, design choices, run order and the draft interpretation rules: [Experiment3_Steps.md](Experiment3_Steps.md). This file records what was done and the run log.
 
@@ -139,3 +139,23 @@ Same picture at matched time (σ = 2: 44 / 21 / 3) and against PI-GNN without dr
 **Reading (§4 rule):** noise does not just close the after-descent gap, it reverses it. With σ ≥ 1, free logits beat PI-GNN on most graphs and lose on 3; σ = 0.5 is too weak to matter. So PI-GNN's small after-descent advantage over plain free logits is consistent with being a noise-injection effect, and noise injected directly into free logits is more effective than PI-GNN's dropout. Diagnostics: noise keeps free logits softer (median margin 18 → 13 → 8 for σ = 0 / 1 / 2; p_max ≥ 0.99 on 93 % of vertices at σ = 2), unlike dropout, which drives PI-GNN to margins ~200.
 
 **Caveats:** σ was not tuned on the synthetic set; three values were fixed in advance and all are reported, but σ = 2 being the best of three on DIMACS is a test-set observation, and the trend has not levelled off (larger σ untested). A fair "tuned noisy free logits" arm would tune σ on the tuning set. PI-GNN's dropout rate was tuned.
+
+## 6. End-to-end D-CE view (from Experiment 2, 2026-10-14)
+
+The plan asks for argmax as the measure of raw optimiser quality and D-CE as "an end-to-end secondary view". Experiment 2 ([Experiment2_Steps.md](Experiment2_Steps.md) §6, jobs 1037155–1037162 and analysis 1039926) decoded every arm's P at step 100k with argmax and with D-CE (saturation order), each followed by the same strict descent. Descriptive, Experiment 1's tie rule (|d| ≤ 5 % or < 1 conflict), 68 graphs.
+
+| arm | mean after argmax + descent | mean after D-CE + descent | rank (argmax → D-CE) | vs A after D-CE (better / tie / worse) |
+| --- | --- | --- | --- | --- |
+| B_noise2 | 83.4 | 83.4 | 1 → 1 | 35 / 29 / 4 |
+| B_noise1 | 92.5 | 92.3 | 2 → 2 | 31 / 30 / 7 |
+| Brand | 107.1 | 106.2 | 3 → 3 | 14 / 25 / 29 |
+| B | 108.6 | 107.3 | 4 → 4 | 14 / 24 / 30 |
+| B_noise0.5 | 109.2 | 108.4 | 5 → 5 | 13 / 24 / 31 |
+| A (PI-GNN) | 114.9 | 111.4 | 6 → 6 | — |
+| A_nodrop | 115.7 | 117.0 | 7 → 8 | 4 / 34 / 30 |
+| C | 120.4 | 116.1 | 8 → 7 | 2 / 44 / 22 |
+| D | 130.4 | 123.1 | 9 → 9 | 1 / 21 / 46 |
+
+(Means are over graphs and are pulled by a few large graphs; the paired counts are the primary view.)
+
+**Reading.** The §3/§4 conclusions do not depend on the decoder: the arms keep their order under D-CE and the per-graph spread across arms shrinks only modestly (median (max − min)/mean 0.87 → 0.68). D-CE ties argmax + descent on 63–68 graphs for every free-logit arm and helps the GNN-type arms a little (A 22, C 27, D 45 graphs better), and PI-GNN's small per-graph edge over plain B persists under D-CE (B better / tie / worse than A: 17 / 25 / 26 after argmax, 14 / 24 / 30 after D-CE), even though B has the lower mean (the means are pulled by a few large graphs). Noisy free logits stay ahead of PI-GNN; σ = 2 is the only arm whose D-CE result beats the no-information control (D-CE on uniform P = DSATUR), 36 / 27 / 5. The untuned-σ caveat of the noise check applies unchanged.

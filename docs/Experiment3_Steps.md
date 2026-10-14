@@ -2,7 +2,7 @@
 
 **RQ2.** Does the GNN parameterisation reach better minima than directly optimising one logit vector per vertex? If it does, can a fixed graph-dependent preconditioner reproduce the difference?
 
-In `PI_GNN_Mechanistic_Plan_Final_v3.pdf` this is **Experiment 3** (§5, rungs A–D; §6 diagnostics 4A–4E). The plan's Experiment 2 answers RQ3 (decoders and null-P controls) and is a separate piece of work.
+In `PI_GNN_Mechanistic_Plan_Final_v3.pdf` this is **Experiment 3** (§5, rungs A–D; §6 diagnostics 4A–4E). The plan's Experiment 2 answers RQ3 (decoders and null-P controls) and is a separate piece of work: [Experiment2_Steps.md](Experiment2_Steps.md), done 2026-10-14. It also ran every arm here through D-CE, the plan's "end-to-end secondary view" for this experiment (summary in [progress_exp3.md](progress_exp3.md) §6).
 
 Started 2026-10-11. Same principles as Experiment 1: self-contained code, k = χ − 1 primary, graph = statistical unit, 5 seeds, every script through `sbatch`, interpretation rules written before results are seen.
 
