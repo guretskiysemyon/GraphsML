@@ -1,0 +1,3 @@
+Output,Mean conflicts,TabuCol fewer,Practical ties,PI-GNN fewer
+PI-GNN (raw argmax),1517.3470588235293,46,11,11
+PI-GNN + strict descent,114.86470588235295,41,13,14
