@@ -1,0 +1,681 @@
+graph,metric,X,Y,d,verdict,family_group
+DSJC125.1,repaired,B,A,0.4000000000000001,Y better,DSJC
+DSJC125.5,repaired,B,A,-0.1329113924050634,X better,DSJC
+DSJC125.9,repaired,B,A,-0.1518987341772152,X better,DSJC
+DSJC250.9,repaired,B,A,-0.41082802547770697,X better,DSJC
+DSJR500.1,repaired,B,A,0.8157894736842107,Y better,DSJR
+DSJR500.1c,repaired,B,A,-0.38725490196078427,X better,DSJR
+DSJR500.5,repaired,B,A,-0.15488215488215482,X better,DSJR
+anna,repaired,B,A,0.6000000000000001,tie,SocialNet
+david,repaired,B,A,0.6000000000000001,tie,SocialNet
+flat1000_50_0,repaired,B,A,-0.04961038961038967,tie,flat
+flat1000_60_0,repaired,B,A,-0.08757117612409193,X better,flat
+flat300_20_0,repaired,B,A,-0.10897797854319584,X better,flat
+flat300_26_0,repaired,B,A,-0.11960132890365446,X better,flat
+flat300_28_0,repaired,B,A,-0.13263785394932925,X better,flat
+fpsol2.i.1,repaired,B,A,1.1666666666666667,Y better,register
+fpsol2.i.2,repaired,B,A,0.4230769230769231,Y better,register
+fpsol2.i.3,repaired,B,A,0.7894736842105263,Y better,register
+games120,repaired,B,A,0.0,tie,other
+homer,repaired,B,A,0.19999999999999996,tie,SocialNet
+huck,repaired,B,A,0.19999999999999996,tie,SocialNet
+inithx.i.1,repaired,B,A,1.8666666666666665,Y better,register
+inithx.i.2,repaired,B,A,0.8064516129032256,Y better,register
+inithx.i.3,repaired,B,A,1.3478260869565222,Y better,register
+jean,repaired,B,A,0.0,tie,SocialNet
+le450_15a,repaired,B,A,-0.03631284916201109,tie,le
+le450_15b,repaired,B,A,-0.046575342465753504,tie,le
+le450_15c,repaired,B,A,-0.031017369727047148,tie,le
+le450_15d,repaired,B,A,-0.08090422367638307,X better,le
+le450_25a,repaired,B,A,0.050632911392405104,tie,le
+le450_25b,repaired,B,A,0.20967741935483866,Y better,le
+le450_25c,repaired,B,A,-0.19999999999999998,X better,le
+le450_25d,repaired,B,A,-0.17590822179732307,X better,le
+le450_5a,repaired,B,A,0.08818897637795267,Y better,le
+le450_5b,repaired,B,A,0.0514814814814814,Y better,le
+le450_5c,repaired,B,A,0.05052063247203997,Y better,le
+le450_5d,repaired,B,A,0.06841282251759187,Y better,le
+miles1000,repaired,B,A,-0.22727272727272735,X better,miles
+miles1500,repaired,B,A,-0.5263157894736842,X better,miles
+miles250,repaired,B,A,0.6666666666666667,tie,miles
+miles500,repaired,B,A,0.0,tie,miles
+miles750,repaired,B,A,0.21428571428571433,tie,miles
+mulsol.i.1,repaired,B,A,0.8,tie,register
+mulsol.i.2,repaired,B,A,0.8999999999999999,Y better,register
+mulsol.i.3,repaired,B,A,0.8999999999999999,Y better,register
+mulsol.i.4,repaired,B,A,1.2000000000000002,Y better,register
+mulsol.i.5,repaired,B,A,1.5714285714285716,Y better,register
+myciel3,repaired,B,A,0.0,tie,myciel
+myciel4,repaired,B,A,0.0,tie,myciel
+myciel5,repaired,B,A,0.0,tie,myciel
+myciel6,repaired,B,A,0.3999999999999999,tie,myciel
+myciel7,repaired,B,A,0.0,tie,myciel
+queen10_10,repaired,B,A,0.2173913043478261,Y better,queen
+queen11_11,repaired,B,A,0.15343915343915357,Y better,queen
+queen12_12,repaired,B,A,0.0423728813559322,tie,queen
+queen13_13,repaired,B,A,0.07865168539325848,Y better,queen
+queen14_14,repaired,B,A,0.006430868167202549,tie,queen
+queen15_15,repaired,B,A,-0.056338028169014086,X better,queen
+queen5_5,repaired,B,A,0.04615384615384613,tie,queen
+queen6_6,repaired,B,A,0.3437499999999999,Y better,queen
+queen7_7,repaired,B,A,0.175257731958763,Y better,queen
+queen8_12,repaired,B,A,0.10714285714285725,Y better,queen
+queen8_8,repaired,B,A,0.1636363636363637,Y better,queen
+queen9_9,repaired,B,A,0.4218749999999999,Y better,queen
+school1,repaired,B,A,-0.4100472305710605,X better,school
+school1_nsh,repaired,B,A,-0.21585903083700447,X better,school
+zeroin.i.1,repaired,B,A,0.24999999999999994,tie,register
+zeroin.i.2,repaired,B,A,0.818181818181818,Y better,register
+zeroin.i.3,repaired,B,A,0.3999999999999999,tie,register
+DSJC125.1,repaired,C,A,0.3428571428571429,Y better,DSJC
+DSJC125.5,repaired,C,A,-0.012658227848101333,tie,DSJC
+DSJC125.9,repaired,C,A,0.18987341772151897,Y better,DSJC
+DSJC250.9,repaired,C,A,-0.13375796178343946,X better,DSJC
+DSJR500.1,repaired,C,A,0.9210526315789475,Y better,DSJR
+DSJR500.1c,repaired,C,A,-0.0686274509803921,X better,DSJR
+DSJR500.5,repaired,C,A,-0.1481481481481481,X better,DSJR
+anna,repaired,C,A,0.3999999999999999,tie,SocialNet
+david,repaired,C,A,0.19999999999999996,tie,SocialNet
+flat1000_50_0,repaired,C,A,0.03233766233766231,tie,flat
+flat1000_60_0,repaired,C,A,0.041233064991164234,tie,flat
+flat300_20_0,repaired,C,A,-0.019762845849802372,tie,flat
+flat300_26_0,repaired,C,A,0.027685492801771874,tie,flat
+flat300_28_0,repaired,C,A,0.07898658718330867,Y better,flat
+fpsol2.i.1,repaired,C,A,0.16666666666666663,tie,register
+fpsol2.i.2,repaired,C,A,0.3461538461538461,Y better,register
+fpsol2.i.3,repaired,C,A,0.6315789473684211,Y better,register
+games120,repaired,C,A,0.0,tie,other
+homer,repaired,C,A,-0.19999999999999996,tie,SocialNet
+huck,repaired,C,A,0.0,tie,SocialNet
+inithx.i.1,repaired,C,A,0.9333333333333332,Y better,register
+inithx.i.2,repaired,C,A,0.4516129032258064,Y better,register
+inithx.i.3,repaired,C,A,0.6956521739130436,Y better,register
+jean,repaired,C,A,0.0,tie,SocialNet
+le450_15a,repaired,C,A,0.12290502793296106,Y better,le
+le450_15b,repaired,C,A,0.043835616438356206,tie,le
+le450_15c,repaired,C,A,0.02481389578163772,tie,le
+le450_15d,repaired,C,A,-0.00535395597858421,tie,le
+le450_25a,repaired,C,A,0.11392405063291143,Y better,le
+le450_25b,repaired,C,A,0.2580645161290322,Y better,le
+le450_25c,repaired,C,A,-0.02385321100917426,tie,le
+le450_25d,repaired,C,A,-0.02868068833652008,tie,le
+le450_5a,repaired,C,A,0.1629921259842519,Y better,le
+le450_5b,repaired,C,A,0.15111111111111114,Y better,le
+le450_5c,repaired,C,A,0.07790204396451982,Y better,le
+le450_5d,repaired,C,A,0.014464425332290807,tie,le
+miles1000,repaired,C,A,-0.31818181818181823,X better,miles
+miles1500,repaired,C,A,-0.4210526315789473,X better,miles
+miles250,repaired,C,A,0.8333333333333336,Y better,miles
+miles500,repaired,C,A,-0.19999999999999996,tie,miles
+miles750,repaired,C,A,0.0,tie,miles
+mulsol.i.1,repaired,C,A,0.3999999999999999,tie,register
+mulsol.i.2,repaired,C,A,0.8,Y better,register
+mulsol.i.3,repaired,C,A,0.5,Y better,register
+mulsol.i.4,repaired,C,A,0.3999999999999999,tie,register
+mulsol.i.5,repaired,C,A,0.8571428571428573,Y better,register
+myciel3,repaired,C,A,0.0,tie,myciel
+myciel4,repaired,C,A,0.0,tie,myciel
+myciel5,repaired,C,A,0.0,tie,myciel
+myciel6,repaired,C,A,0.0,tie,myciel
+myciel7,repaired,C,A,0.0,tie,myciel
+queen10_10,repaired,C,A,0.16304347826086957,Y better,queen
+queen11_11,repaired,C,A,0.08465608465608473,Y better,queen
+queen12_12,repaired,C,A,0.08898305084745753,Y better,queen
+queen13_13,repaired,C,A,0.05992509363295886,Y better,queen
+queen14_14,repaired,C,A,-0.022508038585209094,tie,queen
+queen15_15,repaired,C,A,0.016901408450704265,tie,queen
+queen5_5,repaired,C,A,0.01538461538461533,tie,queen
+queen6_6,repaired,C,A,0.3125,Y better,queen
+queen7_7,repaired,C,A,0.030927835051546466,tie,queen
+queen8_12,repaired,C,A,0.17857142857142858,Y better,queen
+queen8_8,repaired,C,A,0.25454545454545463,Y better,queen
+queen9_9,repaired,C,A,0.390625,Y better,queen
+school1,repaired,C,A,-0.04765993988836408,tie,school
+school1_nsh,repaired,C,A,0.08181246066708621,Y better,school
+zeroin.i.1,repaired,C,A,0.37500000000000006,tie,register
+zeroin.i.2,repaired,C,A,0.36363636363636354,tie,register
+zeroin.i.3,repaired,C,A,0.30000000000000004,tie,register
+DSJC125.1,repaired,D,A,0.4642857142857143,Y better,DSJC
+DSJC125.5,repaired,D,A,0.2531645569620253,Y better,DSJC
+DSJC125.9,repaired,D,A,0.5063291139240506,Y better,DSJC
+DSJC250.9,repaired,D,A,0.041401273885350455,tie,DSJC
+DSJR500.1,repaired,D,A,1.7631578947368423,Y better,DSJR
+DSJR500.1c,repaired,D,A,0.16176470588235298,Y better,DSJR
+DSJR500.5,repaired,D,A,0.21548821548821556,Y better,DSJR
+anna,repaired,D,A,0.6000000000000001,tie,SocialNet
+david,repaired,D,A,1.0,Y better,SocialNet
+flat1000_50_0,repaired,D,A,0.050779220779220806,Y better,flat
+flat1000_60_0,repaired,D,A,0.05340663655998427,Y better,flat
+flat300_20_0,repaired,D,A,0.04912478825522314,tie,flat
+flat300_26_0,repaired,D,A,0.0819490586932448,Y better,flat
+flat300_28_0,repaired,D,A,0.1773472429210135,Y better,flat
+fpsol2.i.1,repaired,D,A,3.3333333333333335,Y better,register
+fpsol2.i.2,repaired,D,A,0.8076923076923077,Y better,register
+fpsol2.i.3,repaired,D,A,1.473684210526316,Y better,register
+games120,repaired,D,A,0.3999999999999999,tie,other
+homer,repaired,D,A,1.1,Y better,SocialNet
+huck,repaired,D,A,0.0,tie,SocialNet
+inithx.i.1,repaired,D,A,3.1333333333333333,Y better,register
+inithx.i.2,repaired,D,A,1.4838709677419353,Y better,register
+inithx.i.3,repaired,D,A,2.173913043478261,Y better,register
+jean,repaired,D,A,0.19999999999999996,tie,SocialNet
+le450_15a,repaired,D,A,0.3826815642458102,Y better,le
+le450_15b,repaired,D,A,0.3205479452054795,Y better,le
+le450_15c,repaired,D,A,0.14516129032258068,Y better,le
+le450_15d,repaired,D,A,0.10350981558596077,Y better,le
+le450_25a,repaired,D,A,0.5189873417721518,Y better,le
+le450_25b,repaired,D,A,0.629032258064516,Y better,le
+le450_25c,repaired,D,A,0.15229357798165133,Y better,le
+le450_25d,repaired,D,A,0.2409177820267688,Y better,le
+le450_5a,repaired,D,A,0.17795275590551177,Y better,le
+le450_5b,repaired,D,A,0.18222222222222217,Y better,le
+le450_5c,repaired,D,A,0.09139992286926335,Y better,le
+le450_5d,repaired,D,A,0.10242376856919463,Y better,le
+miles1000,repaired,D,A,0.318181818181818,Y better,miles
+miles1500,repaired,D,A,0.21052631578947364,tie,miles
+miles250,repaired,D,A,1.3333333333333333,Y better,miles
+miles500,repaired,D,A,0.6000000000000001,Y better,miles
+miles750,repaired,D,A,0.7142857142857143,Y better,miles
+mulsol.i.1,repaired,D,A,3.0,Y better,register
+mulsol.i.2,repaired,D,A,3.0,Y better,register
+mulsol.i.3,repaired,D,A,2.7,Y better,register
+mulsol.i.4,repaired,D,A,3.0,Y better,register
+mulsol.i.5,repaired,D,A,4.285714285714286,Y better,register
+myciel3,repaired,D,A,0.0,tie,myciel
+myciel4,repaired,D,A,0.0,tie,myciel
+myciel5,repaired,D,A,0.0,tie,myciel
+myciel6,repaired,D,A,1.0,Y better,myciel
+myciel7,repaired,D,A,1.4,Y better,myciel
+queen10_10,repaired,D,A,0.5760869565217392,Y better,queen
+queen11_11,repaired,D,A,0.3492063492063493,Y better,queen
+queen12_12,repaired,D,A,0.2542372881355932,Y better,queen
+queen13_13,repaired,D,A,0.2397003745318353,Y better,queen
+queen14_14,repaired,D,A,0.17041800643086807,Y better,queen
+queen15_15,repaired,D,A,0.18028169014084502,Y better,queen
+queen5_5,repaired,D,A,0.10769230769230773,Y better,queen
+queen6_6,repaired,D,A,0.4999999999999999,Y better,queen
+queen7_7,repaired,D,A,0.22680412371134034,Y better,queen
+queen8_12,repaired,D,A,0.42857142857142866,Y better,queen
+queen8_8,repaired,D,A,0.5818181818181817,Y better,queen
+queen9_9,repaired,D,A,0.8281249999999998,Y better,queen
+school1,repaired,D,A,0.09918419922713609,Y better,school
+school1_nsh,repaired,D,A,0.2542479546884833,Y better,school
+zeroin.i.1,repaired,D,A,2.75,Y better,register
+zeroin.i.2,repaired,D,A,1.2727272727272725,Y better,register
+zeroin.i.3,repaired,D,A,1.9,Y better,register
+DSJC125.1,repaired,B_noise2,A,0.15714285714285708,Y better,DSJC
+DSJC125.5,repaired,B_noise2,A,-0.6139240506329114,X better,DSJC
+DSJC125.9,repaired,B_noise2,A,-0.8607594936708861,X better,DSJC
+DSJC250.9,repaired,B_noise2,A,-0.8471337579617834,X better,DSJC
+DSJR500.1,repaired,B_noise2,A,-0.4210526315789473,X better,DSJR
+DSJR500.1c,repaired,B_noise2,A,-0.8921568627450981,X better,DSJR
+DSJR500.5,repaired,B_noise2,A,-0.7878787878787878,X better,DSJR
+anna,repaired,B_noise2,A,0.0,tie,SocialNet
+david,repaired,B_noise2,A,0.0,tie,SocialNet
+flat1000_50_0,repaired,B_noise2,A,-0.2085714285714286,X better,flat
+flat1000_60_0,repaired,B_noise2,A,-0.2949145886510897,X better,flat
+flat300_20_0,repaired,B_noise2,A,-0.2755505364201016,X better,flat
+flat300_26_0,repaired,B_noise2,A,-0.4108527131782945,X better,flat
+flat300_28_0,repaired,B_noise2,A,-0.4605067064083457,X better,flat
+fpsol2.i.1,repaired,B_noise2,A,-0.5,X better,register
+fpsol2.i.2,repaired,B_noise2,A,-0.2692307692307693,X better,register
+fpsol2.i.3,repaired,B_noise2,A,-0.31578947368421045,X better,register
+games120,repaired,B_noise2,A,0.0,tie,other
+homer,repaired,B_noise2,A,-0.5,X better,SocialNet
+huck,repaired,B_noise2,A,0.0,tie,SocialNet
+inithx.i.1,repaired,B_noise2,A,1.0,Y better,register
+inithx.i.2,repaired,B_noise2,A,-0.3225806451612903,X better,register
+inithx.i.3,repaired,B_noise2,A,-0.043478260869565064,tie,register
+jean,repaired,B_noise2,A,0.0,tie,SocialNet
+le450_15a,repaired,B_noise2,A,-0.4972067039106145,X better,le
+le450_15b,repaired,B_noise2,A,-0.5041095890410958,X better,le
+le450_15c,repaired,B_noise2,A,-0.2741935483870967,X better,le
+le450_15d,repaired,B_noise2,A,-0.27305175490779293,X better,le
+le450_25a,repaired,B_noise2,A,-0.4556962025316456,X better,le
+le450_25b,repaired,B_noise2,A,-0.4032258064516129,X better,le
+le450_25c,repaired,B_noise2,A,-0.6366972477064221,X better,le
+le450_25d,repaired,B_noise2,A,-0.6252390057361377,X better,le
+le450_5a,repaired,B_noise2,A,-0.1444881889763779,X better,le
+le450_5b,repaired,B_noise2,A,-0.12518518518518523,X better,le
+le450_5c,repaired,B_noise2,A,0.0528345545699961,Y better,le
+le450_5d,repaired,B_noise2,A,0.014855355746677136,tie,le
+miles1000,repaired,B_noise2,A,-0.7272727272727273,X better,miles
+miles1500,repaired,B_noise2,A,-0.7368421052631579,X better,miles
+miles250,repaired,B_noise2,A,0.16666666666666663,tie,miles
+miles500,repaired,B_noise2,A,-0.5,X better,miles
+miles750,repaired,B_noise2,A,-0.5714285714285714,X better,miles
+mulsol.i.1,repaired,B_noise2,A,0.0,tie,register
+mulsol.i.2,repaired,B_noise2,A,0.0,tie,register
+mulsol.i.3,repaired,B_noise2,A,0.0,tie,register
+mulsol.i.4,repaired,B_noise2,A,0.0,tie,register
+mulsol.i.5,repaired,B_noise2,A,-0.28571428571428564,tie,register
+myciel3,repaired,B_noise2,A,0.0,tie,myciel
+myciel4,repaired,B_noise2,A,0.0,tie,myciel
+myciel5,repaired,B_noise2,A,0.0,tie,myciel
+myciel6,repaired,B_noise2,A,0.0,tie,myciel
+myciel7,repaired,B_noise2,A,0.0,tie,myciel
+queen10_10,repaired,B_noise2,A,-0.2934782608695652,X better,queen
+queen11_11,repaired,B_noise2,A,-0.11640211640211637,X better,queen
+queen12_12,repaired,B_noise2,A,-0.2330508474576271,X better,queen
+queen13_13,repaired,B_noise2,A,-0.247191011235955,X better,queen
+queen14_14,repaired,B_noise2,A,-0.31511254019292606,X better,queen
+queen15_15,repaired,B_noise2,A,-0.35492957746478876,X better,queen
+queen5_5,repaired,B_noise2,A,-0.01538461538461533,tie,queen
+queen6_6,repaired,B_noise2,A,-0.15625,X better,queen
+queen7_7,repaired,B_noise2,A,-0.030927835051546285,tie,queen
+queen8_12,repaired,B_noise2,A,-0.28571428571428564,X better,queen
+queen8_8,repaired,B_noise2,A,-0.12727272727272732,X better,queen
+queen9_9,repaired,B_noise2,A,-0.21875000000000006,X better,queen
+school1,repaired,B_noise2,A,-0.7204808930871619,X better,school
+school1_nsh,repaired,B_noise2,A,-0.5368156073001888,X better,school
+zeroin.i.1,repaired,B_noise2,A,-0.37500000000000006,tie,register
+zeroin.i.2,repaired,B_noise2,A,-0.5454545454545455,X better,register
+zeroin.i.3,repaired,B_noise2,A,-0.5,X better,register
+DSJC125.1,repaired,A_nodrop,A,0.31428571428571417,Y better,DSJC
+DSJC125.5,repaired,A_nodrop,A,0.07594936708860754,Y better,DSJC
+DSJC125.9,repaired,A_nodrop,A,0.15189873417721508,Y better,DSJC
+DSJC250.9,repaired,A_nodrop,A,-0.12738853503184713,X better,DSJC
+DSJR500.1,repaired,A_nodrop,A,0.7894736842105263,Y better,DSJR
+DSJR500.1c,repaired,A_nodrop,A,-0.09803921568627452,X better,DSJR
+DSJR500.5,repaired,A_nodrop,A,-0.02693602693602696,tie,DSJR
+anna,repaired,A_nodrop,A,0.19999999999999996,tie,SocialNet
+david,repaired,A_nodrop,A,0.0,tie,SocialNet
+flat1000_50_0,repaired,A_nodrop,A,0.010519480519480548,tie,flat
+flat1000_60_0,repaired,A_nodrop,A,-0.0003926958570586857,tie,flat
+flat300_20_0,repaired,A_nodrop,A,-0.0011293054771314998,tie,flat
+flat300_26_0,repaired,A_nodrop,A,-0.005537098560354375,tie,flat
+flat300_28_0,repaired,A_nodrop,A,0.0819672131147541,Y better,flat
+fpsol2.i.1,repaired,A_nodrop,A,0.08333333333333341,tie,register
+fpsol2.i.2,repaired,A_nodrop,A,-0.4230769230769231,X better,register
+fpsol2.i.3,repaired,A_nodrop,A,-0.21052631578947364,tie,register
+games120,repaired,A_nodrop,A,0.10000000000000009,tie,other
+homer,repaired,A_nodrop,A,0.19999999999999996,tie,SocialNet
+huck,repaired,A_nodrop,A,0.19999999999999996,tie,SocialNet
+inithx.i.1,repaired,A_nodrop,A,0.20000000000000004,tie,register
+inithx.i.2,repaired,A_nodrop,A,-0.22580645161290328,X better,register
+inithx.i.3,repaired,A_nodrop,A,-0.30434782608695643,X better,register
+jean,repaired,A_nodrop,A,0.3999999999999999,tie,SocialNet
+le450_15a,repaired,A_nodrop,A,0.11731843575419003,Y better,le
+le450_15b,repaired,A_nodrop,A,0.0191780821917809,tie,le
+le450_15c,repaired,A_nodrop,A,0.044665012406948,tie,le
+le450_15d,repaired,A_nodrop,A,0.026174895895300452,tie,le
+le450_25a,repaired,A_nodrop,A,0.11392405063291143,Y better,le
+le450_25b,repaired,A_nodrop,A,0.3387096774193549,Y better,le
+le450_25c,repaired,A_nodrop,A,0.007339449541284377,tie,le
+le450_25d,repaired,A_nodrop,A,-0.045889101338432096,tie,le
+le450_5a,repaired,A_nodrop,A,-0.018897637795275635,tie,le
+le450_5b,repaired,A_nodrop,A,-0.022592592592592678,tie,le
+le450_5c,repaired,A_nodrop,A,0.015811801002699445,tie,le
+le450_5d,repaired,A_nodrop,A,-0.004300234558248721,tie,le
+miles1000,repaired,A_nodrop,A,-0.04545454545454549,tie,miles
+miles1500,repaired,A_nodrop,A,-0.2631578947368421,X better,miles
+miles250,repaired,A_nodrop,A,1.0,Y better,miles
+miles500,repaired,A_nodrop,A,0.19999999999999996,tie,miles
+miles750,repaired,A_nodrop,A,0.142857142857143,tie,miles
+mulsol.i.1,repaired,A_nodrop,A,0.3999999999999999,tie,register
+mulsol.i.2,repaired,A_nodrop,A,0.30000000000000004,tie,register
+mulsol.i.3,repaired,A_nodrop,A,0.0,tie,register
+mulsol.i.4,repaired,A_nodrop,A,0.19999999999999996,tie,register
+mulsol.i.5,repaired,A_nodrop,A,-0.14285714285714282,tie,register
+myciel3,repaired,A_nodrop,A,0.0,tie,myciel
+myciel4,repaired,A_nodrop,A,0.19999999999999996,tie,myciel
+myciel5,repaired,A_nodrop,A,0.0,tie,myciel
+myciel6,repaired,A_nodrop,A,0.0,tie,myciel
+myciel7,repaired,A_nodrop,A,0.19999999999999996,tie,myciel
+queen10_10,repaired,A_nodrop,A,0.4021739130434784,Y better,queen
+queen11_11,repaired,A_nodrop,A,0.32275132275132284,Y better,queen
+queen12_12,repaired,A_nodrop,A,0.17372881355932193,Y better,queen
+queen13_13,repaired,A_nodrop,A,0.18352059925093642,Y better,queen
+queen14_14,repaired,A_nodrop,A,0.13183279742765278,Y better,queen
+queen15_15,repaired,A_nodrop,A,0.10704225352112669,Y better,queen
+queen5_5,repaired,A_nodrop,A,0.10769230769230773,Y better,queen
+queen6_6,repaired,A_nodrop,A,0.24999999999999994,Y better,queen
+queen7_7,repaired,A_nodrop,A,0.3195876288659796,Y better,queen
+queen8_12,repaired,A_nodrop,A,0.32142857142857156,Y better,queen
+queen8_8,repaired,A_nodrop,A,0.5636363636363636,Y better,queen
+queen9_9,repaired,A_nodrop,A,0.6718749999999998,Y better,queen
+school1,repaired,A_nodrop,A,-0.12623443537999143,X better,school
+school1_nsh,repaired,A_nodrop,A,-0.042794210195091324,tie,school
+zeroin.i.1,repaired,A_nodrop,A,-0.1250000000000001,tie,register
+zeroin.i.2,repaired,A_nodrop,A,0.09090909090909079,tie,register
+zeroin.i.3,repaired,A_nodrop,A,0.3999999999999999,tie,register
+DSJC125.1,tie_mean,B,A,0.4000000000000001,Y better,DSJC
+DSJC125.5,tie_mean,B,A,-0.1356466876971609,X better,DSJC
+DSJC125.9,tie_mean,B,A,-0.1332470892626131,X better,DSJC
+DSJC250.9,tie_mean,B,A,-0.41120305537873963,X better,DSJC
+DSJR500.1,tie_mean,B,A,0.8157894736842107,Y better,DSJR
+DSJR500.1c,tie_mean,B,A,-0.3563336766220391,X better,DSJR
+DSJR500.5,tie_mean,B,A,-0.15516661056883202,X better,DSJR
+anna,tie_mean,B,A,0.6000000000000001,tie,SocialNet
+david,tie_mean,B,A,0.6000000000000001,tie,SocialNet
+flat1000_50_0,tie_mean,B,A,-0.04671338873980685,tie,flat
+flat1000_60_0,tie_mean,B,A,-0.09208135513744807,X better,flat
+flat300_20_0,tie_mean,B,A,-0.10371464273543105,X better,flat
+flat300_26_0,tie_mean,B,A,-0.12241969312286127,X better,flat
+flat300_28_0,tie_mean,B,A,-0.14083259521700628,X better,flat
+fpsol2.i.1,tie_mean,B,A,1.4761904761904763,Y better,register
+fpsol2.i.2,tie_mean,B,A,0.3553113553113554,Y better,register
+fpsol2.i.3,tie_mean,B,A,0.7801047120418846,Y better,register
+games120,tie_mean,B,A,0.0,tie,other
+homer,tie_mean,B,A,0.19999999999999996,tie,SocialNet
+huck,tie_mean,B,A,0.19999999999999996,tie,SocialNet
+inithx.i.1,tie_mean,B,A,1.590361445783132,Y better,register
+inithx.i.2,tie_mean,B,A,0.8481848184818479,Y better,register
+inithx.i.3,tie_mean,B,A,1.3478260869565222,Y better,register
+jean,tie_mean,B,A,0.0,tie,SocialNet
+le450_15a,tie_mean,B,A,-0.03631284916201109,tie,le
+le450_15b,tie_mean,B,A,-0.046575342465753504,tie,le
+le450_15c,tie_mean,B,A,-0.03173816017852718,tie,le
+le450_15d,tie_mean,B,A,-0.07816229116945105,X better,le
+le450_25a,tie_mean,B,A,0.04534005037783379,tie,le
+le450_25b,tie_mean,B,A,0.20967741935483866,Y better,le
+le450_25c,tie_mean,B,A,-0.1974967789434934,X better,le
+le450_25d,tie_mean,B,A,-0.1810754322629678,X better,le
+le450_5a,tie_mean,B,A,0.08818897637795267,Y better,le
+le450_5b,tie_mean,B,A,0.0514814814814814,Y better,le
+le450_5c,tie_mean,B,A,0.05052063247203997,Y better,le
+le450_5d,tie_mean,B,A,0.06841282251759187,Y better,le
+miles1000,tie_mean,B,A,-0.1866028708133971,tie,miles
+miles1500,tie_mean,B,A,-0.5833333333333334,X better,miles
+miles250,tie_mean,B,A,0.6666666666666667,tie,miles
+miles500,tie_mean,B,A,0.0,tie,miles
+miles750,tie_mean,B,A,0.1724137931034483,tie,miles
+mulsol.i.1,tie_mean,B,A,0.4516129032258065,tie,register
+mulsol.i.2,tie_mean,B,A,0.8999999999999999,Y better,register
+mulsol.i.3,tie_mean,B,A,0.8999999999999999,Y better,register
+mulsol.i.4,tie_mean,B,A,1.2000000000000002,Y better,register
+mulsol.i.5,tie_mean,B,A,1.535211267605634,Y better,register
+myciel3,tie_mean,B,A,0.0,tie,myciel
+myciel4,tie_mean,B,A,0.0,tie,myciel
+myciel5,tie_mean,B,A,0.0,tie,myciel
+myciel6,tie_mean,B,A,0.3999999999999999,tie,myciel
+myciel7,tie_mean,B,A,-0.01960784313725492,tie,myciel
+queen10_10,tie_mean,B,A,0.2173913043478261,Y better,queen
+queen11_11,tie_mean,B,A,0.15711252653927818,Y better,queen
+queen12_12,tie_mean,B,A,0.0423728813559322,tie,queen
+queen13_13,tie_mean,B,A,0.07865168539325848,Y better,queen
+queen14_14,tie_mean,B,A,0.006430868167202549,tie,queen
+queen15_15,tie_mean,B,A,-0.056338028169014086,X better,queen
+queen5_5,tie_mean,B,A,0.04615384615384613,tie,queen
+queen6_6,tie_mean,B,A,0.3437499999999999,Y better,queen
+queen7_7,tie_mean,B,A,0.175257731958763,Y better,queen
+queen8_12,tie_mean,B,A,0.10714285714285725,Y better,queen
+queen8_8,tie_mean,B,A,0.1636363636363637,Y better,queen
+queen9_9,tie_mean,B,A,0.4218749999999999,Y better,queen
+school1,tie_mean,B,A,-0.37783010324216626,X better,school
+school1_nsh,tie_mean,B,A,-0.2139297205223645,X better,school
+zeroin.i.1,tie_mean,B,A,0.24999999999999994,tie,register
+zeroin.i.2,tie_mean,B,A,0.9801980198019802,Y better,register
+zeroin.i.3,tie_mean,B,A,0.5053763440860213,tie,register
+DSJC125.1,tie_mean,C,A,0.3428571428571429,Y better,DSJC
+DSJC125.5,tie_mean,C,A,-0.013249211356466818,tie,DSJC
+DSJC125.9,tie_mean,C,A,0.2160413971539458,Y better,DSJC
+DSJC250.9,tie_mean,C,A,-0.13335455124124754,X better,DSJC
+DSJR500.1,tie_mean,C,A,0.9210526315789475,Y better,DSJR
+DSJR500.1c,tie_mean,C,A,0.019052523171987693,tie,DSJR
+DSJR500.5,tie_mean,C,A,-0.14742510939077746,X better,DSJR
+anna,tie_mean,C,A,0.3999999999999999,tie,SocialNet
+david,tie_mean,C,A,0.19999999999999996,tie,SocialNet
+flat1000_50_0,tie_mean,C,A,0.04333949925748375,tie,flat
+flat1000_60_0,tie_mean,C,A,0.0314166813199696,tie,flat
+flat300_20_0,tie_mean,C,A,-0.014029308190389634,tie,flat
+flat300_26_0,tie_mean,C,A,0.022629429296832003,tie,flat
+flat300_28_0,tie_mean,C,A,0.06938293475051671,Y better,flat
+fpsol2.i.1,tie_mean,C,A,0.24761904761904763,tie,register
+fpsol2.i.2,tie_mean,C,A,0.28205128205128205,Y better,register
+fpsol2.i.3,tie_mean,C,A,0.6282722513089005,Y better,register
+games120,tie_mean,C,A,0.0,tie,other
+homer,tie_mean,C,A,-0.19999999999999996,tie,SocialNet
+huck,tie_mean,C,A,0.0,tie,SocialNet
+inithx.i.1,tie_mean,C,A,0.7469879518072288,Y better,register
+inithx.i.2,tie_mean,C,A,0.485148514851485,Y better,register
+inithx.i.3,tie_mean,C,A,0.6869565217391305,Y better,register
+jean,tie_mean,C,A,0.0,tie,SocialNet
+le450_15a,tie_mean,C,A,0.12653631284916206,Y better,le
+le450_15b,tie_mean,C,A,0.04739726027397271,tie,le
+le450_15c,tie_mean,C,A,0.023679642945698128,tie,le
+le450_15d,tie_mean,C,A,-0.0007159904534606477,tie,le
+le450_25a,tie_mean,C,A,0.10831234256926955,Y better,le
+le450_25b,tie_mean,C,A,0.2580645161290322,Y better,le
+le450_25c,tie_mean,C,A,-0.02540033130866916,tie,le
+le450_25d,tie_mean,C,A,-0.04028120843625291,tie,le
+le450_5a,tie_mean,C,A,0.16259842519685044,Y better,le
+le450_5b,tie_mean,C,A,0.15085185185185193,Y better,le
+le450_5c,tie_mean,C,A,0.04820671037408407,tie,le
+le450_5d,tie_mean,C,A,0.014464425332290807,tie,le
+miles1000,tie_mean,C,A,-0.2822966507177033,X better,miles
+miles1500,tie_mean,C,A,-0.49074074074074076,X better,miles
+miles250,tie_mean,C,A,0.8333333333333336,Y better,miles
+miles500,tie_mean,C,A,-0.19999999999999996,tie,miles
+miles750,tie_mean,C,A,-0.03448275862068969,tie,miles
+mulsol.i.1,tie_mean,C,A,0.12903225806451607,tie,register
+mulsol.i.2,tie_mean,C,A,0.8,Y better,register
+mulsol.i.3,tie_mean,C,A,0.5,Y better,register
+mulsol.i.4,tie_mean,C,A,0.3999999999999999,tie,register
+mulsol.i.5,tie_mean,C,A,0.8309859154929579,Y better,register
+myciel3,tie_mean,C,A,0.0,tie,myciel
+myciel4,tie_mean,C,A,0.0,tie,myciel
+myciel5,tie_mean,C,A,0.0,tie,myciel
+myciel6,tie_mean,C,A,0.0,tie,myciel
+myciel7,tie_mean,C,A,-0.01960784313725492,tie,myciel
+queen10_10,tie_mean,C,A,0.20978260869565216,Y better,queen
+queen11_11,tie_mean,C,A,0.08811040339702761,Y better,queen
+queen12_12,tie_mean,C,A,0.0864406779661015,Y better,queen
+queen13_13,tie_mean,C,A,0.05992509363295886,Y better,queen
+queen14_14,tie_mean,C,A,-0.022508038585209094,tie,queen
+queen15_15,tie_mean,C,A,0.01859154929577475,tie,queen
+queen5_5,tie_mean,C,A,-0.02153846153846149,tie,queen
+queen6_6,tie_mean,C,A,0.3125,Y better,queen
+queen7_7,tie_mean,C,A,0.030927835051546466,tie,queen
+queen8_12,tie_mean,C,A,0.17857142857142858,Y better,queen
+queen8_8,tie_mean,C,A,0.25454545454545463,Y better,queen
+queen9_9,tie_mean,C,A,0.390625,Y better,queen
+school1,tie_mean,C,A,0.006203586306828365,tie,school
+school1_nsh,tie_mean,C,A,0.08150905305658959,Y better,school
+zeroin.i.1,tie_mean,C,A,0.37500000000000006,tie,register
+zeroin.i.2,tie_mean,C,A,0.5148514851485149,Y better,register
+zeroin.i.3,tie_mean,C,A,0.3978494623655914,tie,register
+DSJC125.1,tie_mean,D,A,0.4642857142857143,Y better,DSJC
+DSJC125.5,tie_mean,D,A,0.2649842271293376,Y better,DSJC
+DSJC125.9,tie_mean,D,A,0.5316946959896508,Y better,DSJC
+DSJC250.9,tie_mean,D,A,0.05792488860598335,Y better,DSJC
+DSJR500.1,tie_mean,D,A,1.7631578947368423,Y better,DSJR
+DSJR500.1c,tie_mean,D,A,0.12306900102986616,Y better,DSJR
+DSJR500.5,tie_mean,D,A,0.2208010770784246,Y better,DSJR
+anna,tie_mean,D,A,0.6000000000000001,tie,SocialNet
+david,tie_mean,D,A,1.0,Y better,SocialNet
+flat1000_50_0,tie_mean,D,A,0.057577573404892696,Y better,flat
+flat1000_60_0,tie_mean,D,A,0.05382646581872878,Y better,flat
+flat300_20_0,tie_mean,D,A,0.062194706350107855,Y better,flat
+flat300_26_0,tie_mean,D,A,0.07815432166905838,Y better,flat
+flat300_28_0,tie_mean,D,A,0.1839385887215824,Y better,flat
+fpsol2.i.1,tie_mean,D,A,3.9523809523809526,Y better,register
+fpsol2.i.2,tie_mean,D,A,0.7216117216117217,Y better,register
+fpsol2.i.3,tie_mean,D,A,1.4607329842931935,Y better,register
+games120,tie_mean,D,A,0.3999999999999999,tie,other
+homer,tie_mean,D,A,1.1,Y better,SocialNet
+huck,tie_mean,D,A,0.0,tie,SocialNet
+inithx.i.1,tie_mean,D,A,2.7349397590361444,Y better,register
+inithx.i.2,tie_mean,D,A,1.5412541254125411,Y better,register
+inithx.i.3,tie_mean,D,A,2.173913043478261,Y better,register
+jean,tie_mean,D,A,0.19999999999999996,tie,SocialNet
+le450_15a,tie_mean,D,A,0.39329608938547506,Y better,le
+le450_15b,tie_mean,D,A,0.33041095890410943,Y better,le
+le450_15c,tie_mean,D,A,0.1342672948177535,Y better,le
+le450_15d,tie_mean,D,A,0.11378281622911708,Y better,le
+le450_25a,tie_mean,D,A,0.5075566750629723,Y better,le
+le450_25b,tie_mean,D,A,0.629032258064516,Y better,le
+le450_25c,tie_mean,D,A,0.14908890115958023,Y better,le
+le450_25d,tie_mean,D,A,0.24244727341820266,Y better,le
+le450_5a,tie_mean,D,A,0.1872834645669291,Y better,le
+le450_5b,tie_mean,D,A,0.18629629629629635,Y better,le
+le450_5c,tie_mean,D,A,0.07736212880833013,Y better,le
+le450_5d,tie_mean,D,A,0.10566849100860058,Y better,le
+miles1000,tie_mean,D,A,0.38755980861244027,Y better,miles
+miles1500,tie_mean,D,A,0.06481481481481466,tie,miles
+miles250,tie_mean,D,A,1.3333333333333333,Y better,miles
+miles500,tie_mean,D,A,0.6000000000000001,Y better,miles
+miles750,tie_mean,D,A,0.6551724137931034,Y better,miles
+mulsol.i.1,tie_mean,D,A,2.225806451612903,Y better,register
+mulsol.i.2,tie_mean,D,A,3.0,Y better,register
+mulsol.i.3,tie_mean,D,A,2.7,Y better,register
+mulsol.i.4,tie_mean,D,A,3.0,Y better,register
+mulsol.i.5,tie_mean,D,A,4.211267605633803,Y better,register
+myciel3,tie_mean,D,A,0.0,tie,myciel
+myciel4,tie_mean,D,A,0.0,tie,myciel
+myciel5,tie_mean,D,A,0.0,tie,myciel
+myciel6,tie_mean,D,A,1.0,Y better,myciel
+myciel7,tie_mean,D,A,1.352941176470588,Y better,myciel
+queen10_10,tie_mean,D,A,0.5586956521739131,Y better,queen
+queen11_11,tie_mean,D,A,0.3503184713375795,Y better,queen
+queen12_12,tie_mean,D,A,0.2419491525423729,Y better,queen
+queen13_13,tie_mean,D,A,0.23370786516853928,Y better,queen
+queen14_14,tie_mean,D,A,0.18231511254019275,Y better,queen
+queen15_15,tie_mean,D,A,0.1814084507042253,Y better,queen
+queen5_5,tie_mean,D,A,0.10769230769230773,Y better,queen
+queen6_6,tie_mean,D,A,0.4999999999999999,Y better,queen
+queen7_7,tie_mean,D,A,0.22680412371134034,Y better,queen
+queen8_12,tie_mean,D,A,0.4160714285714286,Y better,queen
+queen8_8,tie_mean,D,A,0.5854545454545456,Y better,queen
+queen9_9,tie_mean,D,A,0.8406249999999998,Y better,queen
+school1,tie_mean,D,A,0.13860713638833538,Y better,school
+school1_nsh,tie_mean,D,A,0.26092990978487174,Y better,school
+zeroin.i.1,tie_mean,D,A,2.75,Y better,register
+zeroin.i.2,tie_mean,D,A,1.4752475247524752,Y better,register
+zeroin.i.3,tie_mean,D,A,2.1182795698924726,Y better,register
+DSJC125.1,tie_mean,B_noise2,A,0.15714285714285708,Y better,DSJC
+DSJC125.5,tie_mean,B_noise2,A,-0.6151419558359622,X better,DSJC
+DSJC125.9,tie_mean,B_noise2,A,-0.8576972833117722,X better,DSJC
+DSJC250.9,tie_mean,B_noise2,A,-0.8472310630171864,X better,DSJC
+DSJR500.1,tie_mean,B_noise2,A,-0.4210526315789473,X better,DSJR
+DSJR500.1c,tie_mean,B_noise2,A,-0.8867147270854789,X better,DSJR
+DSJR500.5,tie_mean,B_noise2,A,-0.7879501851228542,X better,DSJR
+anna,tie_mean,B_noise2,A,0.0,tie,SocialNet
+david,tie_mean,B_noise2,A,0.0,tie,SocialNet
+flat1000_50_0,tie_mean,B_noise2,A,-0.20615897663027916,X better,flat
+flat1000_60_0,tie_mean,B_noise2,A,-0.2983998593282926,X better,flat
+flat300_20_0,tie_mean,B_noise2,A,-0.2712711575599227,X better,flat
+flat300_26_0,tie_mean,B_noise2,A,-0.4127387128822166,X better,flat
+flat300_28_0,tie_mean,B_noise2,A,-0.465603779155595,X better,flat
+fpsol2.i.1,tie_mean,B_noise2,A,-0.4285714285714286,tie,register
+fpsol2.i.2,tie_mean,B_noise2,A,-0.30402930402930406,X better,register
+fpsol2.i.3,tie_mean,B_noise2,A,-0.3193717277486911,X better,register
+games120,tie_mean,B_noise2,A,0.0,tie,other
+homer,tie_mean,B_noise2,A,-0.5,X better,SocialNet
+huck,tie_mean,B_noise2,A,0.0,tie,SocialNet
+inithx.i.1,tie_mean,B_noise2,A,0.8072289156626504,Y better,register
+inithx.i.2,tie_mean,B_noise2,A,-0.306930693069307,X better,register
+inithx.i.3,tie_mean,B_noise2,A,-0.043478260869565064,tie,register
+jean,tie_mean,B_noise2,A,0.0,tie,SocialNet
+le450_15a,tie_mean,B_noise2,A,-0.4972067039106145,X better,le
+le450_15b,tie_mean,B_noise2,A,-0.5041095890410958,X better,le
+le450_15c,tie_mean,B_noise2,A,-0.2747334490453756,X better,le
+le450_15d,tie_mean,B_noise2,A,-0.2708830548926014,X better,le
+le450_25a,tie_mean,B_noise2,A,-0.4584382871536524,X better,le
+le450_25b,tie_mean,B_noise2,A,-0.4032258064516129,X better,le
+le450_25c,tie_mean,B_noise2,A,-0.6355604638321369,X better,le
+le450_25d,tie_mean,B_noise2,A,-0.6275888276648299,X better,le
+le450_5a,tie_mean,B_noise2,A,-0.1444881889763779,X better,le
+le450_5b,tie_mean,B_noise2,A,-0.12518518518518523,X better,le
+le450_5c,tie_mean,B_noise2,A,0.0528345545699961,Y better,le
+le450_5d,tie_mean,B_noise2,A,0.014855355746677136,tie,le
+miles1000,tie_mean,B_noise2,A,-0.7129186602870813,X better,miles
+miles1500,tie_mean,B_noise2,A,-0.7685185185185185,X better,miles
+miles250,tie_mean,B_noise2,A,0.16666666666666663,tie,miles
+miles500,tie_mean,B_noise2,A,-0.5,X better,miles
+miles750,tie_mean,B_noise2,A,-0.5862068965517241,X better,miles
+mulsol.i.1,tie_mean,B_noise2,A,-0.1935483870967742,tie,register
+mulsol.i.2,tie_mean,B_noise2,A,0.0,tie,register
+mulsol.i.3,tie_mean,B_noise2,A,0.0,tie,register
+mulsol.i.4,tie_mean,B_noise2,A,0.0,tie,register
+mulsol.i.5,tie_mean,B_noise2,A,-0.2957746478873239,tie,register
+myciel3,tie_mean,B_noise2,A,0.0,tie,myciel
+myciel4,tie_mean,B_noise2,A,0.0,tie,myciel
+myciel5,tie_mean,B_noise2,A,0.0,tie,myciel
+myciel6,tie_mean,B_noise2,A,0.0,tie,myciel
+myciel7,tie_mean,B_noise2,A,-0.01960784313725492,tie,myciel
+queen10_10,tie_mean,B_noise2,A,-0.2934782608695652,X better,queen
+queen11_11,tie_mean,B_noise2,A,-0.11358811040339706,X better,queen
+queen12_12,tie_mean,B_noise2,A,-0.2330508474576271,X better,queen
+queen13_13,tie_mean,B_noise2,A,-0.247191011235955,X better,queen
+queen14_14,tie_mean,B_noise2,A,-0.31511254019292606,X better,queen
+queen15_15,tie_mean,B_noise2,A,-0.35492957746478876,X better,queen
+queen5_5,tie_mean,B_noise2,A,-0.01538461538461533,tie,queen
+queen6_6,tie_mean,B_noise2,A,-0.15625,X better,queen
+queen7_7,tie_mean,B_noise2,A,-0.030927835051546285,tie,queen
+queen8_12,tie_mean,B_noise2,A,-0.28571428571428564,X better,queen
+queen8_8,tie_mean,B_noise2,A,-0.12727272727272732,X better,queen
+queen9_9,tie_mean,B_noise2,A,-0.21875000000000006,X better,queen
+school1,tie_mean,B_noise2,A,-0.7052164462959609,X better,school
+school1_nsh,tie_mean,B_noise2,A,-0.5356759825878493,X better,school
+zeroin.i.1,tie_mean,B_noise2,A,-0.37500000000000006,tie,register
+zeroin.i.2,tie_mean,B_noise2,A,-0.504950495049505,X better,register
+zeroin.i.3,tie_mean,B_noise2,A,-0.4623655913978495,tie,register
+DSJC125.1,tie_mean,A_nodrop,A,0.28142857142857153,Y better,DSJC
+DSJC125.5,tie_mean,A_nodrop,A,0.13943217665615137,Y better,DSJC
+DSJC125.9,tie_mean,A_nodrop,A,0.21345407503234148,Y better,DSJC
+DSJC250.9,tie_mean,A_nodrop,A,-0.15658816040738377,X better,DSJC
+DSJR500.1,tie_mean,A_nodrop,A,0.6421052631578948,Y better,DSJR
+DSJR500.1c,tie_mean,A_nodrop,A,-0.10556127703398563,X better,DSJR
+DSJR500.5,tie_mean,A_nodrop,A,-0.03399528778189167,tie,DSJR
+anna,tie_mean,A_nodrop,A,0.21999999999999997,tie,SocialNet
+david,tie_mean,A_nodrop,A,0.020000000000000018,tie,SocialNet
+flat1000_50_0,tie_mean,A_nodrop,A,0.01853685225229907,tie,flat
+flat1000_60_0,tie_mean,A_nodrop,A,0.00209053787390332,tie,flat
+flat300_20_0,tie_mean,A_nodrop,A,-0.004089514938089443,tie,flat
+flat300_26_0,tie_mean,A_nodrop,A,0.02362291643669264,tie,flat
+flat300_28_0,tie_mean,A_nodrop,A,0.06849719515795669,Y better,flat
+fpsol2.i.1,tie_mean,A_nodrop,A,0.2761904761904762,tie,register
+fpsol2.i.2,tie_mean,A_nodrop,A,-0.36263736263736274,X better,register
+fpsol2.i.3,tie_mean,A_nodrop,A,-0.1256544502617802,tie,register
+games120,tie_mean,A_nodrop,A,0.10000000000000009,tie,other
+homer,tie_mean,A_nodrop,A,0.11999999999999988,tie,SocialNet
+huck,tie_mean,A_nodrop,A,0.19999999999999996,tie,SocialNet
+inithx.i.1,tie_mean,A_nodrop,A,-0.030120481927710867,tie,register
+inithx.i.2,tie_mean,A_nodrop,A,-0.24092409240924104,X better,register
+inithx.i.3,tie_mean,A_nodrop,A,-0.30434782608695643,X better,register
+jean,tie_mean,A_nodrop,A,0.21999999999999997,tie,SocialNet
+le450_15a,tie_mean,A_nodrop,A,0.13296089385474877,Y better,le
+le450_15b,tie_mean,A_nodrop,A,0.03643835616438351,tie,le
+le450_15c,tie_mean,A_nodrop,A,0.05132655591371189,Y better,le
+le450_15d,tie_mean,A_nodrop,A,0.010918854415274537,tie,le
+le450_25a,tie_mean,A_nodrop,A,0.07178841309823669,Y better,le
+le450_25b,tie_mean,A_nodrop,A,0.26129032258064516,Y better,le
+le450_25c,tie_mean,A_nodrop,A,0.011411743051721048,tie,le
+le450_25d,tie_mean,A_nodrop,A,-0.05643169295078837,X better,le
+le450_5a,tie_mean,A_nodrop,A,-0.02173228346456686,tie,le
+le450_5b,tie_mean,A_nodrop,A,-0.029666666666666633,tie,le
+le450_5c,tie_mean,A_nodrop,A,0.024990358657925253,tie,le
+le450_5d,tie_mean,A_nodrop,A,0.019468334636434784,tie,le
+miles1000,tie_mean,A_nodrop,A,0.04306220095693795,tie,miles
+miles1500,tie_mean,A_nodrop,A,-0.28240740740740744,X better,miles
+miles250,tie_mean,A_nodrop,A,1.0166666666666666,Y better,miles
+miles500,tie_mean,A_nodrop,A,0.28,tie,miles
+miles750,tie_mean,A_nodrop,A,0.12413793103448287,tie,miles
+mulsol.i.1,tie_mean,A_nodrop,A,0.12903225806451607,tie,register
+mulsol.i.2,tie_mean,A_nodrop,A,0.3700000000000001,tie,register
+mulsol.i.3,tie_mean,A_nodrop,A,0.0,tie,register
+mulsol.i.4,tie_mean,A_nodrop,A,0.16999999999999993,tie,register
+mulsol.i.5,tie_mean,A_nodrop,A,-0.09859154929577459,tie,register
+myciel3,tie_mean,A_nodrop,A,0.0,tie,myciel
+myciel4,tie_mean,A_nodrop,A,0.19999999999999996,tie,myciel
+myciel5,tie_mean,A_nodrop,A,0.0,tie,myciel
+myciel6,tie_mean,A_nodrop,A,0.0,tie,myciel
+myciel7,tie_mean,A_nodrop,A,0.17647058823529405,tie,myciel
+queen10_10,tie_mean,A_nodrop,A,0.4282608695652176,Y better,queen
+queen11_11,tie_mean,A_nodrop,A,0.3126326963906582,Y better,queen
+queen12_12,tie_mean,A_nodrop,A,0.1911016949152543,Y better,queen
+queen13_13,tie_mean,A_nodrop,A,0.15955056179775287,Y better,queen
+queen14_14,tie_mean,A_nodrop,A,0.12861736334405144,Y better,queen
+queen15_15,tie_mean,A_nodrop,A,0.1447887323943662,Y better,queen
+queen5_5,tie_mean,A_nodrop,A,0.10769230769230773,Y better,queen
+queen6_6,tie_mean,A_nodrop,A,0.2656249999999999,Y better,queen
+queen7_7,tie_mean,A_nodrop,A,0.27422680412371137,Y better,queen
+queen8_12,tie_mean,A_nodrop,A,0.342857142857143,Y better,queen
+queen8_8,tie_mean,A_nodrop,A,0.6000000000000001,Y better,queen
+queen9_9,tie_mean,A_nodrop,A,0.7093750000000001,Y better,queen
+school1,tie_mean,A_nodrop,A,-0.0890237275855823,X better,school
+school1_nsh,tie_mean,A_nodrop,A,-0.04378272664185224,tie,school
+zeroin.i.1,tie_mean,A_nodrop,A,-0.1250000000000001,tie,register
+zeroin.i.2,tie_mean,A_nodrop,A,0.18811881188118806,tie,register
+zeroin.i.3,tie_mean,A_nodrop,A,0.41935483870967716,tie,register

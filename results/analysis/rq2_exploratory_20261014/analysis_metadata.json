@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-14",
+  "n_graphs": 68,
+  "n_seeds": 5,
+  "arms": [
+    "A",
+    "A_nodrop",
+    "B",
+    "Brand",
+    "B_noise0.5",
+    "B_noise1",
+    "B_noise2",
+    "C",
+    "D"
+  ],
+  "endpoint_records": 3060,
+  "structure_tests": 224,
+  "within_family_permutations": 4999,
+  "versions": {
+    "numpy": "2.5.4",
+    "pandas": "2.2.3",
+    "networkx": "3.7"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "graphs": 68,
+  "arms": 9,
+  "unique_endpoints": 3060,
+  "reproduced_fields": [
+    "raw conflicts",
+    "repaired conflicts",
+    "moves",
+    "initial improvable vertices"
+  ],
+  "tie_outcomes": 30600,
+  "nonworsening_tie_outcomes": 30600,
+  "assignment_intervals": 12240,
+  "structural_tests_per_screen": 224,
+  "versions": {
+    "numpy": "2.5.4",
+    "pandas": "2.2.3",
+    "scipy": "1.18.1",
+    "networkx": "3.7",
+    "torch": "2.14.1",
+    "matplotlib": "3.11.2"
+  },
+  "report_sha256": "92708471a8b1c25e169296aed90aaf74d549f123306c99b0989de3da31b68458",
+  "vault_file": "/Users/semyon_guretskiy/Documents/Obsidian-Vault/Projects/ML with Graphs/Project/RQ2_Paper.md",
+  "appendix_start_line": 443,
+  "previous_vault_sha256": "d02085ebc343a11a26b3b2364dc41395ea854a4b9451d89811b6779b99039fe3",
+  "new_vault_sha256": "66ce4bb48baa3cb796b1b706224a51b5ccca9712a0df92dc6fa7a5d5db2ffb8e",
+  "existing_content_preserved": true
+}

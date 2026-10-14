@@ -1,0 +1,341 @@
+graph,X,Y,repaired,tie_mean,changed
+DSJC125.1,A_nodrop,A,Y better,Y better,False
+DSJC125.1,B,A,Y better,Y better,False
+DSJC125.1,B_noise2,A,Y better,Y better,False
+DSJC125.1,C,A,Y better,Y better,False
+DSJC125.1,D,A,Y better,Y better,False
+DSJC125.5,A_nodrop,A,Y better,Y better,False
+DSJC125.5,B,A,X better,X better,False
+DSJC125.5,B_noise2,A,X better,X better,False
+DSJC125.5,C,A,tie,tie,False
+DSJC125.5,D,A,Y better,Y better,False
+DSJC125.9,A_nodrop,A,Y better,Y better,False
+DSJC125.9,B,A,X better,X better,False
+DSJC125.9,B_noise2,A,X better,X better,False
+DSJC125.9,C,A,Y better,Y better,False
+DSJC125.9,D,A,Y better,Y better,False
+DSJC250.9,A_nodrop,A,X better,X better,False
+DSJC250.9,B,A,X better,X better,False
+DSJC250.9,B_noise2,A,X better,X better,False
+DSJC250.9,C,A,X better,X better,False
+DSJC250.9,D,A,tie,Y better,True
+DSJR500.1,A_nodrop,A,Y better,Y better,False
+DSJR500.1,B,A,Y better,Y better,False
+DSJR500.1,B_noise2,A,X better,X better,False
+DSJR500.1,C,A,Y better,Y better,False
+DSJR500.1,D,A,Y better,Y better,False
+DSJR500.1c,A_nodrop,A,X better,X better,False
+DSJR500.1c,B,A,X better,X better,False
+DSJR500.1c,B_noise2,A,X better,X better,False
+DSJR500.1c,C,A,X better,tie,True
+DSJR500.1c,D,A,Y better,Y better,False
+DSJR500.5,A_nodrop,A,tie,tie,False
+DSJR500.5,B,A,X better,X better,False
+DSJR500.5,B_noise2,A,X better,X better,False
+DSJR500.5,C,A,X better,X better,False
+DSJR500.5,D,A,Y better,Y better,False
+anna,A_nodrop,A,tie,tie,False
+anna,B,A,tie,tie,False
+anna,B_noise2,A,tie,tie,False
+anna,C,A,tie,tie,False
+anna,D,A,tie,tie,False
+david,A_nodrop,A,tie,tie,False
+david,B,A,tie,tie,False
+david,B_noise2,A,tie,tie,False
+david,C,A,tie,tie,False
+david,D,A,Y better,Y better,False
+flat1000_50_0,A_nodrop,A,tie,tie,False
+flat1000_50_0,B,A,tie,tie,False
+flat1000_50_0,B_noise2,A,X better,X better,False
+flat1000_50_0,C,A,tie,tie,False
+flat1000_50_0,D,A,Y better,Y better,False
+flat1000_60_0,A_nodrop,A,tie,tie,False
+flat1000_60_0,B,A,X better,X better,False
+flat1000_60_0,B_noise2,A,X better,X better,False
+flat1000_60_0,C,A,tie,tie,False
+flat1000_60_0,D,A,Y better,Y better,False
+flat300_20_0,A_nodrop,A,tie,tie,False
+flat300_20_0,B,A,X better,X better,False
+flat300_20_0,B_noise2,A,X better,X better,False
+flat300_20_0,C,A,tie,tie,False
+flat300_20_0,D,A,tie,Y better,True
+flat300_26_0,A_nodrop,A,tie,tie,False
+flat300_26_0,B,A,X better,X better,False
+flat300_26_0,B_noise2,A,X better,X better,False
+flat300_26_0,C,A,tie,tie,False
+flat300_26_0,D,A,Y better,Y better,False
+flat300_28_0,A_nodrop,A,Y better,Y better,False
+flat300_28_0,B,A,X better,X better,False
+flat300_28_0,B_noise2,A,X better,X better,False
+flat300_28_0,C,A,Y better,Y better,False
+flat300_28_0,D,A,Y better,Y better,False
+fpsol2.i.1,A_nodrop,A,tie,tie,False
+fpsol2.i.1,B,A,Y better,Y better,False
+fpsol2.i.1,B_noise2,A,X better,tie,True
+fpsol2.i.1,C,A,tie,tie,False
+fpsol2.i.1,D,A,Y better,Y better,False
+fpsol2.i.2,A_nodrop,A,X better,X better,False
+fpsol2.i.2,B,A,Y better,Y better,False
+fpsol2.i.2,B_noise2,A,X better,X better,False
+fpsol2.i.2,C,A,Y better,Y better,False
+fpsol2.i.2,D,A,Y better,Y better,False
+fpsol2.i.3,A_nodrop,A,tie,tie,False
+fpsol2.i.3,B,A,Y better,Y better,False
+fpsol2.i.3,B_noise2,A,X better,X better,False
+fpsol2.i.3,C,A,Y better,Y better,False
+fpsol2.i.3,D,A,Y better,Y better,False
+games120,A_nodrop,A,tie,tie,False
+games120,B,A,tie,tie,False
+games120,B_noise2,A,tie,tie,False
+games120,C,A,tie,tie,False
+games120,D,A,tie,tie,False
+homer,A_nodrop,A,tie,tie,False
+homer,B,A,tie,tie,False
+homer,B_noise2,A,X better,X better,False
+homer,C,A,tie,tie,False
+homer,D,A,Y better,Y better,False
+huck,A_nodrop,A,tie,tie,False
+huck,B,A,tie,tie,False
+huck,B_noise2,A,tie,tie,False
+huck,C,A,tie,tie,False
+huck,D,A,tie,tie,False
+inithx.i.1,A_nodrop,A,tie,tie,False
+inithx.i.1,B,A,Y better,Y better,False
+inithx.i.1,B_noise2,A,Y better,Y better,False
+inithx.i.1,C,A,Y better,Y better,False
+inithx.i.1,D,A,Y better,Y better,False
+inithx.i.2,A_nodrop,A,X better,X better,False
+inithx.i.2,B,A,Y better,Y better,False
+inithx.i.2,B_noise2,A,X better,X better,False
+inithx.i.2,C,A,Y better,Y better,False
+inithx.i.2,D,A,Y better,Y better,False
+inithx.i.3,A_nodrop,A,X better,X better,False
+inithx.i.3,B,A,Y better,Y better,False
+inithx.i.3,B_noise2,A,tie,tie,False
+inithx.i.3,C,A,Y better,Y better,False
+inithx.i.3,D,A,Y better,Y better,False
+jean,A_nodrop,A,tie,tie,False
+jean,B,A,tie,tie,False
+jean,B_noise2,A,tie,tie,False
+jean,C,A,tie,tie,False
+jean,D,A,tie,tie,False
+le450_15a,A_nodrop,A,Y better,Y better,False
+le450_15a,B,A,tie,tie,False
+le450_15a,B_noise2,A,X better,X better,False
+le450_15a,C,A,Y better,Y better,False
+le450_15a,D,A,Y better,Y better,False
+le450_15b,A_nodrop,A,tie,tie,False
+le450_15b,B,A,tie,tie,False
+le450_15b,B_noise2,A,X better,X better,False
+le450_15b,C,A,tie,tie,False
+le450_15b,D,A,Y better,Y better,False
+le450_15c,A_nodrop,A,tie,Y better,True
+le450_15c,B,A,tie,tie,False
+le450_15c,B_noise2,A,X better,X better,False
+le450_15c,C,A,tie,tie,False
+le450_15c,D,A,Y better,Y better,False
+le450_15d,A_nodrop,A,tie,tie,False
+le450_15d,B,A,X better,X better,False
+le450_15d,B_noise2,A,X better,X better,False
+le450_15d,C,A,tie,tie,False
+le450_15d,D,A,Y better,Y better,False
+le450_25a,A_nodrop,A,Y better,Y better,False
+le450_25a,B,A,tie,tie,False
+le450_25a,B_noise2,A,X better,X better,False
+le450_25a,C,A,Y better,Y better,False
+le450_25a,D,A,Y better,Y better,False
+le450_25b,A_nodrop,A,Y better,Y better,False
+le450_25b,B,A,Y better,Y better,False
+le450_25b,B_noise2,A,X better,X better,False
+le450_25b,C,A,Y better,Y better,False
+le450_25b,D,A,Y better,Y better,False
+le450_25c,A_nodrop,A,tie,tie,False
+le450_25c,B,A,X better,X better,False
+le450_25c,B_noise2,A,X better,X better,False
+le450_25c,C,A,tie,tie,False
+le450_25c,D,A,Y better,Y better,False
+le450_25d,A_nodrop,A,tie,X better,True
+le450_25d,B,A,X better,X better,False
+le450_25d,B_noise2,A,X better,X better,False
+le450_25d,C,A,tie,tie,False
+le450_25d,D,A,Y better,Y better,False
+le450_5a,A_nodrop,A,tie,tie,False
+le450_5a,B,A,Y better,Y better,False
+le450_5a,B_noise2,A,X better,X better,False
+le450_5a,C,A,Y better,Y better,False
+le450_5a,D,A,Y better,Y better,False
+le450_5b,A_nodrop,A,tie,tie,False
+le450_5b,B,A,Y better,Y better,False
+le450_5b,B_noise2,A,X better,X better,False
+le450_5b,C,A,Y better,Y better,False
+le450_5b,D,A,Y better,Y better,False
+le450_5c,A_nodrop,A,tie,tie,False
+le450_5c,B,A,Y better,Y better,False
+le450_5c,B_noise2,A,Y better,Y better,False
+le450_5c,C,A,Y better,tie,True
+le450_5c,D,A,Y better,Y better,False
+le450_5d,A_nodrop,A,tie,tie,False
+le450_5d,B,A,Y better,Y better,False
+le450_5d,B_noise2,A,tie,tie,False
+le450_5d,C,A,tie,tie,False
+le450_5d,D,A,Y better,Y better,False
+miles1000,A_nodrop,A,tie,tie,False
+miles1000,B,A,X better,tie,True
+miles1000,B_noise2,A,X better,X better,False
+miles1000,C,A,X better,X better,False
+miles1000,D,A,Y better,Y better,False
+miles1500,A_nodrop,A,X better,X better,False
+miles1500,B,A,X better,X better,False
+miles1500,B_noise2,A,X better,X better,False
+miles1500,C,A,X better,X better,False
+miles1500,D,A,tie,tie,False
+miles250,A_nodrop,A,Y better,Y better,False
+miles250,B,A,tie,tie,False
+miles250,B_noise2,A,tie,tie,False
+miles250,C,A,Y better,Y better,False
+miles250,D,A,Y better,Y better,False
+miles500,A_nodrop,A,tie,tie,False
+miles500,B,A,tie,tie,False
+miles500,B_noise2,A,X better,X better,False
+miles500,C,A,tie,tie,False
+miles500,D,A,Y better,Y better,False
+miles750,A_nodrop,A,tie,tie,False
+miles750,B,A,tie,tie,False
+miles750,B_noise2,A,X better,X better,False
+miles750,C,A,tie,tie,False
+miles750,D,A,Y better,Y better,False
+mulsol.i.1,A_nodrop,A,tie,tie,False
+mulsol.i.1,B,A,tie,tie,False
+mulsol.i.1,B_noise2,A,tie,tie,False
+mulsol.i.1,C,A,tie,tie,False
+mulsol.i.1,D,A,Y better,Y better,False
+mulsol.i.2,A_nodrop,A,tie,tie,False
+mulsol.i.2,B,A,Y better,Y better,False
+mulsol.i.2,B_noise2,A,tie,tie,False
+mulsol.i.2,C,A,Y better,Y better,False
+mulsol.i.2,D,A,Y better,Y better,False
+mulsol.i.3,A_nodrop,A,tie,tie,False
+mulsol.i.3,B,A,Y better,Y better,False
+mulsol.i.3,B_noise2,A,tie,tie,False
+mulsol.i.3,C,A,Y better,Y better,False
+mulsol.i.3,D,A,Y better,Y better,False
+mulsol.i.4,A_nodrop,A,tie,tie,False
+mulsol.i.4,B,A,Y better,Y better,False
+mulsol.i.4,B_noise2,A,tie,tie,False
+mulsol.i.4,C,A,tie,tie,False
+mulsol.i.4,D,A,Y better,Y better,False
+mulsol.i.5,A_nodrop,A,tie,tie,False
+mulsol.i.5,B,A,Y better,Y better,False
+mulsol.i.5,B_noise2,A,tie,tie,False
+mulsol.i.5,C,A,Y better,Y better,False
+mulsol.i.5,D,A,Y better,Y better,False
+myciel3,A_nodrop,A,tie,tie,False
+myciel3,B,A,tie,tie,False
+myciel3,B_noise2,A,tie,tie,False
+myciel3,C,A,tie,tie,False
+myciel3,D,A,tie,tie,False
+myciel4,A_nodrop,A,tie,tie,False
+myciel4,B,A,tie,tie,False
+myciel4,B_noise2,A,tie,tie,False
+myciel4,C,A,tie,tie,False
+myciel4,D,A,tie,tie,False
+myciel5,A_nodrop,A,tie,tie,False
+myciel5,B,A,tie,tie,False
+myciel5,B_noise2,A,tie,tie,False
+myciel5,C,A,tie,tie,False
+myciel5,D,A,tie,tie,False
+myciel6,A_nodrop,A,tie,tie,False
+myciel6,B,A,tie,tie,False
+myciel6,B_noise2,A,tie,tie,False
+myciel6,C,A,tie,tie,False
+myciel6,D,A,Y better,Y better,False
+myciel7,A_nodrop,A,tie,tie,False
+myciel7,B,A,tie,tie,False
+myciel7,B_noise2,A,tie,tie,False
+myciel7,C,A,tie,tie,False
+myciel7,D,A,Y better,Y better,False
+queen10_10,A_nodrop,A,Y better,Y better,False
+queen10_10,B,A,Y better,Y better,False
+queen10_10,B_noise2,A,X better,X better,False
+queen10_10,C,A,Y better,Y better,False
+queen10_10,D,A,Y better,Y better,False
+queen11_11,A_nodrop,A,Y better,Y better,False
+queen11_11,B,A,Y better,Y better,False
+queen11_11,B_noise2,A,X better,X better,False
+queen11_11,C,A,Y better,Y better,False
+queen11_11,D,A,Y better,Y better,False
+queen12_12,A_nodrop,A,Y better,Y better,False
+queen12_12,B,A,tie,tie,False
+queen12_12,B_noise2,A,X better,X better,False
+queen12_12,C,A,Y better,Y better,False
+queen12_12,D,A,Y better,Y better,False
+queen13_13,A_nodrop,A,Y better,Y better,False
+queen13_13,B,A,Y better,Y better,False
+queen13_13,B_noise2,A,X better,X better,False
+queen13_13,C,A,Y better,Y better,False
+queen13_13,D,A,Y better,Y better,False
+queen14_14,A_nodrop,A,Y better,Y better,False
+queen14_14,B,A,tie,tie,False
+queen14_14,B_noise2,A,X better,X better,False
+queen14_14,C,A,tie,tie,False
+queen14_14,D,A,Y better,Y better,False
+queen15_15,A_nodrop,A,Y better,Y better,False
+queen15_15,B,A,X better,X better,False
+queen15_15,B_noise2,A,X better,X better,False
+queen15_15,C,A,tie,tie,False
+queen15_15,D,A,Y better,Y better,False
+queen5_5,A_nodrop,A,Y better,Y better,False
+queen5_5,B,A,tie,tie,False
+queen5_5,B_noise2,A,tie,tie,False
+queen5_5,C,A,tie,tie,False
+queen5_5,D,A,Y better,Y better,False
+queen6_6,A_nodrop,A,Y better,Y better,False
+queen6_6,B,A,Y better,Y better,False
+queen6_6,B_noise2,A,X better,X better,False
+queen6_6,C,A,Y better,Y better,False
+queen6_6,D,A,Y better,Y better,False
+queen7_7,A_nodrop,A,Y better,Y better,False
+queen7_7,B,A,Y better,Y better,False
+queen7_7,B_noise2,A,tie,tie,False
+queen7_7,C,A,tie,tie,False
+queen7_7,D,A,Y better,Y better,False
+queen8_12,A_nodrop,A,Y better,Y better,False
+queen8_12,B,A,Y better,Y better,False
+queen8_12,B_noise2,A,X better,X better,False
+queen8_12,C,A,Y better,Y better,False
+queen8_12,D,A,Y better,Y better,False
+queen8_8,A_nodrop,A,Y better,Y better,False
+queen8_8,B,A,Y better,Y better,False
+queen8_8,B_noise2,A,X better,X better,False
+queen8_8,C,A,Y better,Y better,False
+queen8_8,D,A,Y better,Y better,False
+queen9_9,A_nodrop,A,Y better,Y better,False
+queen9_9,B,A,Y better,Y better,False
+queen9_9,B_noise2,A,X better,X better,False
+queen9_9,C,A,Y better,Y better,False
+queen9_9,D,A,Y better,Y better,False
+school1,A_nodrop,A,X better,X better,False
+school1,B,A,X better,X better,False
+school1,B_noise2,A,X better,X better,False
+school1,C,A,tie,tie,False
+school1,D,A,Y better,Y better,False
+school1_nsh,A_nodrop,A,tie,tie,False
+school1_nsh,B,A,X better,X better,False
+school1_nsh,B_noise2,A,X better,X better,False
+school1_nsh,C,A,Y better,Y better,False
+school1_nsh,D,A,Y better,Y better,False
+zeroin.i.1,A_nodrop,A,tie,tie,False
+zeroin.i.1,B,A,tie,tie,False
+zeroin.i.1,B_noise2,A,tie,tie,False
+zeroin.i.1,C,A,tie,tie,False
+zeroin.i.1,D,A,Y better,Y better,False
+zeroin.i.2,A_nodrop,A,tie,tie,False
+zeroin.i.2,B,A,Y better,Y better,False
+zeroin.i.2,B_noise2,A,X better,X better,False
+zeroin.i.2,C,A,tie,Y better,True
+zeroin.i.2,D,A,Y better,Y better,False
+zeroin.i.3,A_nodrop,A,tie,tie,False
+zeroin.i.3,B,A,tie,tie,False
+zeroin.i.3,B_noise2,A,X better,tie,True
+zeroin.i.3,C,A,tie,tie,False
+zeroin.i.3,D,A,Y better,Y better,False

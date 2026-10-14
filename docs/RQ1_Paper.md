@@ -108,27 +108,7 @@ $$
 
 and updates $\theta$, rather than allowing independent feasible changes to every row of $P$. Finite real-valued softmax logits also produce positive probabilities rather than exact simplex vertices; numerical arithmetic may nevertheless round saturated probabilities to zero or one. The experiments therefore test the endpoint connection instead of assuming it.
 
-### 2.4 Soft coordinate gap and entropy
-
-For any soft coloring, define
-
-$$
-q_v(a)=\sum_{u\in N(v)}p_u(a),\qquad
-g_v=p_v^\top q_v-\min_a q_v(a).
-$$
-
-The nonnegative gap $g_v$ is the maximum loss reduction from replacing row $v$ by a best-response distribution while keeping all other rows fixed. For non-isolated vertices we report
-
-$$
-\widetilde g_v=\frac{g_v}{\deg(v)},\qquad
-\widetilde H_v=-\frac{\sum_a p_v(a)\log p_v(a)}{\log k}.
-$$
-
-At a one-hot matrix, $g_v=\gamma_v$. However, a small **degree-normalized** gap is not the same as zero hard gain. A gain of one at degree 200 gives $\widetilde g_v=0.005$, which lies below the descriptive threshold used in this study.
-
-The uniform assignment has $g_v=0$ and $\widetilde H_v=1$ for every non-isolated vertex. It is coordinate stationary, but on a graph containing an edge it admits a decreasing simultaneous perturbation: shift the two endpoint distributions in opposite color directions. Entropy is therefore needed alongside the gap to distinguish near-hard outputs from this symmetric stationary configuration. Neither diagnostic alone certifies a local minimum.
-
-## 3 Experimental method
+## 3 Shared experimental setup
 
 ### 3.1 Graphs and palette
 
@@ -153,33 +133,25 @@ Here dropout denotes the same sampled hidden representation supplied to both ter
 
 One configuration is frozen across all test graphs: embedding dimension 85, hidden dimension 30, learning rate 0.0196158, and dropout probability 0.465589. Selection uses 13 disjoint synthetic tuning graphs and mean ranks of seed-averaged final hard conflicts across graph–palette cells. Stage 1 evaluates 43 configurations at 10,000 epochs with two seeds; stage 2 evaluates ten configurations at 50,000 epochs with three seeds. The same configuration wins both stages. The progress log records stage 2 as the top six configurations plus four new draws; this also matches its reported 780 configuration–graph–regime–seed units. A conflicting shorthand in the frozen JSON's provenance note should not be used to describe the search composition.
 
-### 3.3 Training budgets and endpoint analysis
+### 3.3 Shared training and evaluation protocol
 
-All 68 graphs have five runs trained for 100,000 epochs, giving 340 primary runs. Evaluation uses dropout disabled. A shared logarithmic checkpoint grid supports comparisons across graphs; additional checkpoints increase resolution on larger graphs. We report the raw state at each checkpoint, rather than the best earlier state. Training does not stop early; the original patience-style stopping event is recorded without applying it.
+All 68 graphs have five runs trained for 100,000 epochs, giving 340 primary runs. Evaluation uses dropout disabled. A shared logarithmic checkpoint grid supports comparisons across graphs; additional checkpoints increase resolution on larger graphs. We report the raw state at each checkpoint, rather than the best earlier state. Training does not stop early; the original patience-style stopping event is recorded without applying it. Saved evaluation logits support the hard-output and soft-output analyses below.
 
-At each checkpoint, we count argmax conflicts, test single-flip optimality, and apply **steepest strict vertex descent**. Each move chooses a vertex with the largest positive $\gamma_v$, then a minimizing replacement color, using seeded random tie-breaking. Neutral and worsening moves are excluded. Because every move lowers an integer conflict count, descent terminates at a single-flip-optimal coloring. We record its conflicts, number of moves, runtime, and relative improvement $(C_{\rm before}-C_{\rm after})/C_{\rm before}$.
+The graph is the unit of comparison. We average seeds within each graph before comparisons across graphs. Vertex diagnostics likewise summarize vertices within runs and seeds within graphs before giving graphs equal weight. The benchmark is heterogeneous, so aggregate results are accompanied by family-level analysis; the 340 runs are not 340 independent graph samples.
 
-Soft diagnostics are recomputed from saved evaluation logits in float64, excluding isolated vertices. Descriptive categories use $\widetilde g\leq0.01$ for approximate coordinate stationarity, $\widetilde H\leq0.1$ for near-hardness, and $\widetilde H\geq0.9$ for near-uniformity. These categories must not be read as exact optimality certificates.
+The following sections describe the individual analyses within RQ1, including their questions, procedures, metrics, results, and limitations. They reuse the same main training runs; they are not seven independent training experiments. The selected longer-training extension is described separately in Section 4.7. Definitions are repeated where needed so that each analysis can be read on its own.
 
-### 3.4 Controls and quality reference
-
-We apply the same descent to random hard starts and fixed-$k$ DSATUR starts. DSATUR selects vertices by saturation and, when no conflict-free color is available, assigns a least-conflicting color within the fixed palette. Deterministic DSATUR and random starts are the two primary controls, with five seeds per graph. Additional controls randomize DSATUR ties; the vertex-tie-only variant is post hoc and has ten seeds.
-
-TabuCol supplies a practical quality reference using ten random-start runs per graph. Each run receives the mean elapsed PI-GNN training time to 100,000 epochs for that graph. Its reported value is the best conflict count found within that run, averaged across ten seeds; PI-GNN is evaluated at the specified final checkpoint, followed by descent. Thus the comparison is a solver-quality reference with different temporal selection rules. It is elapsed-time matched, not hardware- or energy-matched: TabuCol runs on a CPU core and PI-GNN uses a GPU. Startup and initialization costs are excluded from the TabuCol search budget, and the matching budget is based on PI-GNN training time rather than a full end-to-end cost including repair.
-
-### 3.5 Aggregation and interpretation
-
-The graph is the unit of comparison. Seeds are averaged within graphs before aggregate comparisons; vertex diagnostics likewise give each graph equal weight. A practical tie occurs when the absolute difference is below one conflict **or** the relative difference is at most 5%. For a control with mean post-descent conflicts $C_B$, the relative difference is
-
-$$
-d_G=\frac{C_{\rm PI}-C_B}{\max(C_B,1)}.
-$$
-
-Negative values favor PI-GNN. The stored analyses report two-sided Wilcoxon signed-rank tests on nonzero graph-level relative differences. These tests use numerical differences, including small differences classified as practical ties. The two primary controls use a Bonferroni threshold of 0.025. On this heterogeneous benchmark, p-values are descriptive; seeds are not 340 independent graph samples. We report stored tests without inventing confidence intervals or claiming equivalence from a zero median effect.
-
-## 4 Results
+## 4 RQ1 experiments and analyses
 
 ### 4.1 Training increases local optimality without making it universal
+
+**Question and purpose.** Does longer training bring the decoded output closer to a coloring that cannot be improved by recoloring one vertex? We measure both whether that endpoint has been reached and how much improvement remains when it has not.
+
+**Procedure.** For each of the 68 graphs and five seeds, we decode each saved evaluation output by argmax. We then apply steepest strict vertex descent: choose a vertex with the largest positive conflict reduction, recolor it to a minimizing color, and repeat, using seeded random tie-breaking. Neutral and worsening moves are excluded. Every move reduces the integer conflict count, so descent terminates at a single-flip-optimal coloring. Descent analyzes each checkpoint output; it does not update the neural training state.
+
+**Metrics and how to read them.** Raw conflicts $C_{\rm before}$ count monochromatic edges in the argmax coloring. For each vertex, $\gamma_v=M_v(c_v)-\min_a M_v(a)$ is the largest reduction available by recoloring that vertex, where $M_v(a)$ counts neighbors with color $a$. A run is single-flip optimal if every $\gamma_v=0$; the number and fraction of vertices with $\gamma_v>0$ show how widespread the remaining violations are. Conflicts after descent, $C_{\rm after}$, measure the quality of the local endpoint reached from that start. Relative descent gain $(C_{\rm before}-C_{\rm after})/C_{\rm before}$ measures how much repair remains in an individual run. We also record descent moves and runtime. Local optimality and conflict quality answer different questions: a poor coloring can already be single-flip optimal.
+
+**Aggregation and results.**
 
 Table 1 reports the common 68-graph checkpoint set. Conflict means average within graphs and then across graphs. Relative descent gain is computed for each graph as the difference between its seed-mean conflicts before and after descent, divided by its seed-mean conflicts before descent (with denominator clipped below at one), and then the median is taken across graphs. It is not a ratio of the two aggregate conflict means.
 
@@ -199,6 +171,12 @@ The raw conflict trajectory is markedly non-monotone. Its mean rises above the e
 No evaluated endpoint reaches zero conflicts after descent, consistent with $k=\chi-1$. Training makes the coloring increasingly self-consistent under local moves, but the remaining median repair gain stays near 10% between 50,000 and 100,000 epochs. The evidence supports partial approach to one-flip endpoints over these budgets, not a claim of asymptotic convergence.
 
 ### 4.2 Endpoint behavior depends on graph family
+
+**Question and purpose.** Does the aggregate training result describe all graph families, or does it conceal different endpoint behaviors? This is a stratified analysis of the same main runs, not an additional training experiment.
+
+**Procedure and metrics.** We group the 100,000-epoch outputs by graph family. For each output, we count argmax conflicts, test whether any single-vertex recoloring strictly reduces conflicts, and count conflicts after steepest strict vertex descent with seeded random tie-breaking and no neutral moves. Thus, the single-flip-optimal fraction measures how often no repair is possible, while the before/after conflict counts measure raw quality and the quality reached by repair. We average the five seeds within each graph and then average graphs within each family. The table includes family sizes because small families provide limited evidence for generalization.
+
+**Results.**
 
 Table 2 uses five-seed means at 100,000 epochs; percentages average the single-flip indicator within each family.
 
@@ -225,6 +203,34 @@ The DSJR mean reveals a different failure mode. Some outputs have many conflicts
 
 ### 4.3 Soft outputs become near-hard before all hard violations disappear
 
+**Question and purpose.** What soft states accompany the hard endpoint behavior? The hard test tells us whether argmax can be improved, but does not distinguish confident assignments from diffuse states. We therefore examine the improvement available in probability space together with the concentration of each probability row.
+
+**Procedure and metrics.** We recompute the following diagnostics from saved dropout-disabled evaluation logits in float64, excluding isolated vertices. No retraining is required.
+
+For any soft coloring, define
+
+$$
+q_v(a)=\sum_{u\in N(v)}p_u(a),\qquad
+g_v=p_v^\top q_v-\min_a q_v(a).
+$$
+
+The nonnegative gap $g_v$ is the maximum loss reduction from replacing row $v$ by a best-response distribution while keeping all other rows fixed. For non-isolated vertices we report
+
+$$
+\widetilde g_v=\frac{g_v}{\deg(v)},\qquad
+\widetilde H_v=-\frac{\sum_a p_v(a)\log p_v(a)}{\log k}.
+$$
+
+At a one-hot matrix, $g_v=\gamma_v$. However, a small **degree-normalized** gap is not the same as zero hard gain. A gain of one at degree 200 gives $\widetilde g_v=0.005$, which lies below the descriptive threshold used in this study.
+
+The uniform assignment has $g_v=0$ and $\widetilde H_v=1$ for every non-isolated vertex. It is coordinate stationary, but on a graph containing an edge it admits a decreasing simultaneous perturbation: shift the two endpoint distributions in opposite color directions. Entropy is therefore needed alongside the gap to distinguish near-hard outputs from this symmetric stationary configuration. Neither diagnostic alone certifies a local minimum.
+
+A zero gap is not unique to uniformity: a row can mix any tied best-response colors. Even when all gaps vanish, coordinated changes may improve the loss. Entropy distinguishes concentration from diffuseness, but does not resolve these remaining limitations. The joint diagnostics describe endpoint states and guide hypotheses; they do not establish the cause of the optimization behavior.
+
+**Categories and aggregation.** We classify $\widetilde g_v\leq0.01$ as approximately coordinate stationary, $\widetilde H_v\leq0.1$ as near-hard, and $\widetilde H_v\geq0.9$ as near-uniform. We examine the joint categories rather than interpreting either metric alone. Fractions and mean diagnostics are computed within runs, averaged across seeds within graphs, and then summarized across graphs with equal graph weight. A reported median graph statistic is a median over graph summaries, not a pooled vertex statistic. These descriptive thresholds do not certify exact local optimality.
+
+**Results.**
+
 By 100,000 epochs, the graph-balanced fraction of vertices classified as both near-hard and approximately coordinate stationary is 91.8%, up from 0.3% at epoch 1. Mean normalized entropy falls from 0.611 to 0.031; the median graph's mean normalized entropy is approximately 0.00033. The fraction outside the approximate-stationarity threshold falls from 98.3% to 5.0%.
 
 These vertex-level results coexist with only 42.1% single-flip-optimal runs for two reasons. First, the hard test requires **every** vertex to have zero gain. Second, the normalized threshold can classify positive integer hard gains as approximately stationary on high-degree vertices. A high percentage of vertices in the near-hard/low-gap category therefore overstates exact hard local optimality if interpreted as a certificate.
@@ -236,6 +242,14 @@ The stationary-near-uniform category comprises 2.5% of vertices on average at 10
 *Figure 1. Existing soft diagnostic companion figure. The relevant 68-graph endpoint comparison is at 100,000 epochs. The categories use degree-normalized gaps and descriptive thresholds; they do not certify single-flip optimality.*
 
 ### 4.4 Confidence is high even at improvable vertices
+
+**Question and purpose.** Are the remaining hard violations confined to vertices whose color probabilities are uncertain, or can the model be highly confident about an improvable choice? This post hoc analysis tests that association and examines a possible saturation mechanism.
+
+**Procedure and metrics.** We use saved evaluation logits at 100,000 epochs and at the selected 300,000-epoch endpoints. For each non-isolated vertex, confidence is $p_{\max,v}=\max_a p_v(a)$, and the top-two logit margin is the largest logit minus the second largest. We report fractions above $p_{\max,v}\geq0.99$ and $p_{\max,v}\geq1-10^{-6}$, together with logit-margin summaries. Separately, we identify improvable vertices by $\gamma_v=M_v(c_v)-\min_a M_v(a)>0$ in the argmax coloring and repeat the confidence summaries on that subset. This directly asks whether a confident choice can still be improved by a hard recoloring.
+
+**Aggregation.** We summarize vertices within each run and average seeds within graphs before reporting medians across graphs. Conditional summaries include only runs containing an improvable vertex and graphs with such runs. For logit margins, the reported statistic is the median across graphs of the seed-averaged within-run median. This avoids letting large graphs dominate a pooled vertex summary. The gradient identity below explains how saturation can suppress logit gradients, but these evaluation-state observations do not isolate a causal effect during training.
+
+**Results and mechanistic interpretation.**
 
 The post hoc confidence analysis evaluates 340 endpoints at 100,000 epochs and 65 extended endpoints at 300,000 epochs. Its recomputed conflicts and improvable-vertex counts agree with the endpoint logs on all 405 run–budget pairs.
 
@@ -256,6 +270,20 @@ This observation is **consistent with softmax saturation as a contributor to per
 
 ### 4.5 Training supplies a better start than random coloring
 
+**Question and purpose.** Does training provide a useful starting coloring for a fixed local search procedure? Comparing all starts after the same descent separates starting-point quality from the fact that descent itself improves colorings.
+
+**Procedure.** On all 68 graphs at $k=\chi-1$, we compare the 100,000-epoch PI-GNN argmax output with random hard starts and deterministic fixed-$k$ DSATUR starts, using five seeds per graph. DSATUR selects vertices by saturation and, when no conflict-free color remains, assigns a least-conflicting color within the fixed palette. The deterministic construction can repeat across seeds; descent tie-breaking still uses seeds. Every start receives steepest strict vertex descent with seeded random tie-breaking, excluding neutral and worsening moves, until no single recoloring lowers conflicts. Additional comparisons use PI-GNN's epoch-1 output, the original randomized DSATUR ties, and a post hoc DSATUR variant with random vertex ties only; the last uses ten seeds per graph.
+
+**Metrics and comparison rules.** We average post-descent conflicts across seeds within each graph. For a baseline mean $C_B$ and PI-GNN mean $C_{\rm PI}$, the relative difference is
+
+$$
+d_G=\frac{C_{\rm PI}-C_B}{\max(C_B,1)}.
+$$
+
+Negative values favor PI-GNN. A practical tie occurs when the absolute difference is below one conflict **or** the absolute relative difference is at most 5%; other cases are wins or losses. We report graph-level win/tie/loss counts and the median relative difference. Stored two-sided Wilcoxon signed-rank tests use nonzero graph-level relative differences, including small differences classified as practical ties. Random starts and deterministic DSATUR are the two primary controls, with a Bonferroni threshold of 0.025. These p-values are descriptive on this heterogeneous benchmark; a zero median or many practical ties does not establish statistical equivalence. The stored comparisons do not provide confidence intervals.
+
+**Results.**
+
 Table 3 compares conflicts after the same strict descent. Win/tie/loss is from PI-GNN's perspective.
 
 | Starting-point control | Role | PI-GNN wins / ties / losses | Median relative difference | Descriptive Wilcoxon p |
@@ -274,6 +302,14 @@ Randomizing vertex ties while retaining lowest-index color choices changes the q
 
 ### 4.6 Local optimality does not ensure strong solution quality
 
+**Question and purpose.** How good are PI-GNN's local endpoints compared with those found by a stronger search? Reaching a single-flip-optimal coloring only excludes improving single moves; it does not establish a low conflict count relative to other endpoints.
+
+**Procedure and budget.** On each of the 68 graphs, we compare the five-seed PI-GNN outputs at 100,000 epochs followed by strict vertex descent with ten random-start TabuCol runs. Strict descent repeatedly chooses a largest improving single-vertex recoloring, with seeded random tie-breaking and no neutral or worsening moves. Each TabuCol run receives the mean elapsed PI-GNN training time to 100,000 epochs for that graph. TabuCol contributes the best conflict count found within each run, averaged across its ten seeds; PI-GNN contributes the specified final checkpoint followed by descent, averaged across five seeds. We also test saved TabuCol best colorings for single-flip optimality and apply the same descent to check for remaining improvements.
+
+**Metrics and limits of the comparison.** We compare seed-mean conflicts within each graph, report graph-balanced mean conflicts, and summarize PI-GNN/TabuCol conflict ratios within families. A practical tie means an absolute difference below one conflict or an absolute relative difference of at most 5%, relative to the TabuCol mean with denominator clipped below at one. Higher conflict ratios favor TabuCol. This is a quality reference with different temporal selection rules: TabuCol uses its within-run best, whereas PI-GNN uses its final checkpoint. Elapsed time is matched across different hardware (a CPU core for TabuCol and a GPU for PI-GNN), not hardware or energy use. TabuCol startup and initialization costs are excluded, and its budget matches neural training time rather than training plus repair. TabuCol is not an oracle for the optimal positive conflict count.
+
+**Results.**
+
 TabuCol finds fewer conflicts than PI-GNN plus descent on 41 graphs, practically ties on 13, and finds more on 14. The graph-balanced mean is 70.45 conflicts for TabuCol versus 114.86 for PI-GNN plus descent. Every saved TabuCol best coloring is single-flip optimal, and applying strict descent never changes its conflict count.
 
 The median within-family PI-GNN/TabuCol conflict ratio is approximately 11.1 for DSJC, 6.3 for DSJR, 3.8 for school, 3.0 for le, 2.4 for flat, and 1.6 for queen. TabuCol wins on all 12 queen graphs despite the high frequency of already single-flip-optimal PI-GNN outputs there. This directly separates arrival at a local endpoint from the quality of that endpoint.
@@ -282,9 +318,17 @@ All 14 PI-GNN wins occur on register-allocation graphs. These results should not
 
 ![PI-GNN after descent versus TabuCol](../results/analysis/tabucol_vs_pignn.png)
 
-*Figure 2. Existing 100,000-epoch quality comparison with a random-start TabuCol reference. Elapsed search time is matched to PI-GNN training time per graph; hardware, number of seeds, and temporal selection rules differ as described in Section 3.4.*
+*Figure 2. Existing 100,000-epoch quality comparison with a random-start TabuCol reference. Elapsed search time is matched to PI-GNN training time per graph; hardware, number of seeds, and temporal selection rules differ as described in this section.*
 
 ### 4.7 Longer training does not resolve the selected difficult endpoints
+
+**Question and purpose.** On selected graphs whose raw conflicts were still improving, does additional training resolve the remaining single-flip violations, or mainly improve the local endpoint reached after repair?
+
+**Metrics and matched comparison.** We compare the same graph–seed runs at 100,000 and 300,000 epochs. At both checkpoints we count raw argmax conflicts, test single-flip optimality (no vertex has a strictly improving recoloring), and count conflicts after steepest strict vertex descent with seeded random tie-breaking and no neutral or worsening moves. Conflicts in Table 4 are five-seed means within each graph. The local-optimality count is across the 65 runs in this subset at each budget, rather than a comparison of the full 100,000-epoch set with the smaller extension.
+
+We also recompute the soft summaries on this same subset: $q_v(a)=\sum_{u\in N(v)}p_u(a)$, normalized coordinate gap $\widetilde g_v=(p_v^\top q_v-\min_a q_v(a))/\deg(v)$, and normalized entropy $\widetilde H_v=-\sum_a p_v(a)\log p_v(a)/\log k$. Saved evaluation logits are analyzed in float64, excluding isolated vertices. Near-hard/low-gap means $\widetilde H_v\leq0.1$ and $\widetilde g_v\leq0.01$; stationary-near-uniform means $\widetilde H_v\geq0.9$ and $\widetilde g_v\leq0.01$. We average within runs, then seeds within graphs, and then graphs. These categories distinguish changes in concentration and coordinate improvement, but do not certify hard local optimality.
+
+**Selection and procedure.**
 
 Thirteen graphs are extended from 100,000 to 300,000 epochs. Selection follows the first sweep's budget-extension rule: more than 10% and at least three mean raw conflicts removed between 50,000 and 100,000 epochs, together with a single-flip-optimal fraction below 0.5 at 100,000. This is a selected follow-up, not a representative 300,000-epoch estimate for all 68 graphs. The progress log records that all 65 resumed runs preserve their earlier endpoint and trajectory records through 100,000 epochs, excluding nondeterministic descent runtime.
 
