@@ -1,0 +1,91 @@
+Goals
+• The goal of the research project is to conduct independent research related
+to topics discussed in class. You will pick a paper (or a couple of papers) of
+your choice and focus on some of its aspects: either a possible extension, a
+related or modified model, a novel evaluation method, etc.
+• Alternatively, you can pick a topic you are interested in, and expand the
+scientific knowledge about it.
+• While it would be great to come up with new results, to get full credit it is
+enough to describe what you wanted to achieve, how you tried to achieve
+it, and what were the challenges you faced.
+• The most important goal: experience research and the joy of new
+discoveries
+
+
+Proposal submission
+(a) Choose your partner(s): work in groups of three or four students
+(not less than three).
+(b) Pick one to three papers related to the course topics, that were
+published in a related conferences.
+(c) Submit a proposal as described below for your project by 7.7.2025
+and get a binary approval.
+
+
+Proposal
+The project proposal should consist of up to a single page with the following
+information:
+1. Project title
+2. Names and e-mails of the contributing students
+3. A brief description of the proposed project: what is the main topic, what is
+already known and what you are hoping to achieve. It should be clear from
+reading the proposal what you intend to do and roughly how, and how you will
+evaluate your success.
+4. The main goal for me is to understand that the proposal is sufficiently, but also
+not overly ambitious.
+5. Make sure to describe your assumptions and requirements for the project (e.g. access to compute, access to specific data, etc.) and how you plan to attain
+them. 
+
+
+Final submission
+The final project will be handed in as a “paper” in ACL format; see:
+https://www.overleaf.com/latex/templates/acl-2023-proceedingstemplate/qjdgcrdwcnwp
+The report should be limited to 5 pages (not including references).
+
+
+Grading
+Quality of Research Question
+The project should start with a clear and concise research question that
+is relevant to the subject of the class. The question should be original
+and significant.
+
+Ambitiousness and Effort
+This considers the complexity and novelty of the chosen research
+question, the innovation in methodology or approach, the potential
+impact of the research, and the demonstrated effort in pursuing an
+ambitious and challenging project.
+This criterion rewards students for intellectual risk-taking and
+innovation, and for pushing the boundaries of their knowledge and
+skills, even if the final results may not be as polished or conclusive as
+less ambitious projects.
+
+Literature Review
+The project should include a well-written and comprehensive literature
+review, providing a background of existing research on the topic. It
+should critically evaluate previous research and identify gaps in the
+literature that the project addressed.
+
+Methodology
+Assess the methodology used to answer their research question. The
+methods should be appropriate for the question and be rigorously
+executed. Depending on the nature of the project, this might involve an
+evaluation of experimental design, data collection and analysis, or
+theoretical argumentation.
+
+Results and Discussion
+The paper must present findings with precision and coherence. The
+discussion should contextualize these results within the research
+question and existing literature. Both positive and negative results are
+valued, provided they stem from sound methodology, are thoroughly
+analyzed, and meaningfully contribute to the discourse
+
+Citations and Bibliography
+The paper should properly cite all sources of information used in the
+project. The citation style should be consistent and the bibliography
+should be formatted correctly
+
+Presentation and Communication
+This assesses the clarity of writing, narrative coherence, grammatical
+accuracy, and the visual clarity of figures and explanations. It evaluates
+the overall organization and aesthetic presentation of the work,
+highlighting the importance of conveying complex research in a clear,
+concise, and engaging manner

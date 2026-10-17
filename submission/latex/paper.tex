@@ -1,0 +1,498 @@
+\pdfoutput=1
+\documentclass[11pt]{article}
+
+% Final version (the "review" option would anonymise authors and add line numbers).
+\usepackage{EACL2023}
+
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{inconsolata}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+
+\newtheorem{lemma}{Lemma}
+\newcommand{\Cd}{C_{\mathrm{desc}}}
+\newcommand{\wtl}[3]{#1/#2/#3}
+
+\title{Who Does the Work? Dissecting Physics-Inspired\\
+       Graph Neural Networks for Graph Colouring}
+
+\author{Semyon Guretskiy \\ 336249255 \And
+        Ori Petel \\ 325211498 \And
+        Adi Shimoni \\ 316342435}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Physics-inspired graph neural networks (PI-GNNs) colour a graph by training a
+fresh network to minimise a Potts relaxation of the conflict count, then
+rounding its soft output. Credit for a good colouring could go to three bundled
+ingredients: the neural optimiser, the information in its soft output, or the
+decoding and repair applied afterwards. We separate them with controlled
+interventions on 68 DIMACS graphs with one colour fewer than the chromatic
+number. We find that (i)~training approaches discrete local minima but rarely
+reaches them: only $42\%$ of runs are single-flip optimal after $10^5$ steps,
+and wrong vertices are as confident as right ones, which an exact
+softmax-gradient identity explains; (ii)~the network is not what makes PI-GNN
+work: optimising one logit vector per vertex gives better raw colourings,
+PI-GNN's modest advantage after repair vanishes without dropout, and directly
+noise-injected logits beat PI-GNN on $44$ of $68$ graphs; (iii)~the learned
+probabilities carry real coordinated information, yet a graph-only decoder
+given no learned information does as well overall. The optimiser, not the
+architecture or the decoder, decides the outcome.
+\end{abstract}
+
+\section{Introduction}
+
+A $k$-colouring of $G=(V,E)$ gives every vertex one of $k$ colours; an edge
+whose endpoints share a colour is a \emph{conflict}, and the chromatic number
+$\chi(G)$ is the fewest colours allowing none. Minimising conflicts is NP-hard,
+and unsupervised graph neural networks are a recent line of attack.
+The physics-inspired GNN (PI-GNN) of \citet{schuetz2022colouring} trains, for
+each graph, a new network whose softmax output is a \emph{soft colouring} $P$,
+minimises a Potts energy equal to the expected number of conflicts, and rounds
+$P$ to a hard colouring.
+
+When such a pipeline produces a good colouring, \emph{what deserves the
+credit}? Figure~\ref{fig:pipeline} shows three ingredients that are always
+evaluated together: (1)~the neural parameterisation and its optimiser,
+(2)~the information in the soft output $P$, and (3)~the decoder and any local
+repair. Critiques showing that greedy algorithms match or beat PI-GNNs
+\cite{angelini2023cautionary,boettcher2023inability} tell us \emph{that} the
+pipeline can fall short, not \emph{which} part is responsible. We ask:
+
+\begin{quote}\itshape
+Which ingredient of PI-GNN is responsible for the quality of its colourings:
+the GNN optimiser, the learned soft output, or the decoding and repair?
+\end{quote}
+
+We split it into three sub-questions, each answered by intervening on one
+ingredient while holding the others fixed (Figure~\ref{fig:pipeline}).
+\textbf{RQ1} asks what training actually produces: does the decoded output
+approach a discrete local minimum, and how good is that minimum?
+\textbf{RQ2} asks whether the GNN is needed: does it beat optimising one free
+logit vector per vertex on the same loss? \textbf{RQ3} asks whether the
+learned $P$ helps a stronger decoder more than uninformative or corrupted
+inputs do.
+
+\begin{figure}[t]
+\centering
+\resizebox{\columnwidth}{!}{%
+\begin{tikzpicture}[
+  font=\scriptsize,
+  box/.style={draw, rounded corners=2pt, align=center, minimum height=8.5mm,
+              inner sep=2pt, fill=gray!8},
+  arr/.style={-{Stealth[length=1.6mm]}, semithick},
+  rq/.style={align=center, text=black!70, font=\scriptsize\itshape}]
+\node[box] (opt) {(1) optimiser\\$f_\theta(G)\!\to\! Z$};
+\node[box, right=4mm of opt] (P) {(2) soft\\$P{=}\mathrm{softmax}(Z)$};
+\node[box, right=4mm of P] (dec) {(3) decode\\+ repair};
+\node[box, right=4mm of dec, fill=white] (c) {colouring\\$c$};
+\draw[arr] (opt) -- (P);
+\draw[arr] (P) -- (dec);
+\draw[arr] (dec) -- (c);
+\draw[arr, dashed] (P.north) to[bend right=35]
+  node[above, font=\scriptsize]{Potts loss $L(P)$, gradient} (opt.north);
+\node[rq, below=1.5mm of opt] {RQ2: replace\\the network};
+\node[rq, below=1.5mm of P] {RQ3: replace\\or corrupt $P$};
+\node[rq, below=1.5mm of dec] {RQ1, RQ3: vary\\decoder/repair};
+\end{tikzpicture}}
+\caption{The three ingredients of PI-GNN colouring and where each research
+question intervenes. The graph enters both the network and the loss.}
+\label{fig:pipeline}
+\end{figure}
+
+All experiments use $k=\chi(G)-1$ colours. Zero conflicts are then
+impossible, so methods are compared on a graded conflict count rather than a
+binary success rate that would saturate on easy graphs. Our contribution is a
+controlled decomposition protocol (identical starting outputs, separately tuned
+competitors, matched steps \emph{and} time, one shared repair, graph-level
+paired statistics) and the answer it gives: training makes outputs confident
+long before it makes them locally optimal; the network's edge over free logits
+is small, depends on dropout, and is overturned by plain noise; and the learned
+$P$ beats corrupted inputs but not a graph-only decoder.
+
+\section{Background and Related Work}
+
+\paragraph{Learning for combinatorial optimisation.} Learned methods either
+construct solutions or guide classical solvers \cite{bengio2021ml4co}; for
+colouring, \citet{lemos2019gcp} trained a supervised GNN to decide
+$k$-colourability. Unsupervised approaches instead minimise a differentiable
+relaxation per instance. \citet{karalias2020erdos} relax the objective to an
+expectation under independent vertex distributions and recover a solution by
+derandomised rounding \cite{raghavan1988derandomization}, with a guarantee in
+terms of the relaxed loss. PI-GNN \cite{schuetz2022combopt,schuetz2022colouring}
+applies the same idea with a QUBO or Potts energy \cite{wu1982potts} and a
+GraphSAGE network \cite{hamilton2017sage}, reporting results competitive with
+classical solvers on DIMACS benchmarks \cite{johnson1996dimacs}.
+
+\paragraph{Critiques and ablations.} \citet{angelini2023cautionary} and
+\citet{boettcher2023inability} showed that simple greedy algorithms match or
+beat PI-GNN on maximum independent set and max-cut. These are end-to-end
+comparisons: they show the pipeline can lose, not which component fails or why.
+\citet{vanderbush2026nar} include a direct-logit (depth-zero) ablation of a
+modified PI-GNN for colouring. We make that comparison the central object and
+control what an ablation alone leaves open: a shared starting point, separate
+tuning, matched time, noise controls and a common repair step. To our
+knowledge, no study has isolated the contribution of each PI-GNN ingredient.
+
+\paragraph{Classical references and training dynamics.} DSATUR
+\cite{brelaz1979} greedily colours the most constrained vertex first. TabuCol
+\cite{hertz1987tabu} is a local search that accepts worsening moves and
+forbids recent reversals, and underlies state-of-the-art hybrids
+\cite{galinier1999hybrid}; we use both as reference points. A network moves
+its output through shared parameters, so one step moves many vertices at once
+\cite{jacot2018ntk}, and dropout \cite{srivastava2014dropout} injects noise
+into training; both matter for RQ2.
+
+\section{Problem, Tools and Protocol}
+\label{sec:method}
+
+\paragraph{Relaxation.} A soft colouring $P\in\mathbb{R}^{n\times k}$ has a
+probability row $p_v$ per vertex, obtained from logits by
+$P=\mathrm{softmax}(Z)$. The Potts loss and hard conflict count are
+\begin{align*}
+L(P)&=\textstyle\sum_{\{u,v\}\in E}p_u^{\top}p_v,\\
+C(c)&=\textstyle\sum_{\{u,v\}\in E}\mathbf{1}[c_u=c_v].
+\end{align*}
+$p_u^\top p_v$ is the probability that $u$ and $v$ draw the same colour, so
+$L(P)$ is the expected conflict count when each vertex samples independently,
+and $L=C$ when every row is one-hot. PI-GNN decodes by argmax.
+
+\paragraph{Local optimality and repair.} Let $M_v(a)$ be the number of
+neighbours of $v$ with colour $a$. Recolouring $v$ can remove at most
+$\gamma_v=M_v(c_v)-\min_a M_v(a)$ conflicts; a colouring is \emph{single-flip
+optimal} (SFO) if $\gamma_v=0$ for all $v$. Our shared repair, \emph{strict
+descent}, repeatedly applies a move with the largest positive $\gamma_v$ and
+stops at an SFO colouring. We report raw conflicts $C$ (how good a method's own
+answer is) and $\Cd$ after descent (how good a \emph{starting point} it is);
+in RQ2 these disagree.
+
+\paragraph{Two facts frame the results:} what an ideal endpoint looks like,
+and why training may not reach it.
+
+\begin{lemma}\label{lem:strict}
+If $P^*$ is a strict local minimum of $L$ over all row-stochastic matrices,
+every row is one-hot and every single-vertex recolouring strictly increases $C$.
+\end{lemma}
+\begin{proof}[Sketch]
+With other rows fixed, $L=B+p_v^\top q_v$ where $q_v=\sum_{u\in N(v)}p_u$ is
+affine in $p_v$. Moving mass $\epsilon$ between two colours $a,b$ in the
+support of $p_v$ changes $L$ by $\pm\epsilon(q_v(a)-q_v(b))$, so one of the
+two moves does not increase $L$, contradicting strictness. At a one-hot row,
+moving towards colour $a$ changes $L$ by $t\,[M_v(a)-M_v(c_v)]$, which must be
+positive.
+\end{proof}
+
+\noindent Training, however, moves logits, and for the Potts loss
+\begin{equation}
+\frac{\partial L}{\partial z_{v,a}}=p_v(a)\bigl[q_v(a)-p_v^\top q_v\bigr].
+\label{eq:grad}
+\end{equation}
+If $p_v$ is nearly one-hot on colour $c$, then for $a\neq c$ the factor
+$p_v(a)\approx e^{-\Delta}$ is tiny, where $\Delta$ is the gap between the top
+two logits, and for $a=c$ the bracket is $\approx q_v(c)-q_v(c)=0$. All logit
+gradients of a \emph{saturated} vertex vanish, even when another colour would
+remove many conflicts.
+
+\paragraph{PI-GNN and benchmark.} We reimplement PI-GNN in PyTorch: trainable
+Gaussian vertex embeddings (dimension 85), two mean-aggregation GraphSAGE
+layers (hidden width 30, ReLU, dropout $0.47$), trained full-batch with AdamW
+\cite{loshchilov2019adamw}. We use the 68 DIMACS graphs whose chromatic number
+is proven \cite{held2012safe,gualandi2012exact}, with 11 to 1{,}000 vertices
+from 14 families (queen, Mycielski, register allocation, Leighton, flat,
+DSJC/DSJR random, and others), each with 5 seeds for $10^5$ steps, no early
+stopping, and dropout off at evaluation. Every model type is tuned separately
+by the same two-stage random search on 13 disjoint synthetic graphs, then
+frozen.
+
+\paragraph{Comparison rule.} The graph is the unit of analysis: we average the
+5 seeds per graph, then compare paired graph means $X_g,Y_g$ through
+$d_g=(X_g-Y_g)/\max(Y_g,1)$. A graph is a practical tie if
+$|X_g-Y_g|<1$ conflict or $|d_g|\le 5\%$; otherwise a win or loss. We report
+wins/ties/losses (W/T/L), the median $d_g$, and a two-sided Wilcoxon
+signed-rank test \cite{wilcoxon1945}. A directional claim requires a small $p$
+(Bonferroni-corrected over the primary comparisons of RQ1 and RQ2), a median
+beyond $5\%$, and more wins than losses; anything else is ``not
+distinguishable'', which is not a claim of equality. One rule serves all
+three RQs; it was fixed before the main RQ2 results were computed. The per-graph rule is primary because
+conflict counts span four orders of magnitude, so a mean is dominated by a few
+dense graphs.
+
+\section{Experiments}
+
+\subsection{RQ1: What does training produce?}
+
+Figure~\ref{fig:rq1} tracks the argmax output over training. The fraction of
+SFO runs rises from $0\%$ to $42\%$ ($143/340$), and the median share of
+conflicts that descent can still remove falls from $95\%$ to $10\%$. Both
+curves flatten: from $5{\cdot}10^4$ to $10^5$ steps the remaining gain does not
+move. Extending 13 still-improving graphs to $3{\cdot}10^5$ steps improves
+conflicts after descent on 12, yet SFO runs go from $0/65$ to only $1/65$.
+\emph{Longer training finds better basins without reaching their bottoms.}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=\columnwidth, height=4.3cm,
+  xmode=log, xmin=1, xmax=100000,
+  ymin=0, ymax=100,
+  xlabel={training step}, ylabel={\% },
+  xlabel style={font=\footnotesize}, ylabel style={font=\footnotesize},
+  tick label style={font=\scriptsize},
+  legend style={font=\scriptsize, at={(0.98,0.97)}, anchor=north east,
+                draw=none, fill=white, fill opacity=0.8, text opacity=1},
+  legend cell align=left, grid=major, grid style={gray!20}]
+\addplot[thick, black, mark=*, mark size=1pt] coordinates {
+ (1,0.0) (2,0.59) (5,0.29) (10,0.59) (20,1.76) (50,2.65) (100,4.41)
+ (200,9.41) (500,18.24) (1000,24.41) (2000,28.53) (5000,30.59)
+ (10000,32.06) (20000,35.0) (50000,37.94) (100000,42.06)};
+\addlegendentry{runs single-flip optimal}
+\addplot[thick, gray, dashed, mark=square*, mark size=1pt] coordinates {
+ (1,94.92) (2,92.79) (5,91.32) (10,87.09) (20,83.86) (50,72.43) (100,61.51)
+ (200,45.86) (500,36.64) (1000,28.32) (2000,27.28) (5000,25.86)
+ (10000,18.93) (20000,15.57) (50000,10.41) (100000,10.47)};
+\addlegendentry{conflicts descent can remove}
+\end{axis}
+\end{tikzpicture}
+\caption{RQ1: PI-GNN's argmax output over training (68 graphs, 5 seeds).
+Solid: share of runs that are single-flip optimal. Dashed: median over graphs
+of the relative conflict reduction strict descent still achieves.}
+\label{fig:rq1}
+\end{figure}
+
+Usually only a few vertices are the problem (median $2.5$ improvable vertices
+per run, under $1\%$ of the graph), and those vertices are \emph{confident}.
+In the median graph, $99.7\%$ of vertices have $\max_a p_v(a)\ge 0.99$, and so
+do $100\%$ of the improvable ones; their median top-two logit gap is about
+$150$, so $p_v(a)\approx e^{-150}$ for the better colour. By
+Eq.~\eqref{eq:grad} such a vertex gets almost no gradient towards the better
+colour: a plausible mechanism for frozen errors, though not a proven cause,
+since shared parameters can still move it indirectly.
+
+Is the endpoint at least good? Table~\ref{tab:rq1} compares PI-GNN after
+descent with references given the same descent. Training clearly beats random
+and epoch-1 starts, but it is not distinguishable from the 1979 DSATUR
+heuristic, and a time-matched TabuCol finds fewer conflicts on 41 graphs. The
+queen family makes the point sharply: $85\%$ of queen runs are already SFO,
+yet TabuCol wins on all 12 queen graphs. A local minimum can be shallow.
+Failure modes also differ by family: register-allocation runs are rarely SFO
+but only a few conflicts from it, while some dense DSJR runs stall near the
+uniform distribution, a stationary point of $L$.
+
+\begin{table}[t]
+\centering\small
+\begin{tabular}{@{}lcr@{}}
+\toprule
+PI-GNN + descent vs.\ & W/T/L & median $d$ \\
+\midrule
+random colouring + descent & \wtl{62}{5}{1} & $-38.7\%$ \\
+own epoch-1 output + descent & \wtl{59}{8}{1} & $-32.5\%$ \\
+DSATUR + descent & \wtl{16}{28}{24} & $0.0\%$ \\
+TabuCol, time-matched & \wtl{14}{13}{41} & -- \\
+\bottomrule
+\end{tabular}
+\caption{RQ1: quality of the trained endpoint at $10^5$ steps, counted from
+PI-GNN's side (negative $d$ favours PI-GNN). Mean conflicts: PI-GNN $114.9$,
+TabuCol $70.5$.}
+\label{tab:rq1}
+\end{table}
+
+\subsection{RQ2: Is the network needed?}
+
+The graph enters the Potts loss, so a network is not needed to ``use'' it. The
+natural network-free competitor, arm B, optimises the logit matrix $Z$
+directly, starting from PI-GNN's exact initial output so that only the
+optimisation differs. Other arms each change one thing (Table~\ref{tab:rq2}),
+including Gaussian noise of scale $\sigma$ added to $Z$ during training
+(B-noise) and PI-GNN linearised at initialisation, $Z=Z_0+J_0\delta$ with a
+frozen Jacobian (D), which tests whether the network acts as a fixed
+graph-dependent preconditioner. B-noise reuses B's tuning.
+
+\begin{table*}[t]
+\centering\small\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}llcccrrr@{}}
+\toprule
+& & \multicolumn{3}{c}{vs.\ A, W/T/L (arm better / tie / A better)} & & & \\
+\cmidrule(lr){3-5}
+Arm & change relative to A & raw $C$ & after descent & median $d$ (desc.) &
+mean $\Cd$ & SFO & logit gap \\
+\midrule
+A & PI-GNN (reference) & -- & -- & -- & 114.9 & 42\% & 204 \\
+B & free logits from A's start & \wtl{32}{23}{13} & \wtl{17}{25}{26} & $+6.0\%$ & 108.6 & 100\% & 18 \\
+B-rand & as B, random start & \wtl{28}{21}{19} & \wtl{20}{20}{28} & $+10.8\%$ & 107.1 & 100\% & 19 \\
+A-no-drop & dropout removed & \wtl{10}{9}{49} & \wtl{7}{40}{21} & $+8.7\%$ & 115.7 & 17\% & 18 \\
+B-noise-0.5 & B + logit noise, $\sigma{=}0.5$ & \wtl{33}{21}{14} & \wtl{20}{19}{29} & $+5.8\%$ & 109.2 & 100\% & 19 \\
+B-noise-1 & B + logit noise, $\sigma{=}1$ & \wtl{46}{20}{2} & \wtl{35}{30}{3} & $-15.9\%$ & 92.5 & 100\% & 13 \\
+B-noise-2 & B + logit noise, $\sigma{=}2$ & \wtl{53}{13}{2} & \wtl{44}{21}{3} & $-27.5\%$ & 83.4 & 100\% & 8 \\
+C & node MLP: aggregation removed & \wtl{20}{28}{20} & \wtl{5}{35}{28} & $+7.8\%$ & 120.4 & 41\% & 139 \\
+D & linearised at init, frozen $J_0$ & \wtl{14}{12}{42} & \wtl{0}{10}{58} & $+36.6\%$ & 130.4 & 42\% & 23 \\
+\bottomrule
+\end{tabular}
+\caption{RQ2 at $10^5$ steps (68 graphs, 5 seeds). W/T/L and median
+$d=(\text{arm}-\text{A})/\max(\text{A},1)$ are graph-level; negative $d$
+favours the arm. SFO: share of runs already single-flip optimal. Logit gap:
+median top-two logit difference, a measure of saturation. B versus A is the
+primary comparison; the other rows are secondary.}
+\label{tab:rq2}
+\end{table*}
+
+\paragraph{The verdict flips with repair.} Free logits give \emph{better raw}
+colourings than PI-GNN (32 wins, 13 losses, $p=0.002$), but after descent
+PI-GNN is better (26 wins, 17 losses, median $6\%$, $p<0.001$). Both readings
+hold at matched wall-clock time, where B gets about $2.9\times$ more steps and
+barely changes. The SFO column explains the flip: B ends single-flip optimal
+in all 340 runs, so descent has nothing to add, while PI-GNN stops short in
+$58\%$ of runs but in basins whose bottoms are slightly deeper. B still has
+the lower \emph{mean} after descent (108.6 vs.\ 114.9): PI-GNN's large relative
+wins come on low-conflict graphs, B's on high-conflict ones.
+
+\paragraph{The advantage is noise, not architecture.} Removing dropout from
+PI-GNN erases its edge: the result loses to PI-GNN on 21 graphs and is not
+distinguishable from B. Adding noise to free logits overturns it: at
+$\sigma=2$ they beat PI-GNN after descent on 44 graphs, losing on 3, and beat
+plain B on 53 with no losses. A plausible reading is the one behind simulated
+annealing \cite{kirkpatrick1983annealing}: persistent noise prevents early
+commitment to the first basin. Indeed, at step 100, $69\%$ of PI-GNN's
+vertices are already confident against $0.2\%$ for B.
+
+\paragraph{Noise, but of the right kind.} Dropout and logit noise act in
+opposite directions on confidence. The arms with dropout (A and C) end with
+enormous logit gaps (204 and 139); without dropout the gap is 18, and with
+logit noise it shrinks to 8. We interpret this as the network inflating its
+weights to survive losing half its hidden units; with dropout off at
+evaluation every unit votes at full strength and outputs saturate, freezing
+the RQ1 errors (Eq.~\ref{eq:grad}). Logit noise gives exploration without
+saturation, and the best arm is the \emph{least} confident one.
+
+\paragraph{Aggregation helps only inside the neural recipe; a frozen network
+fails.} The node MLP C loses to PI-GNN after descent on 28 graphs (5 wins), so
+aggregation contributes \emph{within} the neural recipe, although a simpler
+procedure does better without it. D is the worst arm (no wins against PI-GNN
+or B), so PI-GNN's help is not a fixed preconditioner from initialisation. B
+and B-rand are not distinguishable (14/42/12): the network's initial output
+gives no useful head start.
+
+\subsection{RQ3: Is it the soft output or the decoder?}
+
+A decoder that reads the graph can colour well even from a meaningless $P$, so
+we fix the decoder and vary its input. The decoder is derandomised
+conditional expectation (D-CE) \cite{raghavan1988derandomization,karalias2020erdos}:
+it fixes vertices one at a time in DSATUR order, giving $v$ the colour $a$
+that minimises the number of fixed neighbours coloured $a$ plus $\sum p_u(a)$
+over unfixed neighbours $u$. It guarantees $C\le L(P)$, and on exactly uniform
+$P$ it reduces to DSATUR. A near-uniform input is thus a \emph{graph-only}
+decoder with no learned information. We compare PI-GNN's trained $P$ with it
+and with three corruptions: the untrained output, rows shuffled across
+vertices, and colours permuted independently within each row, which keeps
+every row's confidence but breaks agreement between neighbours.
+
+\begin{table}[t]
+\centering\small
+\begin{tabular}{@{}lcr@{}}
+\toprule
+D-CE + descent: first vs.\ second & W/T/L & median $d$ \\
+\midrule
+trained vs.\ colour-scrambled & \wtl{48}{20}{0} & $-25.5\%$ \\
+trained vs.\ vertex-shuffled & \wtl{56}{12}{0} & $-29.9\%$ \\
+trained vs.\ untrained & \wtl{51}{14}{3} & $-22.2\%$ \\
+trained vs.\ near-uniform & \wtl{27}{28}{13} & $0.0\%$ \\
+near-uniform vs.\ colour-scrambled & \wtl{41}{24}{3} & $-17.5\%$ \\
+\midrule
+D-CE vs.\ argmax, raw & \wtl{33}{35}{0} & $-11.4\%$ \\
+D-CE vs.\ argmax, after descent & \wtl{22}{46}{0} & $-2.8\%$ \\
+\midrule
+B-noise-2 vs.\ near-uniform & \wtl{36}{27}{5} & $-21.2\%$ \\
+\bottomrule
+\end{tabular}
+\caption{RQ3: probability-input and decoder controls on frozen $10^5$-step
+outputs. ``Trained'' is PI-GNN's $P$ unless stated.}
+\label{tab:rq3}
+\end{table}
+
+\paragraph{Real information, but not more than the graph alone.}
+Table~\ref{tab:rq3} shows that trained $P$ clearly beats every corruption,
+including the colour-scrambled one that preserves confidence exactly. The
+useful content is therefore \emph{coordination} between neighbours, not
+confidence. Yet against the graph-only decoder the trained $P$ is not
+distinguishable (median $0\%$, $p=0.23$), consistent with RQ1's tie against
+DSATUR. Confidently wrong information is worse than none (near-uniform beats
+scrambled on 41 graphs), so beating a corrupted input is a weak test. The
+aggregate tie also hides a family split: trained $P$ wins on all 12 queen
+graphs but loses to the graph-only decoder on DSJR, register-allocation and
+miles graphs.
+
+\paragraph{Most of the decoder's gain is repair.} D-CE improves raw argmax
+substantially, but once argmax also gets descent the gain is $2.8\%$, inside
+the tie band, though consistent and cheap. Best-of-32 sampling adds nothing
+(2/65/1) at $26\times$ the cost: saturated rows make sampling reproduce argmax.
+
+\paragraph{The optimiser still decides.} Decoding all nine RQ2 arms with D-CE
+narrows the spread between them (median within-graph range down by $10\%$) but
+preserves the ranking: B-noise-2 still beats PI-GNN (35/29/4), D stays last,
+and B-noise-2 is the only arm whose $P$ clearly beats the graph-only decoder.
+A better optimiser yields a better $P$, and that advantage survives decoding.
+
+\section{Discussion and Limitations}
+
+Returning to Figure~\ref{fig:pipeline}, our answer to the research question is
+that \textbf{the optimiser decides the outcome, but the GNN is not what makes
+it good}. Differences between optimisers survive every decoder we tried, while
+PI-GNN's specific ingredients contribute little, and the strongest procedure
+we found has no network at all.
+
+This sharpens the end-to-end critiques
+\cite{angelini2023cautionary,boettcher2023inability}. PI-GNN is not weak
+because it fails to learn: its $P$ carries real coordinated structure
+(Table~\ref{tab:rq3}). It is weak because its optimisation saturates, leaving
+confident but improvable vertices (Eq.~\ref{eq:grad}), and because what helps
+it, noise, is available more cheaply without a network.
+
+For evaluating such methods we suggest: report raw \emph{and} repaired
+quality, which can rank methods oppositely; use free logits on the same loss
+as the network-free baseline; test learned outputs against an uninformative
+input under the same decoder, not only corrupted ones; never treat confidence
+as correctness; and report per-family results.
+
+\paragraph{Limitations.} One architecture, one regime ($k=\chi-1$) and 68
+heterogeneous graphs limit generality. $\sigma=2$ was the best of three values
+on the test graphs, not tuned on the synthetic set, and was not compared with
+TabuCol. Logit noise and dropout differ, so the noise account is plausible
+rather than isolated; saturation rests on evaluation-time diagnostics, not a
+training intervention; D is one linearisation, not every preconditioner. Time
+matching used shared mixed-GPU jobs, and our p-values are descriptive, with no
+confidence intervals.
+
+\section{Conclusion}
+
+Intervening on one ingredient at a time shows that PI-GNN's outputs become
+confident long before they become locally optimal, that the network's edge
+over plain logit optimisation is small and exceeded by simple noise, and that
+its learned probabilities are worth about as much as the graph itself given to
+a greedy decoder. Confidence, local optimality and quality are distinct, and
+conflating them overstates what the network contributes. A natural next step
+is to tune noisy logit optimisation and compare it with strong local search.
+
+\section*{Acknowledgements}
+
+Implementation, experiment execution and drafting were carried out with
+substantial assistance from AI coding assistants. All numbers come from the
+accompanying code and results; the design, interpretation and final text are
+our own.
+
+\bibliography{custom}
+\bibliographystyle{acl_natbib}
+
+\end{document}
