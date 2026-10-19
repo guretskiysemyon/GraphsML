@@ -28,8 +28,8 @@
 % The ACL \maketitle switches to two columns, which longtable cannot use; one-column title instead.
 \onecolumn
 \begin{center}
-{\Large\bfseries Appendix to ``Who Does the Work? Dissecting Physics-Inspired\\[2pt]
-Graph Neural Networks for Graph Colouring''\par}
+{\Large\bfseries Supplementary Appendix to ``Noise in Disguise:\\[2pt]
+What Powers Physics-Inspired GNN Colouring''\par}
 \vspace{1em}
 {\large Semyon Guretskiy (336249255) \quad Ori Petel (325211498) \quad Adi Shimoni (316342435)\par}
 \vspace{1.5em}
@@ -37,9 +37,11 @@ Graph Neural Networks for Graph Colouring''\par}
 
 \noindent This appendix gives the experimental details and the full results behind every number
 in the main paper. Section~\ref{sec:setup} describes the setup, Sections~\ref{sec:rq1}--\ref{sec:rq3}
-give the complete comparisons for each research question, and Section~\ref{sec:pergraph} lists
-per-graph results. All tables are generated from the stored results by one script
-(Section~\ref{sec:repro}); references to ``Table~$n$'' without a letter are to the main paper.
+give the complete comparisons for each research question, Section~\ref{sec:pergraph} lists
+per-graph results, and Section~\ref{sec:sdp} reports a further effort with domain knowledge. The
+tables of Sections~\ref{sec:setup}--\ref{sec:pergraph} are generated from the stored results by one
+script (\texttt{scripts/make\_appendix.py}); references to ``Table~$n$'' without a letter are to the
+main paper.
 
 \section{Experimental setup}
 \label{sec:setup}
@@ -249,5 +251,74 @@ starts need less repair.}
 {\footnotesize\setlength{\tabcolsep}{3.5pt}
 \input{appendix/tables/per_graph.tex}}
 
+\section{Further efforts: domain knowledge from a convex relaxation}
+\label{sec:sdp}
+
+\paragraph{Motivation.} The Potts loss has no relaxation gap: its continuous minimum equals the
+discrete one \citep{rosenberg1972}, so descending it adds no information beyond what local moves can
+find. Colouring has a classical relaxation that does carry global information, vector colouring by
+semidefinite programming \citep{karger1998sdp}. We use the Frieze--Jerrum form at $k$ colours
+\citep{frieze1997maxkcut}: unit vectors $v_i$ whose pairwise inner products are at least $-1/(k-1)$,
+the value between the vertices of a regular simplex, maximising $\sum_{\{u,v\}\in E}(1-v_u^{\top}v_v)$.
+A proper $k$-colouring placed on the simplex puts every edge exactly at this floor. The problem is
+convex; we solve it approximately with a rank-32 Burer--Monteiro factorisation
+\citep{burer2003nonlinear}, in 11--132\,s per graph on one CPU.
+
+\paragraph{Two uses.} (i)~As domain-informed input to PI-GNN: the vectors initialise its vertex
+embeddings (\emph{FJ init}). (ii)~Alone: k-means on the vectors gives a colouring, which can also seed
+TabuCol. We ran both on the 12 harder DIMACS graphs of the main paper's second protocol (Section~3
+there; 2 seeds), against PI-GNN with the best setting of a small pilot, DSATUR and TabuCol
+(Table~\ref{tab:sdp}).
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+graph ($k$) & PI-GNN & +FJ init & SDP alone & DSATUR & TabuCol \\
+\midrule
+DSJC125.5 (17) & 19 & 10 & 31 & 21 & 0 \\
+DSJC250.5 (28) & 55.5 & 42 & 50 & 60 & 0.6 \\
+flat300\_28\_0 (28) & 110 & 96 & 153 & 124 & 32.2 \\
+le450\_15a (15) & 31 & 36.5 & 256 & 7 & 0 \\
+le450\_15b (15) & 35 & 32.5 & 238 & 7 & 0 \\
+le450\_15c (15) & 223 & \textbf{0} & 2 & 248 & 16.2 \\
+le450\_15d (15) & 215.5 & \textbf{0.5} & 8 & 250 & 26.8 \\
+queen10\_10 (11) & 10 & 9.5 & 54 & 10 & 0 \\
+queen12\_12 (12) & 31 & 26 & 61 & 29 & 9.6 \\
+queen14\_14 (14) & 32.5 & 32 & 91 & 32 & 13.4 \\
+queen15\_15 (15) & 41.5 & 36 & 94 & 42 & 15.2 \\
+queen16\_16 (16) & 43.5 & 46 & 117 & 44 & 17 \\
+\bottomrule
+\end{tabular}
+\caption{Conflicts at $k$ colours (second protocol, mean of 2 seeds). PI-GNN and +FJ init: best
+colouring found during training; SDP alone: k-means on the FJ vectors, best of 5; DSATUR: best of 11
+randomised runs; TabuCol: 10\,s, mean of 5 runs.}
+\label{tab:sdp}
+\end{table}
+
+\paragraph{Where structure is global, geometry wins.} FJ init improves PI-GNN on 10 of the 12 graphs.
+On the Leighton graphs le450\_15c/d, built around a planted 15-colouring \citep{leighton1979}, it is
+decisive: 0 and 0.5 conflicts, where plain PI-GNN keeps over 200 and TabuCol 16--27 after 10\,s
+(7--24 after 60\,s). The control shows why. 95--97\% of edges sit exactly at the floor, so the SDP has
+recovered the planted colouring, and TabuCol started from its k-means colouring finds a proper
+colouring within 1--72 iterations (10 of 10 starts). The network is not needed: the geometry carries
+the solution.
+
+\paragraph{Elsewhere it does not.} On random, queen and the sparser Leighton graphs (le450\_15a/b),
+the vectors alone are worse than DSATUR on 9 of 10 graphs (e.g.\ 54 vs.\ 10 conflicts on
+queen10\_10), FJ init helps PI-GNN unevenly (most on DSJC125.5, from 19 to 10), and TabuCol stays far
+ahead. Earlier small-scale tests agree. In an RLF-style colour-class extraction on 13 small graphs,
+SDP vectors lowered the mean excess over the best known colour count from 0.615 (RLF) to 0.385, but
+random unit vectors in the same procedure reached 0.462 (3/35/1 SDP vs.\ random). As PI-GNN input
+features on 9 small graphs, FJ vectors beat the same rows shuffled (21/3/3) but not identity features
+significantly (16/6/5, Holm-corrected $p=0.18$).
+
+\paragraph{Insight.} Domain knowledge from a convex relaxation helps exactly where an instance hides
+global structure. There it solves what neither PI-GNN nor TabuCol can, and the Potts loss, being
+exact, cannot supply it. Where hardness lies in a rugged landscape instead, only search helps.
+Testing all twelve Leighton graphs and planted-partition models would locate the boundary.
+
+\bibliographystyle{acl_natbib}
+\bibliography{custom}
 
 \end{document}
