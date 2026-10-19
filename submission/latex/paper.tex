@@ -118,10 +118,10 @@ impossible, so methods are compared on a graded conflict count rather than a
 binary success rate that would saturate on easy graphs. Our contribution is a
 controlled decomposition protocol (identical starting outputs, separately tuned
 competitors, matched steps \emph{and} time, one shared repair, graph-level
-paired statistics) and the answer it gives: training makes outputs confident
-long before it makes them locally optimal; the network's edge over free logits
-is small, depends on dropout, and is overturned by plain noise; and the learned
-$P$ beats corrupted inputs but not a graph-only decoder.
+paired statistics) and its answer: outputs become confident long before
+locally optimal; the network's small edge over free logits depends on dropout
+and is overturned by plain noise; and learned $P$ beats corrupted inputs but
+not a graph-only decoder.
 
 \section{Background and Related Work}
 
@@ -359,45 +359,16 @@ $58\%$ of runs but in basins whose bottoms are slightly deeper. B still has
 the lower \emph{mean} after descent (108.6 vs.\ 114.9): PI-GNN's large relative
 wins come on low-conflict graphs, B's on high-conflict ones.
 
-\paragraph{The advantage is noise, not architecture.} Removing dropout from
-PI-GNN erases its edge: the result loses to PI-GNN on 21 graphs and is not
-distinguishable from B. Adding noise to free logits overturns it: at
-$\sigma=2$ they beat PI-GNN after descent on 44 graphs, losing on 3, and beat
-plain B on 53 with no losses. A plausible reading is the one behind simulated
-annealing \cite{kirkpatrick1983annealing}: persistent noise prevents early
-commitment to the first basin. Indeed, at step 100, $69\%$ of PI-GNN's
-vertices are already confident against $0.2\%$ for B.
 
-\paragraph{Noise, but of the right kind.} Dropout and logit noise act in
-opposite directions on confidence. The arms with dropout (A and C) end with
-enormous logit gaps (204 and 139); without dropout the gap is 18, and with
-logit noise it shrinks to 8. We interpret this as the network inflating its
-weights to survive losing half its hidden units; with dropout off at
-evaluation every unit votes at full strength and outputs saturate, freezing
-the RQ1 errors (Eq.~\ref{eq:grad}). Logit noise gives exploration without
-saturation, and the best arm is the \emph{least} confident one.
 
-\paragraph{Aggregation helps only inside the neural recipe; a frozen network
-fails.} The node MLP C loses to PI-GNN after descent on 28 graphs (5 wins), so
-aggregation contributes \emph{within} the neural recipe, although a simpler
-procedure does better without it. D is the worst arm (no wins against PI-GNN
-or B), so PI-GNN's help is not a fixed preconditioner from initialisation. B
-and B-rand are not distinguishable (14/42/12): the network's initial output
-gives no useful head start.
 
-\subsection{RQ3: Is it the soft output or the decoder?}
 
-A decoder that reads the graph can colour well even from a meaningless $P$, so
-we fix the decoder and vary its input. The decoder is derandomised
-conditional expectation (D-CE) \cite{raghavan1988derandomization,karalias2020erdos}:
-it fixes vertices one at a time in DSATUR order, giving $v$ the colour $a$
-that minimises the number of fixed neighbours coloured $a$ plus $\sum p_u(a)$
-over unfixed neighbours $u$. It guarantees $C\le L(P)$, and on exactly uniform
-$P$ it reduces to DSATUR. A near-uniform input is thus a \emph{graph-only}
-decoder with no learned information. We compare PI-GNN's trained $P$ with it
-and with three corruptions: the untrained output, rows shuffled across
-vertices, and colours permuted independently within each row, which keeps
-every row's confidence but breaks agreement between neighbours.
+\paragraph{Stochasticity changes the comparison.} Removing dropout erases PI-GNN's advantage: A-no-drop loses to PI-GNN on 21 graphs (7 wins) and is not distinguishable from B after descent. Noise added to free logits instead overturns it: at $\sigma=2$, B-noise beats PI-GNN after descent on 44 graphs (3 losses) and plain B on 53 (no losses). Stochasticity matters, but how the noise enters matters too.
+
+\paragraph{Dropout and logit noise reshape confidence differently.} Dropout first delays PI-GNN's commitment (69\% of vertices confident at step 100 vs.\ 89\% without it), then saturates it far more: final median top-two logit gap 204 vs.\ 18 (139 for the node MLP, also with dropout). Logit noise does the reverse: $\sigma=2$ commits earlier (82\% vs.\ 55\% at step 1k) but stops sharpening, ending at 93\% confident vs.\ 100\% and a gap of 8 vs.\ 18 for plain B. The best arm thus keeps late uncertainty, while dropout's saturation can suppress gradients (Eq.~\ref{eq:grad}); this link to quality is correlational, not causal.
+
+\paragraph{What does the network contribute?} \textit{Aggregation:} the node MLP C ties PI-GNN on raw colourings (20/28/20) but loses after descent (5/35/28), so aggregation helps within the neural recipe, though B-noise-2 does better without it. \textit{Fixed structure:} D, with its Jacobian frozen at initialisation, never beats PI-GNN after descent (0/10/58), so a fixed initial linearisation is insufficient. B and B-rand are not distinguishable (14/42/12): the initial output gives no head start.
+
 
 \begin{table}[t]
 \centering\small
@@ -422,28 +393,47 @@ outputs. ``Trained'' is PI-GNN's $P$ unless stated.}
 \label{tab:rq3}
 \end{table}
 
+
+\subsection{RQ3: Is it the soft output or the decoder?}
+
+We fix the decoder and vary only its input. The decoder is derandomised
+conditional expectation (D-CE) \cite{raghavan1988derandomization,karalias2020erdos}:
+it fixes vertices in DSATUR order, giving $v$ the colour $a$ that minimises
+the number of fixed neighbours coloured $a$ plus $\sum p_u(a)$ over unfixed
+neighbours $u$, which guarantees $C\le L(P)$. Its first term reads the graph,
+so it needs no learned information: on uniform $P$ it is DSATUR, and on a
+near-uniform $P$ it beats raw argmax on all 68 graphs (median $-93\%$). This
+near-uniform input is our \emph{graph-only} baseline. We also corrupt
+trained $P$: the untrained output, rows shuffled across vertices, and
+colours permuted independently within each row (same confidence, no
+neighbour agreement).
+
+
+
 \paragraph{Real information, but not more than the graph alone.}
-Table~\ref{tab:rq3} shows that trained $P$ clearly beats every corruption,
-including the colour-scrambled one that preserves confidence exactly. The
-useful content is therefore \emph{coordination} between neighbours, not
-confidence. Yet against the graph-only decoder the trained $P$ is not
-distinguishable (median $0\%$, $p=0.23$), consistent with RQ1's tie against
-DSATUR. Confidently wrong information is worse than none (near-uniform beats
-scrambled on 41 graphs), so beating a corrupted input is a weak test. The
-aggregate tie also hides a family split: trained $P$ wins on all 12 queen
-graphs but loses to the graph-only decoder on DSJR, register-allocation and
-miles graphs.
+Trained $P$ beats all three corruptions (Table~\ref{tab:rq3}; medians $-22$
+to $-30\%$, at most 3 losses), even colour-scrambled $P$ with identical
+confidence, so the useful content is \emph{coordination} between neighbours,
+not confidence. Against the graph-only baseline it is not distinguishable
+(27/28/13, median $0\%$, $p=0.23$), like RQ1's tie with DSATUR.
+Scrambled $P$ is worse than none (near-uniform wins 41/24/3), so beating a
+corruption is a weak test. The tie hides a family split: trained $P$ wins on
+all 12 queen graphs (median $-18.5\%$) but loses on 5/12 Leighton, 2/3 DSJR,
+3/5 miles and 3/6 fpsol/inithx graphs.
 
-\paragraph{Most of the decoder's gain is repair.} D-CE improves raw argmax
-substantially, but once argmax also gets descent the gain is $2.8\%$, inside
-the tie band, though consistent and cheap. Best-of-32 sampling adds nothing
-(2/65/1) at $26\times$ the cost: saturated rows make sampling reproduce argmax.
+\paragraph{Most of the decoder's gain is repair.} On trained $P$, D-CE beats
+raw argmax (33/35/0, median $-11.4\%$), but once argmax also gets descent the
+gain is $-2.8\%$ (22/46/0): inside the tie band, yet never worse and cheaper
+overall (21 vs.\ 30\,s). Best-of-32 sampling adds nothing (2/65/1) at
+$26\times$ the cost, plausibly as saturated rows make samples repeat argmax.
 
-\paragraph{The optimiser still decides.} Decoding all nine RQ2 arms with D-CE
-narrows the spread between them (median within-graph range down by $10\%$) but
-preserves the ranking: B-noise-2 still beats PI-GNN (35/29/4), D stays last,
-and B-noise-2 is the only arm whose $P$ clearly beats the graph-only decoder.
-A better optimiser yields a better $P$, and that advantage survives decoding.
+\paragraph{The optimiser still decides.} D-CE on all nine RQ2 arms narrows
+their spread (median within-graph range $-10\%$): it barely changes the
+free-logit arms but helps D by $14.6\%$. The mean ranking has one swap (C,
+A-no-drop); B-noise-2 still beats PI-GNN (35/29/4), D stays last, and only
+B-noise-2's $P$ beats the graph-only baseline (36/27/5). A better optimiser
+gives a better $P$, and decoding keeps that edge.
+
 
 \section{Discussion and Limitations}
 
@@ -472,8 +462,8 @@ on the test graphs, not tuned on the synthetic set, and was not compared with
 TabuCol. Logit noise and dropout differ, so the noise account is plausible
 rather than isolated; saturation rests on evaluation-time diagnostics, not a
 training intervention; D is one linearisation, not every preconditioner. Time
-matching used shared mixed-GPU jobs, and our p-values are descriptive, with no
-confidence intervals.
+matching used shared mixed-GPU jobs; $p$-values are descriptive (bootstrap CIs
+for every comparison are in the appendix).
 
 \section{Conclusion}
 
