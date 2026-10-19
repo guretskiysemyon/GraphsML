@@ -243,13 +243,14 @@ Lemma~\ref{lem:strict}, not its local optimality.
 \centering
 \begin{tikzpicture}
 \begin{axis}[
-  width=\columnwidth, height=2.2cm,
+  width=\columnwidth, height=4.6cm,
   xmode=log, xmin=1, xmax=100000,
   ymin=0, ymax=100,
-  xlabel={training step}, ylabel={\% },
-  xlabel style={font=\footnotesize}, ylabel style={font=\footnotesize},
+  xlabel={training step}, ylabel={\%},
+  xlabel style={font=\footnotesize, yshift=2pt},
+  ylabel style={font=\footnotesize, yshift=-4pt},
   tick label style={font=\scriptsize},
-  legend style={font=\scriptsize, at={(0.98,0.97)}, anchor=north east,
+  legend style={font=\scriptsize, at={(0.5,0.98)}, anchor=north,
                 draw=none, fill=white, fill opacity=0.8, text opacity=1},
   legend cell align=left, grid=major, grid style={gray!20}]
 \addplot[thick, black, mark=*, mark size=1pt] coordinates {

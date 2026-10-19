@@ -1,0 +1,50 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.5.2)  19 OCT 2026 20:48
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**/homes/orip/repos/personal/GraphsML/submission/latex/appendix
+(/homes/orip/repos/personal/GraphsML/submission/latex/appendix.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-03-20>
+(/homes/orip/texlive/2026/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(/homes/orip/texlive/2026/texmf-dist/tex/latex/base/size11.clo
+File: size11.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count275
+\c@section=\count276
+\c@subsection=\count277
+\c@subsubsection=\count278
+\c@paragraph=\count279
+\c@subparagraph=\count280
+\c@figure=\count281
+\c@table=\count282
+\abovecaptionskip=\skip49
+\belowcaptionskip=\skip50
+\bibindent=\dimen150
+)
+
+! LaTeX Error: File `EACL2023.sty' not found.
+
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: sty)
+
+Enter file name: 
+/homes/orip/repos/personal/GraphsML/submission/latex/appendix.tex:8: Emergency stop.
+<read *> 
+         
+l.8 ^^M
+       
+*** (cannot \read from terminal in nonstop modes)
+
+ 
+Here is how much of TeX's memory you used:
+ 245 strings out of 467349
+ 3142 string characters out of 5415115
+ 434951 words of memory out of 5000000
+ 29422 multiletter control sequences out of 15000+600000
+ 628021 words of font info for 41 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 35i,0n,38p,174b,36s stack positions out of 10000i,1000n,20000p,200000b,200000s
+/homes/orip/repos/personal/GraphsML/submission/latex/appendix.tex:8:  ==> Fatal error occurred, no output PDF file produced!
