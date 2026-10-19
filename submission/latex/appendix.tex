@@ -249,15 +249,5 @@ starts need less repair.}
 {\footnotesize\setlength{\tabcolsep}{3.5pt}
 \input{appendix/tables/per_graph.tex}}
 
-\section{Reproducibility}
-\label{sec:repro}
-
-Code, configurations and raw results are in the accompanying repository. The main entry points are:
-training and tuning (\texttt{src/graphsml/train.py}, \texttt{tune.py}, \texttt{free\_logits.py},
-\texttt{linearised.py}); strict descent and the SFO test (\texttt{endpoint.py}); D-CE and the input
-controls (\texttt{decoders.py}); DSATUR and random starts (\texttt{controls.py}); TabuCol
-(\texttt{tabucol.py}); analyses (\texttt{scripts/analyze\_*.py}). This appendix's tables and figure
-are regenerated with \texttt{python scripts/make\_appendix.py}, which also verifies its recomputed
-W/T/L counts and medians against the stored analysis files.
 
 \end{document}
